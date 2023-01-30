@@ -18,7 +18,7 @@ ensure("Olical", "aniseed")
 ensure("lewis6991", "impatient.nvim")
 ensure("folke", "which-key.nvim")
 
-require("impatient")
+require("impatient").enable_profile()
 
 vim.g["aniseed#env"] = {
   module = "startup",
