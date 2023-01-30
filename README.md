@@ -1,5 +1,7 @@
 # neovim config in lisp
 
+![Lisp is God](https://imgs.xkcd.com/comics/lisp.jpg)
+
 WIP standalone nvim config in fennel (lisp). Once completed this should replace [fedemengo/.dotfiles/.config/nvim](https://github.com/fedemengo/.dotfiles/tree/master/.config/nvim) as submodule
 
 ## TODOs

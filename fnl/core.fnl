@@ -56,23 +56,23 @@
 (set vim.o.showmode true)
 (set vim.o.showcmd true)
 
-(set vim.o.timeoutlen 300)
-(set vim.o.updatetime 300)
+(set vim.o.timeoutlen 200)
+(set vim.o.updatetime 200)
 
 (set vim.o.list true)
-;(set vim.o.listchars {:tab "▸ " :space "⋅" :eol "↵"})
+;(set vim.o.listchars {:tab "▸ " :space "⋅" :eol "↵"}) ;; see https://github.com/neovim/neovim/issues/15201#issuecomment-1407728303
 ;(set vim.o.listchars {:tab "> " :space " " :eol ""})
 
 ;; undo dir
 (var undodir_path (.. (?. (vim.fn.environ) :HOME) "/.nvim/undo-dir/"))
 (if (= 0 (vim.fn.isdirectory undodir_path))
   (vim.fn.mkdir undodir_path "p")
-  ;(print "directory exists")
+  ;; directory exists
 )
-
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 
 (set vim.o.background "dark")
 
 (vim.cmd "colorscheme PaperColor")
+
