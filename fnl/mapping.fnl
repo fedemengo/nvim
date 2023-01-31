@@ -5,12 +5,12 @@
 (var map vim.keymap.set)
 
 (map ["n"] "<leader>fq" "<cmd>qa<cr>")
-(map ["n" "i" "v"] "<leader>Cf" "<cmd>edit $HOME/.config/nvim/<cr>")
-(map ["n" "i" "v"] "<leader>cf" "<cmd>tabedit $HOME/.config/nvim/<cr>")
+(map ["n"] "<leader>Cf" "<cmd>edit $HOME/.config/nvim/<cr>")
+(map ["n"] "<leader>cf" "<cmd>tabedit $HOME/.config/nvim/<cr>")
 
 (map ["n" "i" "v"] "<C-g>" "<cmd>echo expand('%:p') . ':' . line(\".\")<cr>")
 
-(map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
+(map ["n"] "<C-m>" "<cmd>tabnew<cr><cmd>Startify<cr>")
 (map ["n"] "<C-n>" "mt<cmd>tabedit %<cr>`t")
 
 ;; open new file at current line in new tab
@@ -52,7 +52,7 @@
 (map ["v"] "<leader>e64" "c<C-r>=system('base64', @\")<cr><esc>")
 (map ["v"] "<leader>d64" "c<C-r>=system('base64 --decode', @\")<cr><esc>")
 
-(map ["n" "i" "v"] "gf" "<cmd>edit <cfile><cr>")
+(map ["n"] "gf" "<cmd>edit <cfile><cr>")
 
 (map ["n"] "<C-h>" "<C-w>h")
 (map ["n"] "<C-j>" "<C-w>j")
@@ -99,12 +99,14 @@
       :z ["<cmd>lua require('telescope.builtin').grep_string({shorten_path = true, only_sort_text = true, search = ''})<cr>" "Fuzzy grep sring"]
       :b ["<cmd>lua require('telescope.builtin').buffers()<cr>" "Find buffers"]
       :c ["<cmd>lua require('telescope.builtin').command_history()<cr>" "Commands history"]
+      :e ["<cmd>lua require('telescope.builtin').diagnostics()<cr>" "Diagnostics"]
+    }
+    :g {
       :r ["<cmd>lua require('telescope.builtin').lsp_references()<cr>" "LSP references"]
       :i ["<cmd>lua require('telescope.builtin').lsp_implementations()<cr>" "LSP implementations"]
       :c ["<cmd>lua require('telescope.builtin').git_commits()<cr>" "Commit history"]
       :s ["<cmd>lua require('telescope.builtin').git_status()<cr>" "Git status"]
       :S ["<cmd>lua require('telescope.builtin').git_stash()<cr>" "Git stashes"]
-      :e ["<cmd>lua require('telescope.builtin').diagnostics()<cr>" "Diagnostics"]
     }
     :<Esc> ["<cmd>silent! nohls<cr>"  "Clear search highlight"]
   }
@@ -118,7 +120,6 @@
     :c {
       :w ["<cmd>lua vim.lsp.buf.rename()<cr>" "LSP rename"]
       :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]
-      :a ["<cmd>lua vim.lsp.buf.range_code_action()<cr>" "Code actions" {:mode ["v" "x"]}]
     }
     :p {
       :name "plugins"

@@ -27,8 +27,15 @@
 )
 
 (use
+    ;; ensured
+    :wbthomason/packer.nvim {}
+    :Olical/aniseed {}
+    :lewis6991/impatient.nvim {}
+
+
     ;; utils
     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :util.telescope}
+    :folke/which-key.nvim {}
 
     :jdhao/better-escape.vim {:mod :util.better-escape}
     :mhinz/vim-startify {:mod :util.startify}
@@ -37,9 +44,31 @@
     ;; theme
     :NLKNguyen/papercolor-theme {}
     :folke/zen-mode.nvim {}
+    :nvim-lualine/lualine.nvim {:mod :util.lualine}
 
     ;; programming
     :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :util.treesitter}
 
     :fatih/vim-go {:run ":GoUpdateBinaries" }
+
+    :VonHeikemen/lsp-zero.nvim {
+      :requires [
+        [:neovim/nvim-lspconfig]
+        [:williamboman/mason.nvim]
+        [:williamboman/mason-lspconfig.nvim]
+
+        [:hrsh7th/nvim-cmp]
+        [:hrsh7th/cmp-buffer]
+        [:hrsh7th/cmp-path]
+        [:saadparwaiz1/cmp_luasnip]
+        [:hrsh7th/cmp-nvim-lsp]
+        [:hrsh7th/cmp-nvim-lua]
+
+        [:onsails/lspkind.nvim]
+        [:L3MON4D3/LuaSnip]
+        [:rafamadriz/friendly-snippets]
+        [:jose-elias-alvarez/null-ls.nvim]
+      ]
+      :mod :lsp.lsp
+  }
 )
