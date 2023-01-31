@@ -10,7 +10,7 @@
 
 (map ["n" "i" "v"] "<C-g>" "<cmd>echo expand('%:p') . ':' . line(\".\")<cr>")
 
-(map ["n"] "<C-m>" "<cmd>tabnew<cr><cmd>Startify<cr>")
+(map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
 (map ["n"] "<C-n>" "mt<cmd>tabedit %<cr>`t")
 
 ;; open new file at current line in new tab
