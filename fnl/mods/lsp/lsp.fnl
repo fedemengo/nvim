@@ -134,7 +134,6 @@
   (nullls.setup {
     :sources [
       nullls.builtins.formatting.stylua
-      nullls.builtins.formatting.autopep8
       nullls.builtins.formatting.prettier
     ]
   })

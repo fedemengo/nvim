@@ -2,22 +2,21 @@
   {autoload {which-key which-key}}
 )
 
-(var map vim.keymap.set)
+(local map vim.keymap.set)
 
-(map ["n"] "<leader>fq" "<cmd>qa<cr>")
 (map ["n"] "<leader>Cf" "<cmd>edit $HOME/.config/nvim/<cr>")
 (map ["n"] "<leader>cf" "<cmd>tabedit $HOME/.config/nvim/<cr>")
 
 (map ["n" "i" "v"] "<C-g>" "<cmd>echo expand('%:p') . ':' . line(\".\")<cr>")
 
-(map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
-(map ["n"] "<C-n>" "mt<cmd>tabedit %<cr>`t")
-
 ;; open new file at current line in new tab
+(map ["n"] "<C-n>" "mt<cmd>tabedit %<cr>`t")
+(map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
+
 (map ["n"] "<leader>h" "<cmd>tabmove -1<cr>")
 (map ["n"] "<leader>l" "<cmd>tabmove +1<cr>")
 
-(map ["n"] "bd" "<cmd>bdelete<cr>")
+(map ["n"] "@" "<cmd>tabclose<cr>")
 (map ["n"] "¡" "<cmd> lua require('bufferline').go_to_buffer(1, true)<cr>")
 (map ["n"] "™" "<cmd> lua require('bufferline').go_to_buffer(2, true)<cr>")
 (map ["n"] "£" "<cmd> lua require('bufferline').go_to_buffer(3, true)<cr>")
@@ -29,14 +28,12 @@
 (map ["n"] "ª" "<cmd> lua require('bufferline').go_to_buffer(9, true)<cr>")
 
 (map ["n"] "<leader>v" "<cmd>vsplit<cr>")
-(map ["n"] "<leader>h" "<cmd>split<cr>")
+(map ["n"] "<leader>s" "<cmd>split<cr>")
 
 (map ["i"] "jk" "<esc")
 (map ["i"] "jk" "<C-\\><C-n>")
 
-;; yank/past to clipboard
-(map ["n" "v"] "<leader>y" "\"+y")
-(map ["n"] "<leader>Y" "\"+Y")
+;; yank/past to clipboard - fix me: conflict with packerk
 (map ["n" "v"] "<leader>p" "\"+p")
 (map ["n"] "<leader>P" "\"+P")
 (map ["x"] "<leader>p" "\"_dP")
@@ -118,11 +115,14 @@
     :b ["<cmd>Git toggle_current_line_blame<cr>" "Git blame"]
     :f {
       :p ["<cmd>silent! let @+=expand(\"%:p\") . ':' . line(\".\")<cr>" "Copy file path"]
+      :q ["<cmd>qa<cr>" "Force quit"]
     }
     :c {
       :w ["<cmd>lua vim.lsp.buf.rename()<cr>" "LSP rename"]
       :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]
     }
+    :y ["\"+y" "Yank to clipboard"]
+    :Y ["\"+Y" "Yank line to clipboard"]
     :p {
       :name "plugins"
       :i ["<cmd>PackerInstall<cr>" "Install plugins"]
