@@ -67,9 +67,16 @@
 (local cmp_nvim_lsp (require :cmp_nvim_lsp))
 (local capabilites (cmp_nvim_lsp.default_capabilities))
 
+(local signature (require :lsp_signature))
 (local which-key (require :which-key))
 (local on_attach (fn [client buf]
   (vim.api.nvim_buf_set_option buf "omnifunc" "v:lua.vim.lsp.omnifunc")
+  (signature.on_attach {
+    :bind true
+    :handler_opts {:border "rounded"}
+    :hint_enable false
+    ;;:hint_prefix " "
+  } buf)
   (which-key.register {
      "[d" ["<cmd> lua vim.diagnostic.goto_prev()<cr>"                         "Prev diagnostic"]
      "]d" ["<cmd> lua vim.diagnostic.goto_next()<cr>"                         "Next diagnostic"]
