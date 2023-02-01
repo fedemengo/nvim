@@ -1,4 +1,4 @@
-function ensure(user, repo)
+local function ensure(user, repo)
     local pack_path = vim.fn.stdpath("data") .. "/site/pack"
     local install_path = string.format("%s/packer/start/%s", pack_path, repo)
     if vim.fn.empty(vim.fn.glob(install_path)) > 0 then

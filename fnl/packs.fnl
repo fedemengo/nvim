@@ -32,7 +32,6 @@
     :Olical/aniseed {}
     :lewis6991/impatient.nvim {}
 
-
     ;; utils
     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :util.telescope}
     :folke/which-key.nvim {}

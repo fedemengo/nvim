@@ -75,7 +75,7 @@
      "]d" ["<cmd> lua vim.diagnostic.goto_next()<cr>"                         "Next diagnostic"]
      :td  [ "<cmd>lua vim.lsp.buf.type_definition()<cr>"                      "Type definition"]
      :gD  [ "<cmd>lua vim.lsp.buf.declaration()<cr>"                          "Goto declaration"]
-     :gd  [ "<cmd>lua vim.lsp.buf.definition()<cr>"                           "Goto definition"]
+     :gd  [ "<cmd>lua require('telescope.builtin').lsp_definitions()<cr>"     "Goto definition"]
      :gi  [ "<cmd>lua require('telescope.builtin').lsp_implementations()<cr>" "LSP implementations"]
      :gr  [ "<cmd>lua require('telescope.builtin').lsp_references()<cr>"      "Goto references"]
      :go  [ "<cmd>lua vim.diagnostic.open_float()<cr>"                        "Show diagnostics"]
