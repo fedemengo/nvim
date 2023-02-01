@@ -44,6 +44,7 @@
     :NLKNguyen/papercolor-theme {}
     :folke/zen-mode.nvim {}
     :nvim-lualine/lualine.nvim {:mod :util.lualine}
+    :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :util.tab }
 
     ;; programming
     :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :util.treesitter}
