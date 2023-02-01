@@ -2,7 +2,7 @@
 
 (set vim.g.startify_session_sort 1)
 (set vim.g.startify_files_number 8)
-(set vim.g.startify_bookmarks (vim.fn.systemlist "cut -sd' ' -f 2- ~/.NERDTreeBookmarks"))
+(set vim.g.startify_bookmarks (vim.fn.systemlist "cut -sd' ' -f 2- ~/.nvim-bookmarks"))
 
 (fn git-modified []
   (let [files (vim.fn.systemlist "git ls-files -m 2>/dev/null")]

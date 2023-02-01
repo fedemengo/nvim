@@ -35,6 +35,7 @@
     ;; utils
     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :util.telescope}
     :folke/which-key.nvim {}
+    :kevinhwang91/nvim-hlslens {}
 
     :jdhao/better-escape.vim {:mod :util.better-escape}
     :mhinz/vim-startify {:mod :util.startify}
@@ -48,8 +49,8 @@
 
     ;; programming
     :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :util.treesitter}
-
     :fatih/vim-go {:run ":GoUpdateBinaries" }
+    :lewis6991/gitsigns.nvim {:mod :util.gitsigns}
 
     :VonHeikemen/lsp-zero.nvim {
       :requires [

@@ -17,7 +17,7 @@
 (map ["n"] "<leader>h" "<cmd>tabmove -1<cr>")
 (map ["n"] "<leader>l" "<cmd>tabmove +1<cr>")
 
-(map ["n"] "bb" "<cmd>bdelete<cr>")
+(map ["n"] "bd" "<cmd>bdelete<cr>")
 (map ["n"] "¡" "<cmd> lua require('bufferline').go_to_buffer(1, true)<cr>")
 (map ["n"] "™" "<cmd> lua require('bufferline').go_to_buffer(2, true)<cr>")
 (map ["n"] "£" "<cmd> lua require('bufferline').go_to_buffer(3, true)<cr>")
@@ -115,6 +115,7 @@
 
 (which-key.register
   {
+    :b ["<cmd>Git toggle_current_line_blame<cr>" "Git blame"]
     :f {
       :p ["<cmd>silent! let @+=expand(\"%:p\") . ':' . line(\".\")<cr>" "Copy file path"]
     }
