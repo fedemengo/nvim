@@ -13,10 +13,6 @@
 (map ["n"] "<C-n>" "mt<cmd>tabedit %<cr>`t")
 (map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
 
-(map ["n"] "<leader>h" "<cmd>tabmove -1<cr>")
-(map ["n"] "<leader>l" "<cmd>tabmove +1<cr>")
-
-(map ["n"] "@" "<cmd>tabclose<cr>")
 (map ["n"] "¡" "<cmd> lua require('bufferline').go_to_buffer(1, true)<cr>")
 (map ["n"] "™" "<cmd> lua require('bufferline').go_to_buffer(2, true)<cr>")
 (map ["n"] "£" "<cmd> lua require('bufferline').go_to_buffer(3, true)<cr>")
@@ -26,9 +22,6 @@
 (map ["n"] "¶" "<cmd> lua require('bufferline').go_to_buffer(7, true)<cr>")
 (map ["n"] "•" "<cmd> lua require('bufferline').go_to_buffer(8, true)<cr>")
 (map ["n"] "ª" "<cmd> lua require('bufferline').go_to_buffer(9, true)<cr>")
-
-(map ["n"] "<leader>v" "<cmd>vsplit<cr>")
-(map ["n"] "<leader>s" "<cmd>split<cr>")
 
 (map ["i"] "jk" "<esc")
 (map ["i"] "jk" "<C-\\><C-n>")
@@ -46,9 +39,6 @@
 
 (map ["v"] "y" "myy`y")
 (map ["v"] "Y" "myY`y")
-
-(map ["v"] "<leader>e64" "c<C-r>=system('base64', @\")<cr><esc>")
-(map ["v"] "<leader>d64" "c<C-r>=system('base64 --decode', @\")<cr><esc>")
 
 (map ["n"] "gf" "<cmd>edit <cfile><cr>")
 
@@ -121,8 +111,26 @@
       :w ["<cmd>lua vim.lsp.buf.rename()<cr>" "LSP rename"]
       :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]
     }
+    :h ["<cmd>tabmove -1<cr>" "Move tab to the left"]
+    :l ["<cmd>tabmove +1<cr>" "Move tab to the right"]
+    :v ["<cmd>vsplit<cr>" "Split window vertically"]
+    :s ["<cmd>split<cr>" "Split window horizontally"]
+
     :y ["\"+y" "Yank to clipboard"]
     :Y ["\"+Y" "Yank line to clipboard"]
+
+    :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
+    :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
+
+    :zz ["<cmd>ZenMode<cr>" "Zen mode"]
+  }
+  {
+    :prefix "<leader>"
+  }
+)
+
+(which-key.register
+  {
     :p {
       :name "plugins"
       :i ["<cmd>PackerInstall<cr>" "Install plugins"]
@@ -130,10 +138,9 @@
       :c ["<cmd>PackerCompile<cr>" "Compile packer file"]
       :C ["<cmd>PackerClean<cr>"   "Clean plugins"]
     }
-    :zz ["<cmd>ZenMode<cr>" "Zen mode"]
   }
   {
-    :prefix "<leader>"
+    :prefix "<space>"
   }
 )
 

@@ -35,7 +35,7 @@
     ;; utils
     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :util.telescope}
     :folke/which-key.nvim {}
-    :kevinhwang91/nvim-hlslens {}
+    :kevinhwang91/nvim-hlslens {:mod :util.hlslens }
 
     :jdhao/better-escape.vim {:mod :util.better-escape}
     :mhinz/vim-startify {:mod :util.startify}

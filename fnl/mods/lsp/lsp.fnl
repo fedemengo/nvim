@@ -118,6 +118,11 @@
       }
     }
   }
+  :sumneko_lua {
+    :settings {
+      :Lua {:diagnostics {:globals ["vim"]}}
+    }
+  }
 })
 
 (local get_servers (. masonlsp :get_installed_servers))
