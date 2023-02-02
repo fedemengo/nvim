@@ -31,14 +31,15 @@
         :find_files {
           :mappings {
             :i {
-              :<c-r> (fn [buf]
-                        (let [gen (require :telescope.actions.generate)]
-                          (gen.refine buf {
-                            :prompt_to_prefix true
-                            :sorter false
-                          })
-                        )
-                      )
+              :<c-r>
+              (fn [buf]
+                (let [gen (require :telescope.actions.generate)]
+                  (gen.refine buf {
+                    :prompt_to_prefix true
+                    :sorter false
+                  })
+                )
+              )
             }
           }
         }
@@ -50,3 +51,4 @@
   )
   (telescope.load_extension "fzf")
 )
+

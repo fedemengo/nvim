@@ -8,7 +8,6 @@
   }}
 )
 
-
 (cmp.setup {
   :snippet {
     :expand (fn [args] (luasnip.lsp_expand (. args :body)))
@@ -93,7 +92,6 @@
     {:noremap true :silent false :buffer buf }
   )
 ))
-;; opts {:noremap true :silent true}]
 
 (local lspconfig (require :lspconfig))
 (local lsputil (require :lspconfig/util))

@@ -41,11 +41,14 @@
 (map ["n" "i" "v" "x" "c"] "<left>" "<nop>")
 (map ["n" "i" "v" "x" "c"] "<right>" "<nop>")
 
+;; keep cursor at location after visual yank
 (map ["v"] "y" "myy`y")
 (map ["v"] "Y" "myY`y")
 
+;; edit file under cursor
 (map ["n"] "gf" "<cmd>edit <cfile><cr>")
 
+;; quick movement between splits
 (map ["n"] "<C-h>" "<C-w>h")
 (map ["n"] "<C-j>" "<C-w>j")
 (map ["n"] "<C-k>" "<C-w>k")
@@ -72,11 +75,9 @@
 (map ["n"] "†" toggle-theme)
 
 (fn open-web-commit []
-  (let [
-      path (vim.fn.shellescape (vim.fn.expand "%:p:h"))
-      file (vim.fn.shellescape (vim.fn.expand "%:t"))
-      line (vim.fn.shellescape (vim.fn.line "."))
-    ]
+  (let [path (vim.fn.shellescape (vim.fn.expand "%:p:h"))
+        file (vim.fn.shellescape (vim.fn.expand "%:t"))
+        line (vim.fn.shellescape (vim.fn.line "."))]
     (vim.fn.execute (.. "!open-web-commit" " " path " " file " " line))
     (let [code (. vim.v "shell_error")]
       (if (= 1 code)
@@ -117,22 +118,20 @@
 (which-key.register
   {
     :b ["<cmd>Git toggle_current_line_blame<cr>" "Git blame"]
-    :f {
-      :p ["<cmd>silent! let @+=expand(\"%:p\") . ':' . line(\".\")<cr>" "Copy file path"]
-      :q ["<cmd>qa<cr>" "Force quit"]
-    }
     :c {
       :w ["<cmd>lua vim.lsp.buf.rename()<cr>" "LSP rename"]
       :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]
     }
+    :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
+    :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
+    :f {
+      :p ["<cmd>silent! let @+=expand(\"%:p\") . ':' . line(\".\")<cr>" "Copy file path"]
+      :q ["<cmd>qa<cr>" "Force quit"]
+    }
     :h ["<cmd>tabmove -1<cr>" "Move tab to the left"]
     :l ["<cmd>tabmove +1<cr>" "Move tab to the right"]
-    :v ["<cmd>vsplit<cr>" "Split window vertically"]
     :s ["<cmd>split<cr>" "Split window horizontally"]
-
-    :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
-    :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
-
+    :v ["<cmd>vsplit<cr>" "Split window vertically"]
     :zz ["<cmd>ZenMode<cr>" "Zen mode"]
   }
   { :prefix "<leader>" }

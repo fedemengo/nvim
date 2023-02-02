@@ -23,7 +23,6 @@
        :config {:display {:open_fn (. (require :packer.util) :float)}}}
     )
   )
-  nil
 )
 
 (use

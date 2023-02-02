@@ -67,6 +67,7 @@
 ;;(optremove iskeyword ["."])
 ;;(vim.o.iskeyword:remove ".")
 
+;; aniseed fennel to lua translation seems to be "broken" for string
 (set vim.o.list false)
 ;(set vim.o.listchars {:tab "▸ " :space "⋅" :eol "↵"}) ;; see https://github.com/neovim/neovim/issues/15201#issuecomment-1407728303
 

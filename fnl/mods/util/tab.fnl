@@ -1,6 +1,5 @@
 (module mods.util.tab)
 
-
 (let [bufferline (require :bufferline)]
   (bufferline.setup {
     :options {
@@ -13,3 +12,4 @@
     }
   })
 )
+
