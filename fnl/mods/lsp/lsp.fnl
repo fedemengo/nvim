@@ -4,6 +4,7 @@
     luasnip luasnip
     lspkind lspkind
     mason mason
+    masonnullls mason-null-ls
   }}
 )
 
@@ -23,6 +24,7 @@
           :<C-n> (cmp.mapping.select_next_item cmp_select)
           :<C-e> (cmp.mapping.abort)
           :<C-y> (cmp.mapping.confirm {:select true})
+          :<cr> (cmp.mapping.confirm {:select true})
           :<S-Tab> (cmp.mapping.complete)
   })
   :experimental {
@@ -56,13 +58,12 @@
 })
 
 (mason.setup)
-
-
 (local masonlsp (require :mason-lspconfig))
-
 (masonlsp.setup {
-  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "sumneko_lua"]
+  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "sumneko_lua" "jsonls" "sqls" "pylsp" "jdtls"]
+  :automatic_installation true
 })
+(masonnullls.setup {:automatic_setup true})
 
 (local cmp_nvim_lsp (require :cmp_nvim_lsp))
 (local capabilites (cmp_nvim_lsp.default_capabilities))
@@ -129,6 +130,10 @@
     :settings {
       :Lua {:diagnostics {:globals ["vim"]}}
     }
+  }
+  :clangd {
+    :autostart true
+    :filetypes ["c" "cpp" "cuda"]
   }
 })
 

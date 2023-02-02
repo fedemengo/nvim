@@ -1,4 +1,10 @@
 (module core)
+(import-macros
+  {
+    :opt-remove optremove
+  }
+  :zest.macros
+)
 
 ;; autocmd
 (when (= 1 (vim.fn.has "autocmd"))
@@ -27,6 +33,7 @@
 (set vim.o.autowrite true)
 (set vim.o.autoindent true)
 
+(set vim.o.cursorcolumn true)
 (set vim.o.cursorline true)
 (set vim.o.scrolloff 15)
 (set vim.o.hlsearch true)
@@ -56,6 +63,10 @@
 (set vim.o.showmode true)
 (set vim.o.showcmd true)
 
+;; https://superuser.com/questions/741422/vim-move-word-skips-dot
+;;(optremove iskeyword ["."])
+;;(vim.o.iskeyword:remove ".")
+
 (set vim.o.list false)
 ;(set vim.o.listchars {:tab "▸ " :space "⋅" :eol "↵"}) ;; see https://github.com/neovim/neovim/issues/15201#issuecomment-1407728303
 
@@ -72,3 +83,4 @@
 
 (vim.cmd "colorscheme PaperColor")
 (vim.cmd "hi VertSplit guibg=bg guifg=fg")
+

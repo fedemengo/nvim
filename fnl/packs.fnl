@@ -31,15 +31,24 @@
     :wbthomason/packer.nvim {}
     :Olical/aniseed {}
     :lewis6991/impatient.nvim {}
+    :tsbohc/zest.nvim {}
 
     ;; utils
+    :nvim-telescope/telescope-fzf-native.nvim {:run "make" }
     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :util.telescope}
     :folke/which-key.nvim {}
     :kevinhwang91/nvim-hlslens {:mod :util.hlslens}
+    :lukas-reineke/indent-blankline.nvim {:mod :util.indentblank}
+    :norcalli/nvim-colorizer.lua {}
+    :numToStr/FTerm.nvim {}
+    :SmiteshP/nvim-gps {}
+    :nvim-tree/nvim-tree.lua {}
 
     :jdhao/better-escape.vim {:mod :util.better-escape}
     :mhinz/vim-startify {:mod :util.startify}
     :karb94/neoscroll.nvim {:mod :util.neoscroll}
+    :ggandor/leap.nvim {}
+    :windwp/nvim-autopairs {}
 
     ;; theme
     :NLKNguyen/papercolor-theme {}
@@ -57,6 +66,7 @@
       :requires [
         [:neovim/nvim-lspconfig]
         [:williamboman/mason.nvim]
+        [:jay-babu/mason-null-ls.nvim]
         [:williamboman/mason-lspconfig.nvim]
 
         [:hrsh7th/nvim-cmp]

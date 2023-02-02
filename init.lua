@@ -14,6 +14,7 @@ require("packer").startup(function(use)
   use("wbthomason/packer.nvim")
   use("lewis6991/impatient.nvim")
   use("Olical/aniseed")
+  use("tsbohc/zest.nvim")
 
   if packer_bootstrap then
     require("packer").sync()

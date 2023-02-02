@@ -1,6 +1,9 @@
 (module mods.util.lualine)
 
-(let [lualine (require :lualine)]
+(let [lualine (require :lualine)
+      gps (require :nvim-gps)]
+  (gps.setup {:depth 5})
+
   (lualine.setup {
     :options {
       :icons_enabled true
@@ -17,12 +20,13 @@
       :lualine_c [
           "diagnostics"
           { :sources [ "nvim_diagnostic"  "vim_lsp" ]}
+          { :sections [ "error" "warn" "info" "hint" ]}
           { :colored true }
           { :diagnostic_color { :error { :fg "#ff0000" } } }
       ]
-      :lualine_x ["filename"  "filetype"]
-      :lualine_y ["progress"]
-      :lualine_z ["location"]
+      :lualine_x [ gps.get_location {:cond gps.is_available } ]
+      :lualine_y ["filename"  "filetype"]
+      :lualine_z ["progress" "location"]
     }
     :inactive_sections {
       :lualine_a []

@@ -7,6 +7,8 @@
 (map ["n"] "<leader>Cf" "<cmd>edit $HOME/.config/nvim/<cr>")
 (map ["n"] "<leader>cf" "<cmd>tabedit $HOME/.config/nvim/<cr>")
 
+(map ["n"] "<leader>nn" "<cmd>NvimTreeToggle<cr>")
+
 (map ["n" "i" "v"] "<C-g>" "<cmd>echo expand('%:p') . ':' . line(\".\")<cr>")
 
 ;; open new file at current line in new tab
@@ -26,7 +28,9 @@
 (map ["i"] "jk" "<esc")
 (map ["i"] "jk" "<C-\\><C-n>")
 
-;; yank/past to clipboard - fix me: conflict with packerk
+;; yank/paste to/from clipboard - doesnt work in which-key
+(map ["n" "v"] "<leader>y" "\"+y")
+(map ["n"] "<leader>Y" "\"+Y")
 (map ["n" "v"] "<leader>p" "\"+p")
 (map ["n"] "<leader>P" "\"+P")
 (map ["x"] "<leader>p" "\"_dP")
@@ -47,7 +51,17 @@
 (map ["n"] "<C-k>" "<C-w>k")
 (map ["n"] "<C-l>" "<C-w>l")
 
-(map ["n"] "ß" "<cmd>set spell!<cr>")
+(map ["n"] "ß" "<cmd>set spell!<cr><cmd>set spell?<cr>")
+
+(map ["n"] "<leader>t" "<cmd>lua require('FTerm').toggle()<cr>")
+(map ["t"] "<leader>t" "<C-\\><C-n><cmd>lua require('FTerm').toggle()<cr>")
+
+;; keep visual while indenting left/right
+(map ["v" "s"] "<" "<gv")
+(map ["v" "s"] ">" ">gv")
+
+;; from normal to command mode with enter
+(map ["n"] "<cr>" ":")
 
 (fn toggle-theme []
   (if (= "dark" (. vim.o "background"))
@@ -83,7 +97,7 @@
       :name "find"
       :f ["<cmd>lua require('telescope.builtin').find_files()<cr>" "Find files"]
       :g ["<cmd>lua require('telescope.builtin').live_grep()<cr>" "Grep string"]
-      :s ["<cmd>lua require('telescope.builtin').grep_string()<cr" "Find string"]
+      :s ["<cmd>lua require('telescope.builtin').grep_string()<cr>" "Find string"]
       :z ["<cmd>lua require('telescope.builtin').grep_string({shorten_path = true, only_sort_text = true, search = ''})<cr>" "Fuzzy grep sring"]
       :b ["<cmd>lua require('telescope.builtin').buffers()<cr>" "Find buffers"]
       :c ["<cmd>lua require('telescope.builtin').command_history()<cr>" "Commands history"]
@@ -116,17 +130,12 @@
     :v ["<cmd>vsplit<cr>" "Split window vertically"]
     :s ["<cmd>split<cr>" "Split window horizontally"]
 
-    :y ["\"+y" "Yank to clipboard"]
-    :Y ["\"+Y" "Yank line to clipboard"]
-
     :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
     :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
 
     :zz ["<cmd>ZenMode<cr>" "Zen mode"]
   }
-  {
-    :prefix "<leader>"
-  }
+  { :prefix "<leader>" }
 )
 
 (which-key.register
@@ -139,8 +148,6 @@
       :C ["<cmd>PackerClean<cr>"   "Clean plugins"]
     }
   }
-  {
-    :prefix "<space>"
-  }
+  { :prefix "<space>" }
 )
 
