@@ -1,9 +1,8 @@
-(module mods.util.lualine)
+(module mods.ui.lualine)
 
 (let [lualine (require :lualine)
       gps (require :nvim-gps)]
   (gps.setup {:depth 5})
-
   (lualine.setup {
     :options {
       :icons_enabled true

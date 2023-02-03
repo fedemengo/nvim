@@ -1,10 +1,9 @@
 (module core)
-(import-macros
-  {
-    :opt-remove optremove
-  }
-  :zest.macros
-)
+(import-macros {
+  :opt-remove optremove
+  :opt-set optset
+  :opt-append optappend}
+  :zest.macros )
 
 ;; autocmd
 (when (= 1 (vim.fn.has "autocmd"))
@@ -18,8 +17,7 @@
 
   ;; delete empty space from the end of lines on every save
   (vim.cmd "autocmd BufWritePre * :%s/\\s\\+$//e")
-  (vim.cmd "autocmd InsertLeave * if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif")
-)
+  (vim.cmd "autocmd InsertLeave * if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif"))
 
 ;; leader key
 (set vim.g.mapleader ";")
@@ -67,16 +65,16 @@
 ;;(optremove iskeyword ["."])
 ;;(vim.o.iskeyword:remove ".")
 
-;; aniseed fennel to lua translation seems to be "broken" for string
-(set vim.o.list false)
-;(set vim.o.listchars {:tab "▸ " :space "⋅" :eol "↵"}) ;; see https://github.com/neovim/neovim/issues/15201#issuecomment-1407728303
+(set vim.o.list true)
+(optappend listchars "tab:▸ ")
+(optappend listchars "space:⋅")
+(optappend listchars "eol:↵")
 
 ;; undo dir
-(local undodir_path (.. (?. (vim.fn.environ) :HOME) "/.nvim/undo-dir/"))
-(if (= 0 (vim.fn.isdirectory undodir_path))
-  (vim.fn.mkdir undodir_path "p")
-  ;; directory exists
-)
+(local undodir_path (.. (os.getenv "HOME") "/.nvim/undo-dir/"))
+(when (= 0 (vim.fn.isdirectory undodir_path))
+  (vim.fn.mkdir undodir_path "p"))
+
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 

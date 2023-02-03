@@ -1,6 +1,6 @@
 (module mapping
-  {autoload {which-key which-key}}
-)
+  {autoload
+   {which-key which-key}})
 
 (local map vim.keymap.set)
 
@@ -16,15 +16,13 @@
   (let [line (vim.fn.line ".")
         col (vim.fn.col ".")]
     (vim.cmd "tabedit %")
-    (vim.api.nvim_win_set_cursor 0 [line (- col 1)]) ;; :h nvim_win_set_cursor()
-  )
-)
+    (vim.api.nvim_win_set_cursor 0 [line (- col 1)]))) ;; :h nvim_win_set_cursor()
+
 (fn opentab-at-location []
   (if (= 0 (length (vim.fn.expand "%")))
     (vim.cmd "tabedit") ;; open empty new tab
-    (open-and-move)     ;; open buf in new tab and move cursor
-  )
-)
+    (open-and-move)))   ;; open buf in new tab and move cursor
+
 (map ["n"] "<C-n>" opentab-at-location)
 (map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
 
@@ -82,9 +80,8 @@
 (fn toggle-theme []
   (if (= "dark" (. vim.o "background"))
     (set vim.o.background "light")
-    (set vim.o.background "dark")
-  )
-)
+    (set vim.o.background "dark")))
+
 (map ["n"] "†" toggle-theme)
 
 (fn open-web-commit []
@@ -93,16 +90,11 @@
         line (vim.fn.shellescape (vim.fn.line "."))]
     (vim.fn.execute (.. "!open-web-commit" " " path " " file " " line))
     (let [code (. vim.v "shell_error")]
-      (if (= 1 code)
+      (when (= 1 code)
         (print (.. path " is not a git repository"))
-        (if (= 2 code)
-          (print (.. path "/" file ":" line " was never committed"))
-          ;; ok otherwise
-        )
-      )
-    )
-  )
-)
+      (when (= 2 code)
+        (print (.. path "/" file ":" line " was never committed")))))))
+
 (map ["n"] "<leader>cu" open-web-commit)
 
 (which-key.register
@@ -115,40 +107,36 @@
       :z ["<cmd>lua require('telescope.builtin').grep_string({shorten_path = true, only_sort_text = true, search = ''})<cr>" "Fuzzy grep sring"]
       :b ["<cmd>lua require('telescope.builtin').buffers()<cr>" "Find buffers"]
       :c ["<cmd>lua require('telescope.builtin').command_history()<cr>" "Commands history"]
-      :e ["<cmd>lua require('telescope.builtin').diagnostics()<cr>" "Diagnostics"]
-    }
+      :e ["<cmd>lua require('telescope.builtin').diagnostics()<cr>" "Diagnostics"]}
     :g {
       :r ["<cmd>lua require('telescope.builtin').lsp_references()<cr>" "LSP references"]
       :i ["<cmd>lua require('telescope.builtin').lsp_implementations()<cr>" "LSP implementations"]
       :c ["<cmd>lua require('telescope.builtin').git_commits()<cr>" "Commit history"]
       :s ["<cmd>lua require('telescope.builtin').git_status()<cr>" "Git status"]
-      :S ["<cmd>lua require('telescope.builtin').git_stash()<cr>" "Git stashes"]
-    }
-    :<Esc> ["<cmd>silent! nohls<cr>"  "Clear search highlight"]
-  }
-)
+      :S ["<cmd>lua require('telescope.builtin').git_stash()<cr>" "Git stashes"]}
+    :<Esc> ["<cmd>silent! nohls<cr>"  "Clear search highlight"]})
+
+(fn zenmode []
+  (vim.cmd "ZenMode"))
 
 (which-key.register
   {
-    :b ["<cmd>Git toggle_current_line_blame<cr>" "Git blame"]
+    :b ["<cmd>Gitsigns toggle_current_line_blame<cr>" "Git blame"]
     :c {
       :w ["<cmd>lua vim.lsp.buf.rename()<cr>" "LSP rename"]
-      :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]
-    }
+      :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]}
     :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
     :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
     :f {
       :p ["<cmd>silent! let @+=expand(\"%:p\") . ':' . line(\".\")<cr>" "Copy file path"]
-      :q ["<cmd>qa<cr>" "Force quit"]
-    }
+      :q ["<cmd>qa<cr>" "Force quit"]}
     :h ["<cmd>tabmove -1<cr>" "Move tab to the left"]
     :l ["<cmd>tabmove +1<cr>" "Move tab to the right"]
     :s ["<cmd>split<cr>" "Split window horizontally"]
     :v ["<cmd>vsplit<cr>" "Split window vertically"]
-    :zz ["<cmd>ZenMode<cr>" "Zen mode"]
-  }
-  { :prefix "<leader>" }
-)
+    :zz [zenmode "Zen mode"]}
+  {
+   :prefix "<leader>" })
 
 (which-key.register
   {
@@ -157,9 +145,7 @@
       :i ["<cmd>PackerInstall<cr>" "Install plugins"]
       :u ["<cmd>PackerUpdate<cr>"  "Update plugins"]
       :c ["<cmd>PackerCompile<cr>" "Compile packer file"]
-      :C ["<cmd>PackerClean<cr>"   "Clean plugins"]
-    }
-  }
-  { :prefix "<space>" }
-)
+      :C ["<cmd>PackerClean<cr>"   "Clean plugins"]}}
+  {
+   :prefix "<space>" })
 

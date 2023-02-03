@@ -1,8 +1,9 @@
 (module startup)
 
-(require :util)
-(require :packs)
+(require :init) ;; this must be loaded first
+
 (require :core)
+(require :packs)
 (require :mapping)
 (require :misc)
 
