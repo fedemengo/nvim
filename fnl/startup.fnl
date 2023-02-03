@@ -1,9 +1,6 @@
 (module startup)
 
-(let [zest (require :zest)]
-  (zest.setup)
-)
-
+(require :util)
 (require :packs)
 (require :core)
 (require :mapping)
