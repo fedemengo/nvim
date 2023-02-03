@@ -12,7 +12,20 @@
 (map ["n" "i" "v"] "<C-g>" "<cmd>echo expand('%:p') . ':' . line(\".\")<cr>")
 
 ;; open new file at current line in new tab
-(map ["n"] "<C-n>" "mt<cmd>tabedit %<cr>`t")
+(fn open-and-move []
+  (let [line (vim.fn.line ".")
+        col (vim.fn.col ".")]
+    (vim.cmd "tabedit %")
+    (vim.api.nvim_win_set_cursor 0 [line (- col 1)]) ;; :h nvim_win_set_cursor()
+  )
+)
+(fn opentab-at-location []
+  (if (= 0 (length (vim.fn.expand "%")))
+    (vim.cmd "tabedit") ;; open empty new tab
+    (open-and-move)     ;; open buf in new tab and move cursor
+  )
+)
+(map ["n"] "<C-n>" opentab-at-location)
 (map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
 
 (map ["n"] "¡" "<cmd> lua require('bufferline').go_to_buffer(1, true)<cr>")
