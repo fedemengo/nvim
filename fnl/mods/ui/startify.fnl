@@ -3,6 +3,7 @@
 (set vim.g.startify_session_sort 1)
 (set vim.g.startify_files_number 8)
 (set vim.g.startify_bookmarks (vim.fn.systemlist "cut -sd' ' -f 2- ~/.nvim-bookmarks"))
+(set vim.g.startify_custom_header "startify#center(startify#fortune#cowsay())")
 
 (fn git-modified []
   (let [files (vim.fn.systemlist "git ls-files -m 2>/dev/null")]

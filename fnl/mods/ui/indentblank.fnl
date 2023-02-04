@@ -2,6 +2,5 @@
 
 (let [autopairs (require :indent_blankline)]
   (set vim.g.indent_blankline_buftype_exclude [ "terminal" "nofile" ])
-  (set vim.g.indent_blankline_filetype_exclude ["startify" "TelescopePrompt"])
-)
+  (set vim.g.indent_blankline_filetype_exclude ["startify" "TelescopePrompt"]))
 

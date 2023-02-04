@@ -42,7 +42,6 @@
       :f {
         :name "find"
         :f [builtin.find_files "Find files"]
-        :f [builtin.find_files "Find files"]
         :g [builtin.live_grep "Grep string"]
         :s [builtin.grep_string "Find string"]
         :z [(bind builtin.grep_string {:shorten_path true :only_sort_text true :search ""}) "Fuzzy grep sring"]
