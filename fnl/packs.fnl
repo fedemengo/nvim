@@ -85,7 +85,18 @@
         [:onsails/lspkind.nvim]
         [:L3MON4D3/LuaSnip]
         [:rafamadriz/friendly-snippets]
-        [:jose-elias-alvarez/null-ls.nvim]
-      ]
-      :mod :lsp.lsp
-  })
+        [:jose-elias-alvarez/null-ls.nvim]]
+      :mod :lsp.lsp })
+
+(local which-key (require :which-key))
+(which-key.register
+  {
+    :p {
+      :name "plugins"
+      :i [packer.install "Install plugins"]
+      :u [packer.update "Update plugins"]
+      :c [packer.compile "Compile packer file"]
+      :C [packer.clean "Clean plugins"]}}
+  {
+   :prefix "<space>" })
+

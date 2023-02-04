@@ -7,7 +7,7 @@
   (fn []
     (if (= (type cmds) :string)
       (vim.cmd cmds)
-      (each [_ cmd (pairs cmds)]
+      (each [_ cmd (ipairs cmds)]
         (vim.cmd cmd)))))
 
 (map ["n"] "<leader>Cf" (bindcmd "edit $HOME/.config/nvim/"))
@@ -18,16 +18,13 @@
 (map ["n" "i" "v"] "<C-g>" (bindcmd "echo expand('%:p') . ':' . line(\".\")"))
 
 ;; open new file at current line in new tab
-(fn open-and-move []
-  (let [line (vim.fn.line ".")
-        col (vim.fn.col ".")]
-    (vim.cmd "tabedit %")
-    (vim.api.nvim_win_set_cursor 0 [line (- col 1)]))) ;; :h nvim_win_set_cursor()
-
 (fn opentab-at-location []
   (if (= 0 (length (vim.fn.expand "%")))
     (vim.cmd "tabedit") ;; open empty new tab
-    (open-and-move)))   ;; open buf in new tab and move cursor
+    (let [line (vim.fn.line ".")
+          col (vim.fn.col ".")]
+      (vim.cmd "tabedit %")
+      (vim.api.nvim_win_set_cursor 0 [line (- col 1)])))) ;; :h nvim_win_set_cursor()
 
 (map ["n"] "<C-n>" opentab-at-location)
 (map ["n"] "<C-b>" (bindcmd ["tabnew" "Startify"]))
@@ -59,7 +56,7 @@
 (each [_ k (pairs [:h :j :k :l])]
   (map ["n"] (.. "<C-" k ">") (.. "<C-w>" k)))
 
-(map ["n"] "ß" (bindcmd ["set spell!" "set spell?"]))
+(map ["n"] "ß" (bindcmd ["set spell!" "set spell?"])) ;; <A-s>
 
 (map ["n"] "<leader>t" (bindcmd "lua require('FTerm').toggle()"))
 (map ["t"] "<leader>t" "<C-\\><C-n><cmd>lua require('FTerm').toggle()<cr>")
@@ -76,7 +73,7 @@
     (set vim.o.background "light")
     (set vim.o.background "dark")))
 
-(map ["n"] "†" toggle-theme)
+(map ["n"] "†" toggle-theme) ;; <A-t>
 
 (fn open-web-commit []
   (let [path (vim.fn.shellescape (vim.fn.expand "%:p:h"))
@@ -91,8 +88,7 @@
 
 (map ["n"] "<leader>cu" open-web-commit)
 
-(which-key.register
-  {:<Esc> [(bindcmd "silent! nohls")  "Clear search highlight"]})
+(which-key.register {:<Esc> [(bindcmd "silent! nohls")  "Clear search highlight"]})
 
 (which-key.register
   {
@@ -109,17 +105,5 @@
     :s [(bindcmd "split")      "Split window horizontally"]
     :v [(bindcmd "vsplit")     "Split window vertically"]
     :zz [(bindcmd "ZenMode") "Zen mode"]}
-  {
-   :prefix "<leader>" })
-
-(which-key.register
-  {
-    :p {
-      :name "plugins"
-      :i [(bindcmd "PackerInstall") "Install plugins"]
-      :u [(bindcmd "PackerUpdate")  "Update plugins"]
-      :c [(bindcmd "PackerCompile") "Compile packer file"]
-      :C [(bindcmd "PackerClean")   "Clean plugins"]}}
-  {
-   :prefix "<space>" })
+  { :prefix "<leader>" })
 
