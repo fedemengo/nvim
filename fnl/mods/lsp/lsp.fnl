@@ -121,5 +121,6 @@
   (nullls.setup {
     :sources [
       nullls.builtins.formatting.stylua
+      nullls.builtins.formatting.fnlfmt
       nullls.builtins.formatting.prettier]}))
 

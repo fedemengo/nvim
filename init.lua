@@ -9,17 +9,13 @@ local function ensure(user, repo)
     return false
 end
 
-local packer_bootstrap = ensure("wbthomason", "packer.nvim")
-require("packer").startup(function(use)
-  use("wbthomason/packer.nvim")
-  use("lewis6991/impatient.nvim")
-  use("Olical/aniseed")
-  use("tsbohc/zest.nvim")
+ensure("lewis6991", "impatient.nvim")
+ensure("Olical", "aniseed")
+ensure("tsbohc", "zest.nvim")
 
-  if packer_bootstrap then
+if ensure("wbthomason", "packer.nvim") then
     require("packer").sync()
-  end
-end)
+end
 
 require("impatient").enable_profile()
 
