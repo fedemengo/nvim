@@ -5,7 +5,7 @@
     luasnip luasnip
     lspkind lspkind
     mason mason
-    mason-lspconfig mason-lspconfig
+    masonlsp mason-lspconfig
     masonnullls mason-null-ls
     which-key which-key}})
 
@@ -48,7 +48,7 @@
   :sources [ {:name "path"} {:name "cmdline"}]})
 
 (mason.setup)
-(mason-lspconfig.setup {
+(masonlsp.setup {
   :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "sumneko_lua" "jsonls" "sqls" "pylsp" "jdtls"]
   :automatic_installation true})
 (masonnullls.setup {:automatic_setup true})
@@ -109,7 +109,7 @@
     :autostart true
     :filetypes ["c" "cpp" "cuda"]}})
 
-(let [get_servers (. mason-lspconfig :get_installed_servers)]
+(let [get_servers (. masonlsp :get_installed_servers)]
   (each [_ server (ipairs (get_servers))]
     (let [server_config (. lspconfig server)
           opts (or (. lspopts server) {})]

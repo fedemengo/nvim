@@ -2,9 +2,13 @@
   {autoload {packer packer}})
 
 (defn safe-require [mod]
-  (let [(ok? val-or-err) (pcall require (.. :mods. mod))]
-    (when (not ok?)
-      (print (.. "failed to load config for 'mods." mod "': " val-or-err)))))
+  (let [(ok? val-or-err) (pcall require mod)]
+    (if (not ok?)
+      (print (.. "failed to load config for '" mod "': err stack\n" val-or-err))
+      (let [loaded val-or-err] loaded))))
+
+(defn safe-mod-require [mod]
+  (safe-require (.. :mods "." mod)))
 
 (defn- use [...]
   (let [packs [...]]
@@ -13,20 +17,21 @@
             (for [i 1 (length packs) 2]
               (let [name (. packs i)                ;; plugin name
                     opts (. packs (+ i 1))]         ;; plugin opts
-                (-?> (. opts :mod) (safe-require))  ;; optional opts mods
+                (-?> (. opts :mod) (safe-mod-require))  ;; optional opts mods
                 (table.insert opts 1 name)
                 (use opts))))
        :config {:display {:open_fn (. (require :packer.util) :float)}}})))
 
 ;; setup is used for inline setup for modules that require no or {} arg
 (fn setup [...]
-    (let [in [...]
-          name (. in 1)
-          plugin (require name)]
-      (if (= 2 (length in))
-        (let [arg (. in 2)]
-          (plugin.setup arg))
-        (plugin.setup))))
+    (let [in [...]]
+      (let [name (. in 1)
+            plugin (safe-require name)]
+        (when plugin
+          (if (= 2 (length in))
+            (let [arg (. in 2)]
+              (plugin.setup arg))
+            (plugin.setup))))))
 
 (use
     ;; ensured
@@ -34,13 +39,14 @@
     :Olical/aniseed {}
     :lewis6991/impatient.nvim {}
     :tsbohc/zest.nvim {}
+    :NLKNguyen/papercolor-theme {}
 
     ;; utils
+    :nvim-telescope/telescope-fzf-native.nvim {:run "make" }
     :nvim-telescope/telescope.nvim {
       :requires [
         [:nvim-lua/popup.nvim]
-        [:nvim-lua/plenary.nvim]
-        [:nvim-telescope/telescope-fzf-native.nvim {:run "make" }]]
+        [:nvim-lua/plenary.nvim]]
       :mod :util.telescope }
     :folke/which-key.nvim {}
     :kevinhwang91/nvim-hlslens {:config (setup "hlslens") }
@@ -57,7 +63,6 @@
     :windwp/nvim-autopairs {}
 
     ;; theme
-    :NLKNguyen/papercolor-theme {}
     :folke/zen-mode.nvim {:mod :ui.zenmode }
     :nvim-lualine/lualine.nvim {:mod :ui.lualine }
     :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab }
@@ -72,8 +77,8 @@
       :requires [
         [:neovim/nvim-lspconfig]
         [:williamboman/mason.nvim]
-        [:jay-babu/mason-null-ls.nvim]
         [:williamboman/mason-lspconfig.nvim]
+        [:jay-babu/mason-null-ls.nvim]
 
         [:hrsh7th/nvim-cmp]
         [:hrsh7th/cmp-buffer]

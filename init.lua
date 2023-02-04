@@ -9,13 +9,11 @@ local function ensure(user, repo)
     return false
 end
 
+ensure("wbthomason", "packer.nvim")
 ensure("lewis6991", "impatient.nvim")
 ensure("Olical", "aniseed")
 ensure("tsbohc", "zest.nvim")
-
-if ensure("wbthomason", "packer.nvim") then
-    require("packer").sync()
-end
+ensure("NLKNguyen", "papercolor-theme")
 
 require("impatient").enable_profile()
 
