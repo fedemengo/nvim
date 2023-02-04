@@ -1,6 +1,7 @@
 (module mods.util.gitsigns)
 
-(let [gitsigns (require :gitsigns)]
+(let [gitsigns (require :gitsigns)
+      which-key (require :which-key)]
   (gitsigns.setup {
     :signs {
       :add { :hl "GitSignsAdd" :text "+" :numhl "GitSignsAddNr" :linehl "GitSignsAddLn" }
@@ -14,5 +15,8 @@
       :virt_text true
       :virt_text_pos "eol"
       :delay 100
-      :ignore_whitespace false}}))
+      :ignore_whitespace false}})
+  (which-key.register
+    { :b [gitsigns.toggle_current_line_blame "Toggle git blame"]}
+    { :prefix "<leader>" }))
 

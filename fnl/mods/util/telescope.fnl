@@ -1,7 +1,10 @@
 (module mods.util.telescope)
 
 (let [telescope (require :telescope)
-      actions (require :telescope.actions)]
+      actions (require :telescope.actions)
+      builtin (require :telescope.builtin)
+      which-key (require :which-key)
+      bind (fn [f args] (fn [] (f args)))]
   (telescope.setup {
     :defaults {
       :layout_strategy "vertical"
@@ -33,5 +36,23 @@
                   :sorter false })))}}}}
     :extensions {
       :fzf {:fuzzy true :override_generic_sorter true :override_file_sorter true :case_mode "smart_case" }}})
-  (telescope.load_extension "fzf"))
+  (telescope.load_extension "fzf")
+  (which-key.register
+    {
+      :f {
+        :name "find"
+        :f [builtin.find_files "Find files"]
+        :f [builtin.find_files "Find files"]
+        :g [builtin.live_grep "Grep string"]
+        :s [builtin.grep_string "Find string"]
+        :z [(bind builtin.grep_string {:shorten_path true :only_sort_text true :search ""}) "Fuzzy grep sring"]
+        :b [builtin.buffers "Find buffers"]
+        :c [builtin.command_history "Commands history"]
+        :e [builtin.diagnostics "Diagnostics"]}
+      :g {
+        :r [builtin.lsp_references "LSP references"]
+        :i [builtin.lsp_implementations "LSP implementations"]
+        :c [builtin.git_commits "Commit history"]
+        :s [builtin.git_status "Git status"]
+        :S [builtin.git_stash "Git stashes"]}}))
 

@@ -3,13 +3,19 @@
    {which-key which-key}})
 
 (local map vim.keymap.set)
+(fn bindcmd [cmds]
+  (fn []
+    (if (= (type cmds) :string)
+      (vim.cmd cmds)
+      (each [_ cmd (pairs cmds)]
+        (vim.cmd cmd)))))
 
-(map ["n"] "<leader>Cf" "<cmd>edit $HOME/.config/nvim/<cr>")
-(map ["n"] "<leader>cf" "<cmd>tabedit $HOME/.config/nvim/<cr>")
+(map ["n"] "<leader>Cf" (bindcmd "edit $HOME/.config/nvim/"))
+(map ["n"] "<leader>cf" (bindcmd "tabedit $HOME/.config/nvim/"))
 
-(map ["n"] "<leader>nn" "<cmd>NvimTreeToggle<cr>")
+(map ["n"] "<leader>nn" (bindcmd "NvimTreeToggle"))
 
-(map ["n" "i" "v"] "<C-g>" "<cmd>echo expand('%:p') . ':' . line(\".\")<cr>")
+(map ["n" "i" "v"] "<C-g>" (bindcmd "echo expand('%:p') . ':' . line(\".\")"))
 
 ;; open new file at current line in new tab
 (fn open-and-move []
@@ -24,19 +30,9 @@
     (open-and-move)))   ;; open buf in new tab and move cursor
 
 (map ["n"] "<C-n>" opentab-at-location)
-(map ["n"] "<C-b>" "<cmd>tabnew<cr><cmd>Startify<cr>")
+(map ["n"] "<C-b>" (bindcmd ["tabnew" "Startify"]))
 
-(map ["n"] "¡" "<cmd> lua require('bufferline').go_to_buffer(1, true)<cr>")
-(map ["n"] "™" "<cmd> lua require('bufferline').go_to_buffer(2, true)<cr>")
-(map ["n"] "£" "<cmd> lua require('bufferline').go_to_buffer(3, true)<cr>")
-(map ["n"] "¢" "<cmd> lua require('bufferline').go_to_buffer(4, true)<cr>")
-(map ["n"] "∞" "<cmd> lua require('bufferline').go_to_buffer(5, true)<cr>")
-(map ["n"] "§" "<cmd> lua require('bufferline').go_to_buffer(6, true)<cr>")
-(map ["n"] "¶" "<cmd> lua require('bufferline').go_to_buffer(7, true)<cr>")
-(map ["n"] "•" "<cmd> lua require('bufferline').go_to_buffer(8, true)<cr>")
-(map ["n"] "ª" "<cmd> lua require('bufferline').go_to_buffer(9, true)<cr>")
-
-(map ["i"] "jk" "<esc")
+(map ["i"] "jk" "<esc>")
 (map ["i"] "jk" "<C-\\><C-n>")
 
 ;; yank/paste to/from clipboard - doesnt work in which-key
@@ -57,17 +53,15 @@
 (map ["v"] "Y" "myY`y")
 
 ;; edit file under cursor
-(map ["n"] "gf" "<cmd>edit <cfile><cr>")
+(map ["n"] "gf" (bindcmd "edit <cfile>"))
 
 ;; quick movement between splits
-(map ["n"] "<C-h>" "<C-w>h")
-(map ["n"] "<C-j>" "<C-w>j")
-(map ["n"] "<C-k>" "<C-w>k")
-(map ["n"] "<C-l>" "<C-w>l")
+(each [_ k (pairs [:h :j :k :l])]
+  (map ["n"] (.. "<C-" k ">") (.. "<C-w>" k)))
 
-(map ["n"] "ß" "<cmd>set spell!<cr><cmd>set spell?<cr>")
+(map ["n"] "ß" (bindcmd ["set spell!" "set spell?"]))
 
-(map ["n"] "<leader>t" "<cmd>lua require('FTerm').toggle()<cr>")
+(map ["n"] "<leader>t" (bindcmd "lua require('FTerm').toggle()"))
 (map ["t"] "<leader>t" "<C-\\><C-n><cmd>lua require('FTerm').toggle()<cr>")
 
 ;; keep visual while indenting left/right
@@ -98,43 +92,23 @@
 (map ["n"] "<leader>cu" open-web-commit)
 
 (which-key.register
-  {
-    :f {
-      :name "find"
-      :f ["<cmd>lua require('telescope.builtin').find_files()<cr>" "Find files"]
-      :g ["<cmd>lua require('telescope.builtin').live_grep()<cr>" "Grep string"]
-      :s ["<cmd>lua require('telescope.builtin').grep_string()<cr>" "Find string"]
-      :z ["<cmd>lua require('telescope.builtin').grep_string({shorten_path = true, only_sort_text = true, search = ''})<cr>" "Fuzzy grep sring"]
-      :b ["<cmd>lua require('telescope.builtin').buffers()<cr>" "Find buffers"]
-      :c ["<cmd>lua require('telescope.builtin').command_history()<cr>" "Commands history"]
-      :e ["<cmd>lua require('telescope.builtin').diagnostics()<cr>" "Diagnostics"]}
-    :g {
-      :r ["<cmd>lua require('telescope.builtin').lsp_references()<cr>" "LSP references"]
-      :i ["<cmd>lua require('telescope.builtin').lsp_implementations()<cr>" "LSP implementations"]
-      :c ["<cmd>lua require('telescope.builtin').git_commits()<cr>" "Commit history"]
-      :s ["<cmd>lua require('telescope.builtin').git_status()<cr>" "Git status"]
-      :S ["<cmd>lua require('telescope.builtin').git_stash()<cr>" "Git stashes"]}
-    :<Esc> ["<cmd>silent! nohls<cr>"  "Clear search highlight"]})
-
-(fn zenmode []
-  (vim.cmd "ZenMode"))
+  {:<Esc> [(bindcmd "silent! nohls")  "Clear search highlight"]})
 
 (which-key.register
   {
-    :b ["<cmd>Gitsigns toggle_current_line_blame<cr>" "Git blame"]
     :c {
-      :w ["<cmd>lua vim.lsp.buf.rename()<cr>" "LSP rename"]
-      :a ["<cmd>lua vim.lsp.buf.code_action()<cr>" "Code actions"]}
+      :w [vim.lsp.buf.rename "LSP rename"]
+      :a [vim.lsp.buf.code_action "Code actions"]}
     :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
     :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
     :f {
-      :p ["<cmd>silent! let @+=expand(\"%:p\") . ':' . line(\".\")<cr>" "Copy file path"]
-      :q ["<cmd>qa<cr>" "Force quit"]}
-    :h ["<cmd>tabmove -1<cr>" "Move tab to the left"]
-    :l ["<cmd>tabmove +1<cr>" "Move tab to the right"]
-    :s ["<cmd>split<cr>" "Split window horizontally"]
-    :v ["<cmd>vsplit<cr>" "Split window vertically"]
-    :zz [zenmode "Zen mode"]}
+      :p [(bindcmd "silent! let @+=expand(\"%:p\") . ':' . line(\".\")") "Copy file path"]
+      :q [(bindcmd "qa") "Force quit"]}
+    :h [(bindcmd "tabmove -1") "Move tab to the left"]
+    :l [(bindcmd "tabmove +1") "Move tab to the right"]
+    :s [(bindcmd "split")      "Split window horizontally"]
+    :v [(bindcmd "vsplit")     "Split window vertically"]
+    :zz [(bindcmd "ZenMode") "Zen mode"]}
   {
    :prefix "<leader>" })
 
@@ -142,10 +116,10 @@
   {
     :p {
       :name "plugins"
-      :i ["<cmd>PackerInstall<cr>" "Install plugins"]
-      :u ["<cmd>PackerUpdate<cr>"  "Update plugins"]
-      :c ["<cmd>PackerCompile<cr>" "Compile packer file"]
-      :C ["<cmd>PackerClean<cr>"   "Clean plugins"]}}
+      :i [(bindcmd "PackerInstall") "Install plugins"]
+      :u [(bindcmd "PackerUpdate")  "Update plugins"]
+      :c [(bindcmd "PackerCompile") "Compile packer file"]
+      :C [(bindcmd "PackerClean")   "Clean plugins"]}}
   {
    :prefix "<space>" })
 
