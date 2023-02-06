@@ -66,6 +66,8 @@
     (which-key.register {
        "[d" [ vim.diagnostic.goto_prev                  "Prev diagnostic"]
        "]d" [ vim.diagnostic.goto_next                  "Next diagnostic"]
+       "[s" [ vim.diagnostic.show                       "Show diagnostics"]
+       "[h" [ vim.diagnostic.hide                       "Hide diagnostics"]
        :td  [ vim.lsp.buf.type_definition               "Type definition"]
        :gD  [ vim.lsp.buf.declaration                   "Goto declaration"]
        :gd  [ tbuiltin.lsp_definitions                  "Goto definition"]
