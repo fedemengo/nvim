@@ -1,6 +1,6 @@
 (module mapping
   {autoload
-   {which-key which-key}})
+   {wkey which-key}})
 
 (local map vim.keymap.set)
 
@@ -82,9 +82,9 @@
 
 (map ["n"] "<leader>cu" open-web-commit)
 
-(which-key.register {:<Esc> [(bindcmd "silent! nohls")  "Clear search highlight"]})
+(wkey.register {:<Esc> [(bindcmd "silent! nohls")  "Clear search highlight"]})
 
-(which-key.register
+(wkey.register
   {
     :c {
       :w [vim.lsp.buf.rename "LSP rename"]

@@ -1,8 +1,9 @@
-(module init)
+(module init {
+  autoload {
+    zest zest }})
 
 ;; load sensible macro
-(let [zest (require :zest)]
-  (zest.setup))
+(zest.setup)
 
 (fn remove [tab indx]
   (let [t tab] (table.remove t indx) t))

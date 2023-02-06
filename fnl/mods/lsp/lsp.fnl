@@ -4,10 +4,15 @@
     cmp_nvim_lsp cmp_nvim_lsp
     luasnip luasnip
     lspkind lspkind
+    lspsignature lsp_signature
+    lspconfig lspconfig
+    lsputil lspconfig/util
+    nullls null-ls
     mason mason
     masonlsp mason-lspconfig
     masonnullls mason-null-ls
-    which-key which-key}})
+    tbuiltin telescope.builtin
+    wkey which-key}})
 
 (cmp.setup {
   :snippet {
@@ -54,32 +59,28 @@
 (masonnullls.setup {:automatic_setup true})
 
 (local on_attach (fn [client buf]
-  (let [signature (require :lsp_signature)
-        tbuiltin (require :telescope.builtin)]
-    (vim.api.nvim_buf_set_option buf "omnifunc" "v:lua.vim.lsp.omnifunc")
-    (signature.on_attach {
-      :bind true
-      :handler_opts {:border "rounded"}
-      :hint_enable false
-    } buf)
-    (which-key.register {
-       "[d" [ vim.diagnostic.goto_prev                  "Prev diagnostic"]
-       "]d" [ vim.diagnostic.goto_next                  "Next diagnostic"]
-       "[s" [ vim.diagnostic.show                       "Show diagnostics"]
-       "[h" [ vim.diagnostic.hide                       "Hide diagnostics"]
-       :td  [ vim.lsp.buf.type_definition               "Type definition"]
-       :gD  [ vim.lsp.buf.declaration                   "Goto declaration"]
-       :gd  [ tbuiltin.lsp_definitions                  "Goto definition"]
-       :gi  [ tbuiltin.lsp_implementations              "LSP implementations"]
-       :gr  [ tbuiltin.lsp_references                   "Goto references"]
-       :go  [ vim.diagnostic.open_float                 "Show diagnostics"]
-       :K   [ vim.lsp.buf.hover                         "Hover"]
-       :fk  [ (bindf vim.lsp.buf.format {:async true} ) "Format code"]}
-      {:noremap true :silent false :buffer buf }))))
+  (vim.api.nvim_buf_set_option buf "omnifunc" "v:lua.vim.lsp.omnifunc")
+  (lspsignature.on_attach {
+    :bind true
+    :handler_opts {:border "rounded"}
+    :hint_enable false
+  } buf)
+  (wkey.register {
+     "[d" [ vim.diagnostic.goto_prev                  "Prev diagnostic"]
+     "]d" [ vim.diagnostic.goto_next                  "Next diagnostic"]
+     "[s" [ vim.diagnostic.show                       "Show diagnostics"]
+     "[h" [ vim.diagnostic.hide                       "Hide diagnostics"]
+     :td  [ vim.lsp.buf.type_definition               "Type definition"]
+     :gD  [ vim.lsp.buf.declaration                   "Goto declaration"]
+     :gd  [ tbuiltin.lsp_definitions                  "Goto definition"]
+     :gi  [ tbuiltin.lsp_implementations              "LSP implementations"]
+     :gr  [ tbuiltin.lsp_references                   "Goto references"]
+     :go  [ vim.diagnostic.open_float                 "Show diagnostics"]
+     :K   [ vim.lsp.buf.hover                         "Hover"]
+     :fk  [ (bindf vim.lsp.buf.format {:async true} ) "Format code"]}
+    {:noremap true :silent false :buffer buf })))
 
-(local lspconfig (require :lspconfig))
-(local lsputil (require :lspconfig/util))
-(local lspopts {
+(local lsp_opt {
   :gopls {
     :autostart true
     :cmd ["gopls" "serve"]
@@ -113,15 +114,14 @@
 (let [get_servers (. masonlsp :get_installed_servers)]
   (each [_ server (ipairs (get_servers))]
     (let [server_config (. lspconfig server)
-          opts (or (. lspopts server) {})]
+          opts (or (. lsp_opt server) {})]
       (tset opts :on_attach on_attach)
       (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
       (server_config.setup opts))))
 
-(let [nullls (require :null-ls)]
-  (nullls.setup {
-    :sources [
-      nullls.builtins.formatting.stylua
-      nullls.builtins.formatting.fnlfmt
-      nullls.builtins.formatting.prettier]}))
+(nullls.setup {
+  :sources [
+    nullls.builtins.formatting.stylua
+    nullls.builtins.formatting.fnlfmt
+    nullls.builtins.formatting.prettier]})
 

@@ -1,5 +1,7 @@
 (module packs
-  {autoload {packer packer}})
+  {autoload {
+    packer packer
+    wkey which-key}})
 
 (defn safe-require [mod]
   (let [(ok? val-or-err) (pcall require mod)]
@@ -95,8 +97,7 @@
         [:jose-elias-alvarez/null-ls.nvim]]
       :mod :lsp.lsp })
 
-(local which-key (require :which-key))
-(which-key.register
+(wkey.register
   {
     :p {
       :name "plugins"
