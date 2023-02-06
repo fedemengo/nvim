@@ -3,8 +3,7 @@
 (let [telescope (require :telescope)
       actions (require :telescope.actions)
       builtin (require :telescope.builtin)
-      which-key (require :which-key)
-      bind (fn [f args] (fn [] (f args)))]
+      which-key (require :which-key)]
   (telescope.setup {
     :defaults {
       :layout_strategy "vertical"
@@ -44,7 +43,7 @@
         :f [builtin.find_files "Find files"]
         :g [builtin.live_grep "Grep string"]
         :s [builtin.grep_string "Find string"]
-        :z [(bind builtin.grep_string {:shorten_path true :only_sort_text true :search ""}) "Fuzzy grep sring"]
+        :z [(bindf builtin.grep_string {:shorten_path true :only_sort_text true :search ""}) "Fuzzy grep sring"]
         :b [builtin.buffers "Find buffers"]
         :c [builtin.command_history "Commands history"]
         :e [builtin.diagnostics "Diagnostics"]}

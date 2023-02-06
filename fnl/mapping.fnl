@@ -3,12 +3,6 @@
    {which-key which-key}})
 
 (local map vim.keymap.set)
-(fn bindcmd [cmds]
-  (fn []
-    (if (= (type cmds) :string)
-      (vim.cmd cmds)
-      (each [_ cmd (ipairs cmds)]
-        (vim.cmd cmd)))))
 
 (map ["n"] "<leader>Cf" (bindcmd "edit $HOME/.config/nvim/"))
 (map ["n"] "<leader>cf" (bindcmd "tabedit $HOME/.config/nvim/"))

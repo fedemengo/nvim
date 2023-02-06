@@ -55,8 +55,7 @@
 
 (local on_attach (fn [client buf]
   (let [signature (require :lsp_signature)
-        tbuiltin (require :telescope.builtin)
-        bind (fn [f args] (fn [] (f args)))]
+        tbuiltin (require :telescope.builtin)]
     (vim.api.nvim_buf_set_option buf "omnifunc" "v:lua.vim.lsp.omnifunc")
     (signature.on_attach {
       :bind true
@@ -75,7 +74,7 @@
        :gr  [ tbuiltin.lsp_references                   "Goto references"]
        :go  [ vim.diagnostic.open_float                 "Show diagnostics"]
        :K   [ vim.lsp.buf.hover                         "Hover"]
-       :fk  [ (bind vim.lsp.buf.format {:async true} )  "Format code"]}
+       :fk  [ (bindf vim.lsp.buf.format {:async true} ) "Format code"]}
       {:noremap true :silent false :buffer buf }))))
 
 (local lspconfig (require :lspconfig))
