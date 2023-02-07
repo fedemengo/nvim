@@ -23,4 +23,6 @@
 (fmap :¶ ["n"] (bufferline.go_to_buffer 7 true))
 (fmap :• ["n"] (bufferline.go_to_buffer 8 true))
 (fmap :ª ["n"] (bufferline.go_to_buffer 9 true))
+(fmap :œ ["n"] (bufferline.cycle -1))
+(fmap :∑ ["n"] (bufferline.cycle 1))
 
