@@ -2,3 +2,4 @@ lua/
 autoload/
 plugin/
 
+.DS_Store
