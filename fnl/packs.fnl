@@ -1,7 +1,6 @@
 (module packs
   {autoload {
-    packer packer
-    wkey which-key}})
+    packer packer }})
 
 (defn safe-require [mod]
   (let [(ok? val-or-err) (pcall require mod)]
@@ -50,13 +49,13 @@
         [:nvim-lua/popup.nvim]
         [:nvim-lua/plenary.nvim]]
       :mod :util.telescope }
-    :folke/which-key.nvim {}
+    :folke/which-key.nvim {:config (setup "which-key") }
     :kevinhwang91/nvim-hlslens {:config (setup "hlslens") }
     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank }
     :norcalli/nvim-colorizer.lua {:config (setup "colorizer") }
     :numToStr/FTerm.nvim {:mod :util.fterm }
     :SmiteshP/nvim-gps {}
-    :nvim-tree/nvim-tree.lua {:config (setup "nvim-tree") }
+    :nvim-tree/nvim-tree.lua {:mod :util.nvim-tree }
 
     :jdhao/better-escape.vim {:mod :util.better-escape }
     :mhinz/vim-startify {:mod :ui.startify }
@@ -97,14 +96,8 @@
         [:jose-elias-alvarez/null-ls.nvim]]
       :mod :lsp.lsp })
 
-(wkey.register
-  {
-    :p {
-      :name "plugins"
-      :i [packer.install "Install plugins"]
-      :u [packer.update "Update plugins"]
-      :c [packer.compile "Compile packer file"]
-      :C [packer.clean "Clean plugins"]}}
-  {
-   :prefix "<space>" })
+(map ["n"] "<space>pi" packer.install {:desc "Install plugins"})
+(map ["n"] "<space>pu" packer.update  {:desc "Update plugins"})
+(map ["n"] "<space>pc" packer.compile {:desc "Compile plugins"})
+(map ["n"] "<space>pC" packer.clean   {:desc "Clean plugins"})
 

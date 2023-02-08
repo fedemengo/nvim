@@ -11,8 +11,7 @@
     mason mason
     masonlsp mason-lspconfig
     masonnullls mason-null-ls
-    tbuiltin telescope.builtin
-    wkey which-key}})
+    tbuiltin telescope.builtin }})
 
 (cmp.setup {
   :snippet {
@@ -54,7 +53,7 @@
 
 (mason.setup)
 (masonlsp.setup {
-  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "sumneko_lua" "jsonls" "sqls" "pylsp" "jdtls"]
+  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "sumneko_lua" "jsonls" "sqls" "pylsp" "jdtls" "rust_analyzer"]
   :automatic_installation true})
 (masonnullls.setup {:automatic_setup true})
 
@@ -65,20 +64,21 @@
     :handler_opts {:border "rounded"}
     :hint_enable false
   } buf)
-  (wkey.register {
-     "[d" [ vim.diagnostic.goto_prev                  "Prev diagnostic"]
-     "]d" [ vim.diagnostic.goto_next                  "Next diagnostic"]
-     "[s" [ vim.diagnostic.show                       "Show diagnostics"]
-     "[h" [ vim.diagnostic.hide                       "Hide diagnostics"]
-     :td  [ vim.lsp.buf.type_definition               "Type definition"]
-     :gD  [ vim.lsp.buf.declaration                   "Goto declaration"]
-     :gd  [ tbuiltin.lsp_definitions                  "Goto definition"]
-     :gi  [ tbuiltin.lsp_implementations              "LSP implementations"]
-     :gr  [ tbuiltin.lsp_references                   "Goto references"]
-     :go  [ vim.diagnostic.open_float                 "Show diagnostics"]
-     :K   [ vim.lsp.buf.hover                         "Hover"]
-     :fk  [ (bindf vim.lsp.buf.format {:async true} ) "Format code"]}
-    {:noremap true :silent false :buffer buf })))
+  (map ["n"] "<leader>cw" vim.lsp.buf.rename                        {:desc "Rename symbol [LSP]"})
+  (map ["n"] "<leader>ca" vim.lsp.buf.code_action                   {:desc "Code actions [LSP]"})
+  (map ["n"] "td"         vim.lsp.buf.type_definition               {:desc "Type definition [LSP]"})
+  (map ["n"] "gD"         vim.lsp.buf.declaration                   {:desc "Go to declaration [LSP]"})
+  (map ["n"] "gd"         vim.lsp.buf.definition                    {:desc "Go to definition [LSP]"})
+  (map ["n"] "K"          vim.lsp.buf.hover                         {:desc "Hover [LSP]"})
+  (map ["n"] "fk"         (bindf vim.lsp.buf.format {:async true})  {:desc "Format code [LSP]"})
+  (map ["n"] "gi"         tbuiltin.lsp_implementations              {:desc "Implementations [LSP]"})
+  (map ["n"] "gr"         tbuiltin.lsp_references                   {:desc "References [LSP]"})
+  (map ["n"] "fe"         tbuiltin.diagnostics                      {:desc "Diagnostics"})
+  (map ["n"] "[d"         vim.diagnostic.goto_prev                  {:desc "Prev diagnostic"})
+  (map ["n"] "]d"         vim.diagnostic.goto_prev                  {:desc "Next diagnostic"})
+  (map ["n"] "[s"         vim.diagnostic.show                       {:desc "Show diagnostic"})
+  (map ["n"] "[h"         vim.diagnostic.hide                       {:desc "Hide diagnostic"})
+  (map ["n"] "go"         vim.diagnostic.open_float                 {:desc "Open diagnostic"})))
 
 (local lsp_opt {
   :gopls {

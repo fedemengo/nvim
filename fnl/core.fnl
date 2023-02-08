@@ -78,8 +78,8 @@
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 
-(set vim.o.background "dark")
+(vim.cmd "hi VertSplit guibg=bg guifg=fg")
 
 (vim.cmd "colorscheme PaperColor")
-(vim.cmd "hi VertSplit guibg=bg guifg=fg")
+(set vim.o.background "dark")
 

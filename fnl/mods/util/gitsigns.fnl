@@ -1,7 +1,6 @@
 (module mods.util.gitsigns
   {autoload {
-    gitsigns gitsigns
-    wkey which-key }})
+    gitsigns gitsigns }})
 
 (gitsigns.setup {
   :signs {
@@ -18,7 +17,5 @@
     :delay 100
     :ignore_whitespace false}})
 
-(wkey.register
-  { :b [gitsigns.toggle_current_line_blame "Toggle git blame"]}
-  { :prefix "<leader>" })
+(map ["n"] "<leader>b" gitsigns.toggle_current_line_blame {:desc "Toggle git blame line"})
 

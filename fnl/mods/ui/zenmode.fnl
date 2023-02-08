@@ -23,3 +23,5 @@
   :on_open onopen
   :on_close onclose})
 
+(map ["n"] "<leader>zz" zenmode.toggle {:desc "Toggle zen mode"})
+

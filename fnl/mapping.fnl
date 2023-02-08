@@ -1,15 +1,4 @@
-(module mapping
-  {autoload
-   {wkey which-key}})
-
-(local map vim.keymap.set)
-
-(map ["n"] "<leader>Cf" (bindcmd "edit $HOME/.config/nvim/"))
-(map ["n"] "<leader>cf" (bindcmd "tabedit $HOME/.config/nvim/"))
-
-(map ["n"] "<leader>nn" (bindcmd "NvimTreeToggle"))
-
-(map ["n" "i" "v"] "<C-g>" (bindcmd "echo expand('%:p') . ':' . line(\".\")"))
+(module mapping)
 
 ;; open new file at current line in new tab
 (fn opentab-at-location []
@@ -20,54 +9,14 @@
       (vim.cmd "tabedit %")
       (vim.api.nvim_win_set_cursor 0 [line (- col 1)])))) ;; :h nvim_win_set_cursor()
 
-(map ["n"] "<C-n>" opentab-at-location)
-(map ["n"] "<C-b>" (bindcmd ["tabnew" "Startify"]))
-
-(map ["i"] "jk" "<esc>")
-(map ["i"] "jk" "<C-\\><C-n>")
-
-;; yank/paste to/from clipboard - doesnt work in which-key
-(map ["n" "v"] "<leader>y" "\"+y")
-(map ["n"] "<leader>Y" "\"+Y")
-(map ["n" "v"] "<leader>p" "\"+p")
-(map ["n"] "<leader>P" "\"+P")
-(map ["x"] "<leader>p" "\"_dP")
-
-;; disable arrows
-(map ["n" "i" "v" "x" "c"] "<up>" "<nop>")
-(map ["n" "i" "v" "x" "c"] "<down>" "<nop>")
-(map ["n" "i" "v" "x" "c"] "<left>" "<nop>")
-(map ["n" "i" "v" "x" "c"] "<right>" "<nop>")
-
-;; keep cursor at location after visual yank
-(map ["v"] "y" "myy`y")
-(map ["v"] "Y" "myY`y")
-
-;; edit file under cursor
-(map ["n"] "gf" (bindcmd "edit <cfile>"))
-
-;; quick movement between splits
-(each [_ k (pairs [:h :j :k :l])]
-  (map ["n"] (.. "<C-" k ">") (.. "<C-w>" k)))
-
-(map ["n"] "ß" (bindcmd ["set spell!" "set spell?"])) ;; <A-s>
-
-(map ["n"] "<leader>t" (bindcmd "lua require('FTerm').toggle()"))
-(map ["t"] "<leader>t" "<C-\\><C-n><cmd>lua require('FTerm').toggle()<cr>")
-
-;; keep visual while indenting left/right
-(map ["v" "s"] "<" "<gv")
-(map ["v" "s"] ">" ">gv")
-
-;; from normal to command mode with enter
-(map ["n"] "<cr>" ":")
+(fn opentab-at-location-and-back []
+  (opentab-at-location)
+  (vim.cmd "tabprev"))
 
 (fn toggle-theme []
   (if (= "dark" (. vim.o "background"))
     (set vim.o.background "light")
     (set vim.o.background "dark")))
-
-(map ["n"] "†" toggle-theme) ;; <A-t>
 
 (fn open-web-commit []
   (let [path (vim.fn.shellescape (vim.fn.expand "%:p:h"))
@@ -80,24 +29,58 @@
       (when (= 2 code)
         (print (.. path "/" file ":" line " was never committed")))))))
 
-(map ["n"] "<leader>cu" open-web-commit)
+;; disable arrows
+(map ["n" "i" "v" "x" "c"] "<up>"     "<nop>")
+(map ["n" "i" "v" "x" "c"] "<down>"   "<nop>")
+(map ["n" "i" "v" "x" "c"] "<left>"   "<nop>")
+(map ["n" "i" "v" "x" "c"] "<right>"  "<nop>")
 
-(wkey.register {:<Esc> [(bindcmd "silent! nohls")  "Clear search highlight"]})
+(map ["i"] "jk" "<esc>")
+(map ["i"] "jk" "<C-\\><C-n>")
 
-(wkey.register
-  {
-    :c {
-      :w [vim.lsp.buf.rename "LSP rename"]
-      :a [vim.lsp.buf.code_action "Code actions"]}
-    :d64 ["c<C-r>=system('base64 --decode', @\")<cr><esc>" "Decode selection in base64"]
-    :e64 ["c<C-r>=system('base64', @\")<cr><esc>" "Encode selection in base64"]
-    :f {
-      :p [(bindcmd "silent! let @+=expand(\"%:p\") . ':' . line(\".\")") "Copy file path"]
-      :q [(bindcmd "qa") "Force quit"]}
-    :h [(bindcmd "tabmove -1") "Move tab to the left"]
-    :l [(bindcmd "tabmove +1") "Move tab to the right"]
-    :s [(bindcmd "split")      "Split window horizontally"]
-    :v [(bindcmd "vsplit")     "Split window vertically"]
-    :zz [(bindcmd "ZenMode") "Zen mode"]}
-  { :prefix "<leader>" })
+;; quick movement between splits
+(each [_ k (pairs [:h :j :k :l])]
+  (map ["n"] (.. "<C-" k ">") (.. "<C-w>" k)))
+
+;; from normal to command mode with enter
+(map ["n"] "<cr>" ":")
+
+;; keep cursor at location after visual yank
+(map ["v"] "y" "myy`y")
+(map ["v"] "Y" "myY`y")
+
+;; keep visual while indenting left/right
+(map ["v" "s"] "<" "<gv")
+(map ["v" "s"] ">" ">gv")
+(map ["n"]          "gf"          (bindcmd "edit <cfile>")                                        {:desc "Edit file under cursor"})
+
+(map ["n"]          "<Esc>"       (bindcmd "silent! nohls")                                       {:desc "Clear search highlight"})
+(map ["n"]          "<C-s>"       (bindcmd ["tabnew" "Startify"])                                 {:desc "Launch Startify"})
+(map ["n" "i" "v"]  "<C-g>"       (bindcmd "echo expand('%:p') . ':' . line(\".\")")              {:desc "Print full path of current buffer"})
+(map ["n"]          "<A-s>"       (bindcmd ["set spell!" "set spell?"])                           {:desc "Toggle spell and print status"})
+(map ["n"]          "<A-t>"       toggle-theme                                                    {:desc "Toggle dark/light theme"})
+(map ["n"]          "<C-b>"       opentab-at-location-and-back                                    {:desc "Open buf in new tab"})
+(map ["n"]          "<C-n>"       opentab-at-location                                             {:desc "Open buf in new tab with focus"})
+
+(map ["n"]          "<leader>cu"  open-web-commit                                                 {:desc "Open commit in browser"})
+(map ["n"]          "<leader>Cf"  (bindcmd "edit $HOME/.config/nvim/")                            {:desc "Open nvim config in buffer"})
+(map ["n"]          "<leader>cf"  (bindcmd "tabedit $HOME/.config/nvim/")                         {:desc "Open nvim config in new tab"})
+(map ["n"]          "<leader>fp"  (bindcmd "silent! let @+=expand(\"%:p\") . ':' . line(\".\")")  {:desc "Copy file path"})
+
+(map ["n"]          "<leader>h"   (bindcmd "tabmove -1")                                          {:desc "Move tab to the left"})
+(map ["n"]          "<leader>l"   (bindcmd "tabmove +1")                                          {:desc "Move tab to the right"})
+(map ["n"]          "<leader>s"   (bindcmd "split")                                               {:desc "Split window horizontally"})
+(map ["n"]          "<leader>v"   (bindcmd "vsplit")                                              {:desc "Split window vertically"})
+(map ["n"]          "<leader>q"   (bindcmd "qa")                                                  {:desc "Quit all"})
+(map ["n"]          "<leader>Q"   (bindcmd "qa!")                                                 {:desc "Force quit all"})
+(map ["n"]          "<leader>t"   (bindcmd "lua require('FTerm').toggle()")                       {:desc "Toggle FTerm"})
+(map ["t"]          "<leader>t"   "<C-\\><C-n><cmd>lua require('FTerm').toggle()<cr>"             {:desc "Toggle FTerm"})
+(map ["n" "v"]      "<leader>d64" "c<C-r>=system('base64 --decode', @\")<cr><esc>"                {:desc "Decode selection from base64"})
+(map ["n" "v"]      "<leader>e64" "c<C-r>=system('base64', @\")<cr><esc>"                         {:desc "Encode selection in base64"})
+
+(map ["n" "v"]      "<leader>y"   "\"+y"                                                          {:desc "Yank to clipboard"})
+(map ["n"]          "<leader>Y"   "\"+Y"                                                          {:desc "Yank line to clipboard"})
+(map ["n" "v"]      "<leader>p"   "\"+p"                                                          {:desc "Paste from clipboard after cursor"})
+(map ["n"]          "<leader>P"   "\"+P"                                                          {:desc "Paste from clipboard before cursor"})
+(map ["x"]          "<leader>p"   "\"_dP")
 

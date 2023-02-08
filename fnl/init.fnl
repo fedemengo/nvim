@@ -17,6 +17,8 @@
   (fn [lst]
     (remove lst 1)))
 
+(global map vim.keymap.set)
+
 (global bindcmd (fn [cmds]
   (fn []
     (if (= (type cmds) :string)
@@ -26,4 +28,12 @@
 
 (global bindf (fn [f args]
   (fn [] (f args))))
+
+(global merge-table (fn [a b]
+  (let [t {}]
+    (each [key val (pairs a)]
+      (tset t key val))
+    (each [key val (pairs b)]
+      (tset t key val))
+  t)))
 
