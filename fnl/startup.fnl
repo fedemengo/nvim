@@ -4,6 +4,6 @@
 
 (require :core)
 (require :mapping)
-(require :packs)
+(require :plugins)
 (require :misc)
 

@@ -1,4 +1,4 @@
-(module packs
+(module plugins
   {autoload {
     packer packer }})
 
@@ -12,16 +12,23 @@
   (safe-require (.. :mods "." mod)))
 
 (defn- use [...]
-  (let [packs [...]]
+  (let [packs [...]
+        pack_path (.. (vim.fn.stdpath "data" ) "/site/pack/packer/start/")]
     (packer.startup
       {1 (fn [use]
             (for [i 1 (length packs) 2]
               (let [name (. packs i)                ;; plugin name
-                    opts (. packs (+ i 1))]         ;; plugin opts
+                    opts (. packs (+ i 1))          ;; plugin opts
+                    plugin (. (vim.fn.split name "/") 2)
+                    doc_path (.. plugin "/doc")]
                 (-?> (. opts :mod) (safe-mod-require))  ;; optional opts mods
                 (table.insert opts 1 name)
-                (use opts))))
-       :config {:display {:open_fn (. (require :packer.util) :float)}}})))
+                (use opts)
+                (when (= 0 (vim.fn.empty (vim.fn.glob doc_path))) ;; load docs
+                  (vim.cmd (.. "helptags " doc_path))))))
+       :config {
+        :display {
+          :open_fn (. (require :packer.util) :float)}}})))
 
 ;; setup is used for inline setup for modules that require no or {} arg
 (fn setup [...]
