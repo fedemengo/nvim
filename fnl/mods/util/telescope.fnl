@@ -65,3 +65,6 @@
 (map ["n"] "gs" (bindf builtin.git_status ivy_config)           {:desc "Git status"})
 (map ["n"] "gS" (bindf builtin.git_stash ivy_config)            {:desc "Git stashes"})
 
+(map ["n"] "gi" (bindf builtin.lsp_implementations {})  {:desc "Implementations [LSP]"})
+(map ["n"] "gr" (bindf builtin.lsp_references {})       {:desc "References [LSP]"})
+(map ["n"] "fe" (bindf builtin.diagnostics ivy_config)          {:desc "Diagnostics"})
