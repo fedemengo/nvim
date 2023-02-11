@@ -19,15 +19,17 @@
     (set vim.o.background "dark")))
 
 (fn open-web-commit []
-  (let [path (vim.fn.shellescape (vim.fn.expand "%:p:h"))
-        file (vim.fn.shellescape (vim.fn.expand "%:t"))
-        line (vim.fn.shellescape (vim.fn.line "."))]
-    (vim.fn.execute (.. "!open-web-commit" " " path " " file " " line))
+  (let [path (vim.fn.expand "%:p:h")
+        file (vim.fn.expand "%:t")
+        line (vim.fn.line ".")
+        safe_path (vim.fn.shellescape path)
+        safe_file (vim.fn.shellescape file)
+        safe_line (vim.fn.shellescape line)]
+    (vim.fn.execute (.. "!open-web-commit" " " safe_path " " safe_file " " safe_line))
     (let [code (. vim.v "shell_error")]
-      (when (= 1 code)
-        (print (.. path " is not a git repository"))
-      (when (= 2 code)
-        (print (.. path "/" file ":" line " was never committed")))))))
+      (match code
+        1 (print (.. path " is not a git repository"))
+        2 (print (.. path "/" file ":" line " was never committed"))))))
 
 ;; disable arrows
 (map [:n :i :v :x :c] :<up>     :<nop>)
