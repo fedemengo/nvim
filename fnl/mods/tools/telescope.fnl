@@ -1,4 +1,4 @@
-(module mods.util.telescope
+(module mods.tools.telescope
   { autoload {
     telescope telescope
     utils telescope.utils

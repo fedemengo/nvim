@@ -1,4 +1,4 @@
-(module mods.util.gitsigns
+(module mods.tools.gitsigns
   {autoload {
     gitsigns gitsigns }})
 

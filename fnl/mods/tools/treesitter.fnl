@@ -1,4 +1,4 @@
-(module mods.util.treesitter {
+(module mods.tools.treesitter {
   autoload {
     conf nvim-treesitter.configs }})
 

@@ -1,4 +1,4 @@
-(module mods.util.better-escape)
+(module mods.tools.better-escape)
 
 (local interval 200)
 

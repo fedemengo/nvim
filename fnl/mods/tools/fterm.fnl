@@ -1,4 +1,4 @@
-(module mods.util.fterm
+(module mods.tools.fterm
   {autoload {
     fterm FTerm}})
 

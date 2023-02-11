@@ -55,16 +55,16 @@
       :requires [
         [:nvim-lua/popup.nvim]
         [:nvim-lua/plenary.nvim]]
-      :mod :util.telescope }
+      :mod :tools.telescope }
     :folke/which-key.nvim {:config (setup "which-key") }
     :kevinhwang91/nvim-hlslens {:config (setup "hlslens") }
     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank }
     :norcalli/nvim-colorizer.lua {:config (setup "colorizer") }
-    :numToStr/FTerm.nvim {:mod :util.fterm }
+    :numToStr/FTerm.nvim {:mod :tools.fterm }
     :SmiteshP/nvim-gps {}
-    :nvim-tree/nvim-tree.lua {:mod :util.nvim-tree }
+    :nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree }
 
-    :jdhao/better-escape.vim {:mod :util.better-escape }
+    :jdhao/better-escape.vim {:mod :tools.better-escape }
     :mhinz/vim-startify {:mod :ui.startify }
     :karb94/neoscroll.nvim {:mod :ui.neoscroll }
     :ggandor/leap.nvim {:config (setup "leap" {}) }
@@ -78,9 +78,9 @@
         [:nvim-tree/nvim-web-devicons]] :mod :ui.tab }
 
     ;; programming
-    :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :util.treesitter }
+    :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter }
     :fatih/vim-go {:run ":GoUpdateBinaries" }
-    :lewis6991/gitsigns.nvim {:mod :util.gitsigns }
+    :lewis6991/gitsigns.nvim {:mod :tools.gitsigns }
     :ray-x/lsp_signature.nvim {}
 
     :VonHeikemen/lsp-zero.nvim {

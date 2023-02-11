@@ -1,4 +1,4 @@
-(module mods.util.nvim-tree
+(module mods.tools.nvim-tree
   {autoload {
     tree nvim-tree
     api nvim-tree.api}})
