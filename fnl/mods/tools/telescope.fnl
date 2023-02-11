@@ -11,9 +11,7 @@
   :defaults {
     :layout_strategy "bottom_pane"
     :layout_config {
-      :preview_width 0.7
-      :width 30
-      :height 50 }
+      :preview_width 0.7 }
     :file_ignore_patterns [
       ".git/" "node_modules/" ".npm/" "*[Cc]ache/" "*-cache*"
       "*.tags*" "*.gemtags*" "*.csv" "*.tsv" "*.tmp*"
@@ -56,16 +54,17 @@
 
 (local fzf_conf_with_theme (merge-table ivy_config fuzzy_search_opt))
 
-(fn with-count [f]
+(fn with-count [f prompt]
   (fn [args]
     (var back "")
     (for [i 1 vim.v.count]  ;; h v:count
       (set back (.. back "/..")))
-    (f (merge-table (merge-table ivy_config {:cwd (.. (utils.buffer_dir) back)}) args))))
+    (var cwd (vim.fn.resolve (.. (utils.buffer_dir) back)))
+    (f (merge-table (merge-table ivy_config {:cwd cwd :prompt_title (.. prompt " in " cwd)}) args))))
 
-(map [:n] :ff (with-count builtin.find_files)                         {:desc "Find files"})
-(map [:n] :hf (bindf (with-count builtin.find_files) {:hidden true})  {:desc "Find hidden files"})
-(map [:n] :fg (with-count builtin.live_grep)                          {:desc "Grep string"})
+(map [:n] :ff (with-count builtin.find_files "Find files")                         {:desc "Find files"})
+(map [:n] :hf (bindf (with-count builtin.find_files "Find files") {:hidden true})  {:desc "Find hidden files"})
+(map [:n] :fg (with-count builtin.live_grep "Grep string")                          {:desc "Grep string"})
 (map [:n] :fs (bindf builtin.grep_string ivy_config)                  {:desc "Find string"})
 (map [:n] :fz (bindf builtin.grep_string fzf_conf_with_theme)         {:desc "Fuzzy grep string"})
 (map [:n] :fb (bindf builtin.buffers ivy_config)                      {:desc "Buffer list"})
