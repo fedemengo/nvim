@@ -26,14 +26,18 @@
       (each [_ cmd (ipairs cmds)]
         (vim.cmd cmd))))))
 
-(global bindf (fn [f args]
-  (fn [] (f args))))
-
 (global merge-table (fn [a b]
   (let [t {}]
-    (each [key val (pairs a)]
-      (tset t key val))
-    (each [key val (pairs b)]
-      (tset t key val))
+    (when a
+      (each [key val (pairs a)]
+        (tset t key val)))
+    (when b
+      (each [key val (pairs b)]
+        (tset t key val)))
   t)))
+
+(global bindf
+  (fn [f f-args]
+    (fn [call-args]
+      (f (merge-table f-args call-args)))))
 
