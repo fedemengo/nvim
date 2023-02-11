@@ -17,7 +17,9 @@
 
   ;; delete empty space from the end of lines on every save
   (vim.cmd "autocmd BufWritePre * :%s/\\s\\+$//e")
-  (vim.cmd "autocmd InsertLeave * if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif"))
+  (vim.cmd "autocmd InsertLeave * if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif")
+
+  (vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ..."))
 
 ;; leader key
 (set vim.g.mapleader ";")
@@ -78,8 +80,7 @@
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 
-(vim.cmd "hi VertSplit guibg=bg guifg=fg")
-
+(vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")
 (vim.cmd "colorscheme PaperColor")
 (set vim.o.background "dark")
 

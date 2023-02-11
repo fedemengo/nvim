@@ -8,3 +8,4 @@
     :height 0.9
     :width 0.9 }})
 
+(map [:n] :<leader>t  fterm.toggle  {:desc "Toggle FTerm"})

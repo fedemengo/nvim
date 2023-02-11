@@ -6,7 +6,8 @@
 (zest.setup)
 
 (fn remove [tab indx]
-  (let [t tab] (table.remove t indx) t))
+  (table.remove tab indx)
+  tab)
 
 ;; car and cdr to let the magic begin
 (global car
@@ -40,4 +41,9 @@
   (fn [f f-args]
     (fn [call-args]
       (f (merge-table f-args call-args)))))
+
+
+(require :core)
+(require :mapping)
+(require :plugins)
 

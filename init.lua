@@ -19,7 +19,7 @@ ensure("NLKNguyen", "papercolor-theme")
 require("impatient").enable_profile()
 
 vim.g["aniseed#env"] = {
-  module = "startup",
+  module = "init",
   compile = true
 }
 

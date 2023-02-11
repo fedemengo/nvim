@@ -5,5 +5,5 @@
 
 (tree.setup)
 
-(map ["n"] "<leader>nn" api.tree.toggle {:desc "Toggle NvimTree"} )
+(map [:n :i] :<leader>nn api.tree.toggle {:desc "Toggle NvimTree"} )
 

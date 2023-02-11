@@ -6,7 +6,7 @@
   (let [(ok? val-or-err) (pcall require mod)]
     (if (not ok?)
       (print (.. "failed to load config for '" mod "': err stack\n" val-or-err))
-      (let [loaded val-or-err] loaded))))
+      val-or-err)))
 
 (defn safe-mod-require [mod]
   (safe-require (.. :mods "." mod)))
@@ -103,8 +103,8 @@
         [:jose-elias-alvarez/null-ls.nvim]]
       :mod :lsp.lsp })
 
-(map ["n"] "<space>pi" packer.install {:desc "Install plugins"})
-(map ["n"] "<space>pu" packer.update  {:desc "Update plugins"})
-(map ["n"] "<space>pc" packer.compile {:desc "Compile plugins"})
-(map ["n"] "<space>pC" packer.clean   {:desc "Clean plugins"})
+(map [:n] :<space>pi packer.install {:desc "Install plugins"})
+(map [:n] :<space>pu packer.update  {:desc "Update plugins"})
+(map [:n] :<space>pc packer.compile {:desc "Compile plugins"})
+(map [:n] :<space>pC packer.clean   {:desc "Clean plugins"})
 
