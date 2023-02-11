@@ -1,6 +1,7 @@
 (module mods.util.telescope
   { autoload {
     telescope telescope
+    utils telescope.utils
     builtin telescope.builtin
     actions telescope.actions
     themes telescope.themes
@@ -55,17 +56,25 @@
 
 (local fzf_conf_with_theme (merge-table ivy_config fuzzy_search_opt))
 
-(map [:n] :ff (bindf builtin.find_files ivy_config)           {:desc "Find files"})
-(map [:n] :fg (bindf builtin.live_grep ivy_config)            {:desc "Grep string"})
-(map [:n] :fs (bindf builtin.grep_string ivy_config)          {:desc "Find string"})
-(map [:n] :fz (bindf builtin.grep_string fzf_conf_with_theme) {:desc "Fuzzy grep string"})
-(map [:n] :fb (bindf builtin.buffers ivy_config)              {:desc "Buffer list"})
-(map [:n] :fc (bindf builtin.command_history ivy_config)      {:desc "Commands history"})
-(map [:n] :gc (bindf builtin.git_commits ivy_config)          {:desc "Commit history"})
-(map [:n] :gs (bindf builtin.git_status ivy_config)           {:desc "Git status"})
-(map [:n] :gS (bindf builtin.git_stash ivy_config)            {:desc "Git stashes"})
+(fn with-count [f]
+  (fn [args]
+    (var back "")
+    (for [i 1 vim.v.count]  ;; h v:count
+      (set back (.. back "/..")))
+    (f (merge-table (merge-table ivy_config {:cwd (.. (utils.buffer_dir) back)}) args))))
 
-(map [:n] :gi (bindf builtin.lsp_implementations ivy_config)  {:desc "Implementations [LSP]"})
-(map [:n] :gr (bindf builtin.lsp_references ivy_config)       {:desc "References [LSP]"})
-(map [:n] :fe (bindf builtin.diagnostics ivy_config)          {:desc "Diagnostics"})
+(map [:n] :ff (with-count builtin.find_files)                         {:desc "Find files"})
+(map [:n] :hf (bindf (with-count builtin.find_files) {:hidden true})  {:desc "Find hidden files"})
+(map [:n] :fg (with-count builtin.live_grep)                          {:desc "Grep string"})
+(map [:n] :fs (bindf builtin.grep_string ivy_config)                  {:desc "Find string"})
+(map [:n] :fz (bindf builtin.grep_string fzf_conf_with_theme)         {:desc "Fuzzy grep string"})
+(map [:n] :fb (bindf builtin.buffers ivy_config)                      {:desc "Buffer list"})
+(map [:n] :fc (bindf builtin.command_history ivy_config)              {:desc "Commands history"})
+(map [:n] :gc (bindf builtin.git_commits ivy_config)                  {:desc "Commit history"})
+(map [:n] :gs (bindf builtin.git_status ivy_config)                   {:desc "Git status"})
+(map [:n] :gS (bindf builtin.git_stash ivy_config)                    {:desc "Git stashes"})
+
+(map [:n] :gi (bindf builtin.lsp_implementations ivy_config)          {:desc "Implementations [LSP]"})
+(map [:n] :gr (bindf builtin.lsp_references ivy_config)               {:desc "References [LSP]"})
+(map [:n] :fe (bindf builtin.diagnostics ivy_config)                  {:desc "Diagnostics"})
 
