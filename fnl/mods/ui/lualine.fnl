@@ -25,12 +25,5 @@
         { :diagnostic_color { :error { :fg "#ff0000" } } }]
     :lualine_x [ gps.get_location {:cond gps.is_available }]
     :lualine_y ["filename"  "filetype"]
-    :lualine_z ["progress" "location"]}
-  :inactive_sections {
-    :lualine_a []
-    :lualine_b []
-    :lualine_c ["filename"]
-    :lualine_x []
-    :lualine_y ["progress"]
-    :lualine_z ["location"] }})
+    :lualine_z ["progress" "location"]}})
 

@@ -2,9 +2,6 @@
   autoload {
     bufferline bufferline }})
 
-(import-macros { :def-keymap-fn fmap }
-  :zest.macros )
-
 (bufferline.setup {
   :options {
     :mode "tabs"
@@ -14,15 +11,15 @@
     :show_buffer_close_icons false
     :diagnostics "nvim_lsp"}})
 
-(fmap :<A-1> ["n"] (bufferline.go_to_buffer 1 true))
-(fmap :<A-2> ["n"] (bufferline.go_to_buffer 2 true))
-(fmap :<A-3> ["n"] (bufferline.go_to_buffer 3 true))
-(fmap :<A-4> ["n"] (bufferline.go_to_buffer 4 true))
-(fmap :<A-5> ["n"] (bufferline.go_to_buffer 5 true))
-(fmap :<A-6> ["n"] (bufferline.go_to_buffer 6 true))
-(fmap :<A-7> ["n"] (bufferline.go_to_buffer 7 true))
-(fmap :<A-8> ["n"] (bufferline.go_to_buffer 8 true))
-(fmap :<A-9> ["n"] (bufferline.go_to_buffer 9 true))
-(fmap :<A-q> ["n"] (bufferline.cycle -1))
-(fmap :<A-w> ["n"] (bufferline.cycle 1))
+(map [:n :i :v :x] :<A-1> (bindf bufferline.go_to_buffer 1 true))
+(map [:n :i :v :x] :<A-2> (bindf bufferline.go_to_buffer 2 true))
+(map [:n :i :v :x] :<A-3> (bindf bufferline.go_to_buffer 3 true))
+(map [:n :i :v :x] :<A-4> (bindf bufferline.go_to_buffer 4 true))
+(map [:n :i :v :x] :<A-5> (bindf bufferline.go_to_buffer 5 true))
+(map [:n :i :v :x] :<A-6> (bindf bufferline.go_to_buffer 6 true))
+(map [:n :i :v :x] :<A-7> (bindf bufferline.go_to_buffer 7 true))
+(map [:n :i :v :x] :<A-8> (bindf bufferline.go_to_buffer 8 true))
+(map [:n :i :v :x] :<A-9> (bindf bufferline.go_to_buffer 9 true))
+(map [:n :i :v :x] :<A-q> (bindf bufferline.cycle -1))
+(map [:n :i :v :x] :<A-w> (bindf bufferline.cycle 1))
 

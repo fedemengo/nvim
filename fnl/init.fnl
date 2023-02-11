@@ -20,13 +20,6 @@
 
 (global map vim.keymap.set)
 
-(global bindcmd (fn [cmds]
-  (fn []
-    (if (= (type cmds) :string)
-      (vim.cmd cmds)
-      (each [_ cmd (ipairs cmds)]
-        (vim.cmd cmd))))))
-
 (global merge-table (fn [a b]
   (let [t {}]
     (when a
@@ -38,10 +31,19 @@
   t)))
 
 (global bindf
-  (fn [f f-args]
-    (fn [call-args]
-      (f (merge-table f-args call-args)))))
+  (fn [...]
+    (let [f-args [...]  ;; first argument is function, then n args
+          f (car f-args)
+          args (cdr f-args)]
+      (fn [call-args]
+        (f (unpack (merge-table args call-args)))))))
 
+(global bindcmd (fn [cmds]
+  (fn []
+    (if (= (type cmds) :string)
+      (vim.cmd cmds)
+      (each [_ cmd (ipairs cmds)]
+        (vim.cmd cmd))))))
 
 (require :core)
 (require :mapping)

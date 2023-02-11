@@ -11,6 +11,7 @@
   :defaults {
     :layout_strategy "bottom_pane"
     :layout_config {
+      :scroll_speed 8
       :preview_width 0.7 }
     :file_ignore_patterns [
       ".git/" "node_modules/" ".npm/" "*[Cc]ache/" "*-cache*"
@@ -50,7 +51,7 @@
       :prompt ["" "" "" "" "" "" "" ""]
       :results [""]
       :preview ["" "" "" "│" "" "" "" ""]}
-    :preview_width 0.65 }))
+    :preview_width 0.7 }))
 
 (local fzf_conf_with_theme (merge-table ivy_config fuzzy_search_opt))
 
@@ -62,18 +63,18 @@
     (var cwd (vim.fn.resolve (.. (utils.buffer_dir) back)))
     (f (merge-table (merge-table ivy_config {:cwd cwd :prompt_title (.. prompt " in " cwd)}) args))))
 
-(map [:n] :ff (with-count builtin.find_files "Find files")                         {:desc "Find files"})
-(map [:n] :hf (bindf (with-count builtin.find_files "Find files") {:hidden true})  {:desc "Find hidden files"})
+(map [:n] :ff (with-count builtin.find_files "Find files")                          {:desc "Find files"})
+(map [:n] :fh (bindf (with-count builtin.find_files "Find files") {:hidden true})   {:desc "Find hidden files"})
 (map [:n] :fg (with-count builtin.live_grep "Grep string")                          {:desc "Grep string"})
-(map [:n] :fs (bindf builtin.grep_string ivy_config)                  {:desc "Find string"})
-(map [:n] :fz (bindf builtin.grep_string fzf_conf_with_theme)         {:desc "Fuzzy grep string"})
-(map [:n] :fb (bindf builtin.buffers ivy_config)                      {:desc "Buffer list"})
-(map [:n] :fc (bindf builtin.command_history ivy_config)              {:desc "Commands history"})
-(map [:n] :gc (bindf builtin.git_commits ivy_config)                  {:desc "Commit history"})
-(map [:n] :gs (bindf builtin.git_status ivy_config)                   {:desc "Git status"})
-(map [:n] :gS (bindf builtin.git_stash ivy_config)                    {:desc "Git stashes"})
+(map [:n] :fs (bindf builtin.grep_string ivy_config)                                {:desc "Find string"})
+(map [:n] :fz (bindf builtin.grep_string fzf_conf_with_theme)                       {:desc "Fuzzy grep string"})
+(map [:n] :fb (bindf builtin.buffers ivy_config)                                    {:desc "Buffer list"})
+(map [:n] :fc (bindf builtin.command_history ivy_config)                            {:desc "Commands history"})
+(map [:n] :gc (bindf builtin.git_commits ivy_config)                                {:desc "Commit history"})
+(map [:n] :gs (bindf builtin.git_status ivy_config)                                 {:desc "Git status"})
+(map [:n] :gS (bindf builtin.git_stash ivy_config)                                  {:desc "Git stashes"})
 
-(map [:n] :gi (bindf builtin.lsp_implementations ivy_config)          {:desc "Implementations [LSP]"})
-(map [:n] :gr (bindf builtin.lsp_references ivy_config)               {:desc "References [LSP]"})
-(map [:n] :fe (bindf builtin.diagnostics ivy_config)                  {:desc "Diagnostics"})
+(map [:n] :gi (bindf builtin.lsp_implementations ivy_config)                        {:desc "Implementations [LSP]"})
+(map [:n] :gr (bindf builtin.lsp_references ivy_config)                             {:desc "References [LSP]"})
+(map [:n] :fe (bindf builtin.diagnostics ivy_config)                                {:desc "Diagnostics"})
 

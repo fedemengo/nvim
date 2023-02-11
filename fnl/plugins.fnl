@@ -50,13 +50,13 @@
     :NLKNguyen/papercolor-theme {}
 
     ;; utils
+    :folke/which-key.nvim {:config (setup "which-key") }
     :nvim-telescope/telescope-fzf-native.nvim {:run "make" }
     :nvim-telescope/telescope.nvim {
       :requires [
         [:nvim-lua/popup.nvim]
         [:nvim-lua/plenary.nvim]]
       :mod :tools.telescope }
-    :folke/which-key.nvim {:config (setup "which-key") }
     :kevinhwang91/nvim-hlslens {:config (setup "hlslens") }
     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank }
     :norcalli/nvim-colorizer.lua {:config (setup "colorizer") }

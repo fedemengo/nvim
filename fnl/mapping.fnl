@@ -23,13 +23,15 @@
         file (vim.fn.expand "%:t")
         line (vim.fn.line ".")
         safe_path (vim.fn.shellescape path)
-        safe_file (vim.fn.shellescape file)
-        safe_line (vim.fn.shellescape line)]
-    (vim.fn.execute (.. "!open-web-commit" " " safe_path " " safe_file " " safe_line))
-    (let [code (. vim.v "shell_error")]
-      (match code
-        1 (print (.. path " is not a git repository"))
-        2 (print (.. path "/" file ":" line " was never committed"))))))
+        safe_file (vim.fn.shellescape file)]
+    (vim.fn.execute (.. "!open-web-commit " safe_path " " safe_file " " line))
+    (match vim.v.shell_error
+      1 (print (.. path " is not a git repository"))
+      2 (print (.. path "/" file ":" line " was never committed")))))
+
+;; search with s instead of f
+(map [:n] :s :f)
+(map [:n] :S :F)
 
 ;; disable arrows
 (map [:n :i :v :x :c] :<up>     :<nop>)
