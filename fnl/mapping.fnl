@@ -86,3 +86,7 @@
 (map [:n]       :<leader>P   "\"+P"                                                          {:desc "Paste from clipboard before cursor"})
 (map [:x]       :<leader>p   "\"_dP")
 
+;; https://github.com/folke/which-key.nvim#%EF%B8%8F-configuration
+;; this is discouraged, but hey https://xkcd.com/1172
+(map [:n] :f (bindcmd "WhichKey f"))
+
