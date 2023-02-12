@@ -1,5 +1,11 @@
 (module init)
 
+(fn tlen [t]
+  (var c 0)
+  (each [_ _ (pairs t)]
+    (set c (+ 1 c)))
+  c)
+
 ;; car and cdr to let the magic begin
 (global car
   (fn [lst]
@@ -7,8 +13,13 @@
 
 (global cdr
   (fn [lst]
-    (table.remove lst 1)
-    lst))
+    (local t [])
+    (each [k v (ipairs lst)]
+      (tset t k v))
+    (table.remove t 1)
+    (if (= (length lst) (tlen lst)) ;; lst is an array
+      t
+      nil)))
 
 (global map vim.keymap.set)
 

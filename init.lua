@@ -12,7 +12,6 @@ end
 ensure("wbthomason", "packer.nvim")
 ensure("lewis6991", "impatient.nvim")
 ensure("Olical", "aniseed")
-ensure("tsbohc", "zest.nvim")
 
 ensure("NLKNguyen", "papercolor-theme")
 
