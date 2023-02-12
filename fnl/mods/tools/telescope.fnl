@@ -63,6 +63,7 @@
     (var cwd (vim.fn.resolve (.. (utils.buffer_dir) back)))
     (f (merge-table (merge-table ivy_config {:cwd cwd :prompt_title (.. prompt " in " cwd)}) args))))
 
+(map [:n] :fr (bindf builtin.resume {:initial_mode :normal})                        {:desc "Resume last search"})
 (map [:n] :ff (with-count builtin.find_files "Find files")                          {:desc "Find files"})
 (map [:n] :fh (bindf (with-count builtin.find_files "Find files") {:hidden true})   {:desc "Find hidden files"})
 (map [:n] :fg (with-count builtin.live_grep "Grep string")                          {:desc "Grep string"})
