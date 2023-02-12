@@ -9,6 +9,15 @@
 
 (telescope.setup {
   :defaults {
+    :vimgrep_arguments [
+      "rg"
+      "--color=never"
+      "--no-heading"
+      "--with-filename"
+      "--line-number"
+      "--column"
+      "--smart-case"
+      "--only-matching" ]
     :layout_strategy "bottom_pane"
     :layout_config {
       :scroll_speed 8
@@ -48,10 +57,11 @@
 (local ivy_config
   (themes.get_ivy {
     :borderchars {
-      :prompt ["" "" "" "" "" "" "" ""]
+      :prompt ["─" "" "" "" "─" "─" "" ""]
       :results [""]
-      :preview ["" "" "" "│" "" "" "" ""]}
-    :preview_width 0.7 }))
+      :preview ["" "" "" "" "" "" "" ""]}
+    :preview_width 0.7
+    :preview_title "" }))
 
 (local fzf_conf_with_theme (merge-table ivy_config fuzzy_search_opt))
 
