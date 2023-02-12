@@ -46,7 +46,6 @@
     :wbthomason/packer.nvim {}
     :Olical/aniseed {}
     :lewis6991/impatient.nvim {}
-    :tsbohc/zest.nvim {}
     :NLKNguyen/papercolor-theme {}
 
     ;; utils

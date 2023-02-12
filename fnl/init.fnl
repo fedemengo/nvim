@@ -1,13 +1,4 @@
-(module init {
-  autoload {
-    zest zest }})
-
-;; load sensible macro
-(zest.setup)
-
-(fn remove [tab indx]
-  (table.remove tab indx)
-  tab)
+(module init)
 
 ;; car and cdr to let the magic begin
 (global car
@@ -16,7 +7,8 @@
 
 (global cdr
   (fn [lst]
-    (remove lst 1)))
+    (table.remove lst 1)
+    lst))
 
 (global map vim.keymap.set)
 
