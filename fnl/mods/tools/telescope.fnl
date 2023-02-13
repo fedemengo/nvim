@@ -68,7 +68,7 @@
     ivy_config
     fuzzy_search_opts))
 
-(local lsp_theme
+(local lsp_opts_theme
   (merge-table
     ivy_config
     {:show_line false
@@ -88,11 +88,25 @@
             :prompt_title (.. (. opts :prompt_title) " in " cwd)})
          args))))
 
+(fn with-bufnr [f opts?]
+  (fn []
+    (var opts (or opts? {}))
+    (var bufnr (vim.fn.bufnr))
+    (f (merge-table
+         opts
+         {:bufnr bufnr}))))
+
 (local themed_count_find_files
   (with-count builtin.find_files {:prompt_title "Find files"}))
 
 (local themed_count_live_grep
   (with-count builtin.live_grep {:prompt_title "Grep string"}))
+
+(local themed_bufnr_lsp_impl
+  (with-bufnr builtin.lsp_implementations lsp_opts_theme))
+
+(local themed_bufnr_lsp_refs
+  (with-bufnr builtin.lsp_references lsp_opts_theme))
 
 (map [:n] :fr (bindf builtin.resume {:initial_mode :normal})  {:desc "Resume last search"})
 (map [:n] :ff themed_count_find_files                         {:desc "Find files"})
@@ -106,7 +120,7 @@
 (map [:n] :gs (bindf builtin.git_status ivy_config)           {:desc "Git status"})
 (map [:n] :gS (bindf builtin.git_stash ivy_config)            {:desc "Git stashes"})
 
-(map [:n] :gi (bindf builtin.lsp_implementations lsp_theme)   {:desc "Implementations [LSP]"})
-(map [:n] :gr (bindf builtin.lsp_references lsp_theme)        {:desc "References [LSP]"})
+(map [:n] :gi themed_bufnr_lsp_impl                           {:desc "Implementations [LSP]"})
+(map [:n] :gr themed_bufnr_lsp_refs                           {:desc "References [LSP]"})
 (map [:n] :fe (bindf builtin.diagnostics ivy_config)          {:desc "Diagnostics"})
 

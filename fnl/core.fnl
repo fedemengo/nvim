@@ -11,6 +11,8 @@
   ;; delete empty space from the end of lines on every save
   (vim.cmd "autocmd BufWritePre * :%s/\\s\\+$//e")
   (vim.cmd "autocmd InsertLeave * if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif")
+
+  (vim.cmd "autocmd User TelescopePreviewerLoaded setlocal number")
   ;; load all go mods
   (vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ...")
   ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
