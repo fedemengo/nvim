@@ -111,6 +111,9 @@
 (local themed_bufnr_lsp_refs
   (with-bufnr builtin.lsp_references lsp_opts_theme))
 
+(local themed_bufnr_lsp_defs
+  (with-bufnr builtin.lsp_definitions lsp_opts_theme))
+
 (map [:n] :fr (bindf builtin.resume {:initial_mode :normal})  {:desc "Resume last search"})
 (map [:n] :ff themed_count_find_files                         {:desc "Find files"})
 (map [:n] :fh (bindf themed_count_find_files {:hidden true})  {:desc "Find hidden files"})
@@ -125,6 +128,7 @@
 
 (map [:n] :gi themed_bufnr_lsp_impl                           {:desc "Implementations [LSP]"})
 (map [:n] :gr themed_bufnr_lsp_refs                           {:desc "References [LSP]"})
+(map [:n] :gd themed_bufnr_lsp_defs                           {:desc "Definitions [LSP]"})
 (map [:n] :fd (bindf builtin.diagnostics ivy_config)          {:desc "Diagnostics"})
 (map [:n] :fe (bindf builtin.diagnostics diag_err_theme)      {:desc "Diagnostics [ERR]"})
 
