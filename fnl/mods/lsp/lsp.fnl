@@ -93,8 +93,10 @@
           :nilness true
           :unusedparams true
           :unusedwrite true
+          :unusedvariable true
+          :shadow true
           :useany true
-          :fillstruct false}
+          :fieldalignment true}
         :codelenses {
           :gc_details true
           :generate true
