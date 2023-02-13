@@ -90,11 +90,9 @@
 
 (fn with-bufnr [f opts?]
   (fn []
-    (var opts (or opts? {}))
-    (var bufnr (vim.fn.bufnr))
     (f (merge-table
-         opts
-         {:bufnr bufnr}))))
+         opts?
+         {:bufnr (vim.fn.bufnr)}))))
 
 (local themed_count_find_files
   (with-count builtin.find_files {:prompt_title "Find files"}))

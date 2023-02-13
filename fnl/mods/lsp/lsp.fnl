@@ -54,7 +54,7 @@
 
 (mason.setup)
 (masonlsp.setup {
-  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "sumneko_lua" "jsonls" "sqls" "pylsp" "jdtls" "rust_analyzer"]
+  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "lua_ls" "jsonls" "sqls" "pylsp" "jdtls" "rust_analyzer"]
   :automatic_installation true})
 (masonnullls.setup {:automatic_setup true})
 
@@ -103,7 +103,7 @@
           :test true}
         :staticcheck true
         :usePlaceholders true}}}
-  :sumneko_lua {
+  :lua_ls {
     :settings {
       :Lua {:diagnostics {:globals ["vim"]}}}}
   :clangd {
