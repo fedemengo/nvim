@@ -74,6 +74,11 @@
     {:show_line false
      :jump_type :never}))
 
+(local diag_err_theme
+  (merge-table
+    ivy_config
+    {:severity "error"}))
+
 (fn with-count [f opts?]
   (fn [args]
     (var opts (or opts? {}))
@@ -120,5 +125,6 @@
 
 (map [:n] :gi themed_bufnr_lsp_impl                           {:desc "Implementations [LSP]"})
 (map [:n] :gr themed_bufnr_lsp_refs                           {:desc "References [LSP]"})
-(map [:n] :fe (bindf builtin.diagnostics ivy_config)          {:desc "Diagnostics"})
+(map [:n] :fd (bindf builtin.diagnostics ivy_config)          {:desc "Diagnostics"})
+(map [:n] :fe (bindf builtin.diagnostics diag_err_theme)      {:desc "Diagnostics [ERR]"})
 

@@ -96,7 +96,7 @@
           :unusedvariable true
           :shadow true
           :useany true
-          :fieldalignment true}
+          :fieldalignment false}
         :codelenses {
           :gc_details true
           :generate true
