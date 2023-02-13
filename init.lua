@@ -15,6 +15,7 @@ ensure("lewis6991", "impatient.nvim")
 ensure("Olical", "aniseed")
 
 ensure("NLKNguyen", "papercolor-theme")
+ensure("fedemengo", "github-nvim-theme")
 
 require("impatient").enable_profile()
 

@@ -16,7 +16,7 @@
   ;; load all go mods
   (vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ...")
   ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
-  (vim.cmd "autocmd FileType fennel :set lisp iskeyword-=."))
+  (vim.cmd "autocmd FileType fennel :set lisp iskeyword-=_ iskeyword-=."))
 
 (set vim.g.mapleader ";")
 
@@ -74,7 +74,8 @@
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 
-(vim.cmd "colorscheme PaperColor")
+(vim.cmd "colorscheme github_dimmed")
+;;(vim.cmd "colorscheme PaperColor")
 (set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")
