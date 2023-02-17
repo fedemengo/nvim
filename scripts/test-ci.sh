@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-TESTFILE="$PWD/test.fnl"
+TESTFILE="$PWD/nvim/test.fnl"
 
 cat > $TESTFILE << EOF
 (var vim {
@@ -9,9 +9,9 @@ cat > $TESTFILE << EOF
 
 EOF
 
-cat "$PWD/fnl/init.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
+cat "$PWD/nvim/fnl/init.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
 
-cat "$PWD/test/test.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
+cat "$PWD/nvim/test/test.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
 
 fennel --raw-errors --globals "*" $TESTFILE
 
