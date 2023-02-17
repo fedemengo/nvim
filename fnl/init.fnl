@@ -9,15 +9,17 @@
 ;; car and cdr to let the magic begin
 (global car
   (fn [lst]
+    "Returns the first item of the list"
     (. lst 1)))
 
 (global cdr
   (fn [lst]
+    "Returns the part of the list that follows the first item or nil if <arg> is not a list"
     (local t [])
     (each [k v (ipairs lst)]
-      (tset t k v))
-    (table.remove t 1)
-    (if (= (length lst) (tlen lst)) ;; lst is an array
+      (when (> k 1)
+        (tset t (- k 1) v)))
+    (if (= (length lst) (tlen lst)) ;; lst is an array - it has only numeric keys
       t
       nil)))
 
@@ -41,12 +43,13 @@
       (fn [call-args]
         (f (unpack (merge-table args call-args)))))))
 
-(global bindcmd (fn [cmds]
-  (fn []
-    (if (= (type cmds) :string)
-      (vim.cmd cmds)
-      (each [_ cmd (ipairs cmds)]
-        (vim.cmd cmd))))))
+(global bindcmd
+  (fn [cmds]
+    (fn []
+      (if (= (type cmds) :string)
+        (vim.cmd cmds)
+        (each [_ cmd (ipairs cmds)]
+          (vim.cmd cmd))))))
 
 (require :core)
 (require :mapping)
