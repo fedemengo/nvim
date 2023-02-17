@@ -86,11 +86,12 @@
     (for [i 1 vim.v.count]  ;; h v:count
       (set back (.. back "/..")))
     (var cwd (vim.fn.resolve (.. (utils.buffer_dir) back)))
+    (var relwd (cwd:gsub (os.getenv :HOME) :$HOME))
     (f (merge-table
          (merge-table
            ivy_config
            {:cwd cwd
-            :prompt_title (.. (. opts :prompt_title) " in " cwd)})
+            :prompt_title (.. (. opts :prompt_title) " in " relwd)})
          args))))
 
 (fn with-bufnr [f opts?]
