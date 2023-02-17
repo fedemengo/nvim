@@ -65,8 +65,8 @@
 
 (set vim.o.list true)
 (set vim.opt.listchars {:tab "▸ " :space "⋅" :eol "↵"})
-;; undo dir
 
+;; undo dir
 (local undodir_path (.. (os.getenv :HOME) :/.nvim/undo-dir/))
 (when (= 0 (vim.fn.isdirectory undodir_path))
   (vim.fn.mkdir undodir_path :p))
