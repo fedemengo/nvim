@@ -17,7 +17,7 @@
     "Returns the part of the list that follows the first item or nil if <arg> is not a list"
     (local t [])
     (each [k v (ipairs lst)]
-      (when (> k 1)
+      (when (> k 2)
         (tset t (- k 1) v)))
     (if (= (length lst) (tlen lst)) ;; lst is an array - it has only numeric keys
       t
