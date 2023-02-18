@@ -104,6 +104,6 @@
 
 (map [:n] :<space>pi packer.install {:desc "Install plugins"})
 (map [:n] :<space>pu packer.update  {:desc "Update plugins"})
-(map [:n] :<space>pc packer.compile {:desc "Compile plugins"})
-(map [:n] :<space>pC packer.clean   {:desc "Clean plugins"})
+(map [:n] :<space>pc packer.clean   {:desc "Clean plugins"})
+(map [:n] :<space>pC packer.compile {:desc "Compile plugins"})
 
