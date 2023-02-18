@@ -3,10 +3,9 @@
 (global lengtht
   (fn [t]
     "Returns the length of a proper table"
-    (var c 0)
-    (each [_ _ (pairs t)]
-      (set c (+ 1 c)))
-    c))
+    (accumulate [len 0
+                 _ _ (pairs t)]
+      (+ len 1))))
 
 (global type!
   (fn [x]

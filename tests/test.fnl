@@ -105,6 +105,9 @@
 (var t                {:d 5 :e 10 :f 15})
 (var v {:a 2 :b 3 :c 4 :d 5 :e 10 })
 
+(assert= (lengtht s) 3 "length of table")
+(assert= (lengtht v) 5 "length of table")
+
 (assert-eq  (merge-table s t) {:a 2 :b 3 :c 4 :d 5 :e 10 :f 15})
 (assert-neq (merge-table s t) v "merge table")
 

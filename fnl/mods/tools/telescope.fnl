@@ -77,7 +77,8 @@
 (local diag_err_theme
   (merge-table
     ivy_config
-    {:severity "error"}))
+    {:severity "error"
+     :prompt_title "Workspace Errors"}))
 
 (fn with-count [f opts?]
   (fn [args]
