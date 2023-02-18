@@ -1,10 +1,21 @@
 (module init)
 
-(fn tlen [t]
-  (var c 0)
-  (each [_ _ (pairs t)]
-    (set c (+ 1 c)))
-  c)
+(global lengtht
+  (fn [t]
+    "Returns the length of a proper table"
+    (var c 0)
+    (each [_ _ (pairs t)]
+      (set c (+ 1 c)))
+    c))
+
+(global type!
+  (fn [x]
+    "Return the type of an object, discriminating between lists and tables"
+    (if (= (type x) :table)
+      (if (= (length x) (lengtht x))
+        :list
+        :table)
+      (type x))))
 
 ;; car and cdr to let the magic begin
 (global car
@@ -19,7 +30,7 @@
     (each [k v (ipairs lst)]
       (when (> k 1)
         (tset t (- k 1) v)))
-    (if (= (length lst) (tlen lst)) ;; lst is an array - it has only numeric keys
+    (if (= (type! lst) :list)
       t
       nil)))
 
