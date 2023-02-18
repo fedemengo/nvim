@@ -59,6 +59,10 @@
 (map [:v] :y "myy`y")
 (map [:v] :Y "myY`y")
 
+(map [:n] :tv (bindcmd ["vsplit" "term"]) {:desc "Open term in vertical split"})
+(map [:n] :ts (bindcmd ["split" "term"]) {:desc "Open term in horizontal split"})
+(map [:n :t] :<leader>e (bindcmd "exit") {:desc "Close current buffer"})
+
 ;; keep visual while indenting left/right
 (map [:v :s] :< :<gv)
 (map [:v :s] :> :>gv)
@@ -95,4 +99,5 @@
 ;; https://github.com/folke/which-key.nvim#%EF%B8%8F-configuration
 ;; this is discouraged, but hey https://xkcd.com/1172
 (map [:n] :f (bindcmd "WhichKey f"))
+(map [:n] :t (bindcmd "WhichKey t"))
 
