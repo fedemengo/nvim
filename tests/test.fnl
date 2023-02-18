@@ -82,24 +82,24 @@
 (var list [1 2 3 4 5 6])
 (var listclone [1 2 3 4 5 6])
 
-(assert=    list list             "same list should be strictly equal")
-(assert!=   list listclone        "equal list should not be strictly equal")
-(assert!=   list []               "different list should not be strictly equal")
+(assert=    list list                 "same list should be strictly equal")
+(assert!=   list listclone            "equal list should not be strictly equal")
+(assert!=   list []                   "different list should not be strictly equal")
 
-(assert!=   list listclone        "equal list should not be strictly equal")
-(assert-eq  list listclone        "equal list should be equal")
-(assert-neq list []               "different list should not be equal")
+(assert!=   list listclone            "equal list should not be strictly equal")
+(assert-eq  list listclone            "equal list should be equal")
+(assert-neq list []                   "different list should not be equal")
 
 
-(assert= 1  (car list)             "car should return first element")
-(assert-eq  [2 3 4 5 6] (cdr list) "cdr should return all elements but first")
-(assert-eq  list listclone         "car and cdr should not modify the element")
+(assert= 1  (car list)                "car should return first element")
+(assert-eq  [2 3 4 5 6] (cdr list)    "cdr should return all elements but first")
+(assert-eq  list listclone            "car and cdr should not modify the element")
 
-(assert=    1 (car [1])              "car on single element list")
-(assert=    nil (car [])             "car on empty list")
+(assert=    1 (car [1])               "car on single element list")
+(assert=    nil (car [])              "car on empty list")
 
-(assert-eq  [] (cdr [1])           "cdr on single element list")
-(assert-eq  [] (cdr [])            "cdr on empty list")
+(assert-eq  [] (cdr [1])              "cdr on single element list")
+(assert-eq  [] (cdr [])               "cdr on empty list")
 
 (var s {:a 2 :b 3 :c 4})
 (var t                {:d 5 :e 10 :f 15})

@@ -9,9 +9,9 @@ cat > $TESTFILE << EOF
 
 EOF
 
-cat "$PWD/fnl/init.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
+cat "$PWD/fnl/init.fnl" | sed '/module/d;/require/d' >> $TESTFILE
 
-cat "$PWD/test/test.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
+cat "$PWD/tests/test.fnl" | sed '/module/d;/require/d' >> $TESTFILE
 
 fennel --raw-errors --globals "*" $TESTFILE
 

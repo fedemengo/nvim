@@ -9,9 +9,9 @@ cat > $TESTFILE << EOF
 
 EOF
 
-cat "$PWD/nvim/fnl/init.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
+cat "$PWD/nvim/fnl/init.fnl" | sed '/module/d;/require/d' >> $TESTFILE
 
-cat "$PWD/nvim/test/test.fnl" | sed '1d;/module/d;/require/d' >> $TESTFILE
+cat "$PWD/nvim/tests/test.fnl" | sed '/module/d;/require/d' >> $TESTFILE
 
 fennel --raw-errors --globals "*" $TESTFILE
 
