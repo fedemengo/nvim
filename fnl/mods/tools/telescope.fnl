@@ -147,3 +147,64 @@
 (map [:n] :fd (bindf builtin.diagnostics ivy_config)            {:desc "Diagnostics"})
 (map [:n] :fe (bindf builtin.diagnostics diag_err_theme)        {:desc "Diagnostics [ERR]"})
 
+(var pickers (require :telescope.pickers))
+(var finders (require :telescope.finders))
+(var conf (. (require :telescope.config) :values))
+(var state (require :telescope.actions.state))
+
+(var ffwithback
+  (fn [_opts]
+    (var opts (or _opts {}))
+    (var cwd (utils.buffer_dir))
+    (var lcwd cwd)
+    (tset opts :cwd cwd)
+    (tset opts :hidden (or (. opts :hidden) false))
+    (var fcmd ["rg" "--files" "--color" "never" "--follow"])
+    (var p (pickers.new
+      opts
+      {:finder (finders.new_oneshot_job fcmd opts)
+       :previewer (conf.grep_previewer opts)
+       :sorter (conf.file_sorter opts)
+       :cache_picker false
+       :attach_mappings (fn
+                          [prompt_buf map]
+                          (map
+                            [:i :n]
+                            :<C-h>
+                            (fn []
+                              (var hidden (not (. opts :hidden)))
+                              (set opts (merge-table opts {:hidden hidden}))
+                              (p.refresh_previewer p)
+                              (p.refresh
+                                p
+                                (finders.new_oneshot_job fcmd opts)
+                                {:reset_prompt false})))
+                          (map
+                            [:i :n]
+                            :<tab>
+                            (fn []
+                              (var picker (state.get_current_picker prompt_buf))
+                              (var line (picker._get_prompt picker))
+                              (set lcwd (vim.fn.resolve (.. lcwd "/" line)))
+                              (set opts (merge-table opts {:cwd lcwd}))
+                              (p.refresh_previewer p)
+                              (p.refresh
+                                p
+                                (finders.new_oneshot_job fcmd opts)
+                                {:reset_prompt true})))
+                          (map
+                            [:i :n]
+                            :<S-tab>
+                            (fn []
+                              (set lcwd (vim.fn.resolve (.. lcwd "/..")))
+                              (set opts (merge-table opts {:cwd lcwd}))
+                              (p.refresh_previewer p)
+                              (p.refresh
+                                p
+                                (finders.new_oneshot_job fcmd opts)
+                                {:reset_prompt false})))
+                          true)}))
+    (p.find p)))
+
+(map [:n] :fj ffwithback            {:desc "Find something random"})
+
