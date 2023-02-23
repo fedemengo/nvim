@@ -16,11 +16,22 @@
         :table)
       (type x))))
 
+(global in
+  (fn [x lst]
+    "Returns true if <x> is in <lst>"
+    (var found nil)
+    (each [k v (pairs lst)]
+      (when (= x v)
+        (set found true)))
+    found))
+
 ;; car and cdr to let the magic begin
 (global car
   (fn [lst]
     "Returns the first item of the list"
-    (. lst 1)))
+    (if (in (type! lst) [:number :string])
+      lst
+      (. lst 1))))
 
 (global cdr
   (fn [lst]
@@ -32,6 +43,27 @@
     (if (= (type! lst) :list)
       t
       nil)))
+
+(fn append [lhs v]
+  (var nl [])
+  (each [k v (ipairs lhs)]
+    (tset nl k v))
+  (table.insert nl v)
+  nl)
+
+(global cons
+  (fn [_lhs _rhs]
+    (var lhs _lhs)
+    (var rhs _rhs)
+    (when (in (type! lhs) [:number :string])
+      (set lhs [lhs]))
+    (when (in (type! rhs) [:number :string])
+      (set rhs [rhs]))
+    (assert (not (in (type! lhs) [:function :table])))
+    (assert (not (in (type! rhs) [:function :table])))
+    (if (= 0 (length rhs))
+      lhs
+      (cons (append lhs (car rhs)) (cdr rhs)))))
 
 (global map vim.keymap.set)
 (global unmap vim.keymap.del)
