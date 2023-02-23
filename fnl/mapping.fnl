@@ -60,8 +60,8 @@
 (map [:v] :Y "myY`y")
 
 (map [:n] :tv (bindcmd ["vsplit" "term"]) {:desc "Open term in vertical split"})
-(map [:n] :ts (bindcmd ["split" "term"]) {:desc "Open term in horizontal split"})
-(map [:n :t] :<leader>e (bindcmd "exit") {:desc "Close current buffer"})
+(map [:n] :ts (bindcmd ["split" "term"])  {:desc "Open term in horizontal split"})
+(map [:n :t] :<leader>e (bindcmd "exit")  {:desc "Close current buffer"})
 
 ;; keep visual while indenting left/right
 (map [:v :s] :< :<gv)
