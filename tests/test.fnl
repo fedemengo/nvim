@@ -111,3 +111,17 @@
 (assert-eq  (merge-table s t) {:a 2 :b 3 :c 4 :d 5 :e 10 :f 15})
 (assert-neq (merge-table s t) v "merge table")
 
+(assert= true (in 2 [1 2 3]))
+(assert= true (in 2 {:a 1 :b 2 :c 3}))
+(assert= nil (in 2 [1 3 4]))
+(assert= nil (in 2 {:a 1 :b 3 :c 4}))
+
+;;(cons s t)
+(assert-eq [1 2 3 4 5 6] (cons [1 2 3] [4 5 6]))
+(var nums1 [1 2 3])
+(var nums2 [4 5 6])
+(assert-eq [1 2 3 4 5 6] (cons nums1 nums2))
+(assert-eq [1 2 3] nums1 "cons should not modify the element")
+(assert-eq [4 5 6] nums2 "cons should not modify the element")
+(assert-eq [1 2 3 4 5 6] (cons [1 2 3 4 5] 6))
+
