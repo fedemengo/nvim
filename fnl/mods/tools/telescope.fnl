@@ -154,36 +154,21 @@
 (var state (require :telescope.actions.state))
 
 (fn should_cd [old new]
-  (var should (and
-                (= 1 (vim.fn.isdirectory new))
-                (not (= old new))))
-  ;;(print (.. (tostring should)) " " new)
-  should)
+  (and
+    (= 1 (vim.fn.isdirectory new))
+    (not (= old new))))
 
 
-(fn extract_dir [path]
-  (var dir (vim.fn.fnamemodify path ":h"))
-  dir)
+(fn extract_dirs [path]
+  (vim.fn.fnamemodify path ":h"))
 
 (fn extract_first_dir [path]
   (car (vim.split path :/)))
 
-(fn join-with-sep [sep list]
-  (if (= nil list)
-    "<nil>"
-    (if (= (length list) 0)
-      ""
-      (if (= (length list) 1)
-        (car list)
-        (.. (car list) sep (join-with-sep sep (cdr list)))))))
-
-
 (fn get_find_cmd [default opts]
-  ;;(print (. opts :hidden))
-  (var cmd default)
-  (when (. opts :hidden)
-    (set cmd (cons default "--hidden")))
-  cmd)
+  (if (. opts :hidden)
+    (cons default "--hidden")
+    default))
 
 (var magic
   (fn [_opts]
@@ -191,18 +176,16 @@
     (var cwd (utils.buffer_dir))
     (var lcwd cwd)
     (tset opts :cwd cwd)
-    ;;(tset opts :hidden (or (. opts :hidden) false))
-    (tset opts :hidden true)
-    (var fcmd ["rg" "--files" "--color" "never" "--follow"])
-    (tset opts :entry_maker (or (. opts :entry_maker) (make_entry.gen_from_file opts)))
+    (tset opts :hidden (or (. opts :hidden) false))
+    (tset opts :entry_maker (make_entry.gen_from_file opts))
+    (var fcmd ["fd" "--type" "f" "--color" "never" "--follow" "--max-depth" "4" "--max-results" "1000"])
     (var p (pickers.new
       opts
       {:finder (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
        :previewer (conf.grep_previewer opts)
        :sorter (conf.file_sorter opts)
        :cache_picker false
-       :attach_mappings (fn
-                          [prompt_buf map]
+       :attach_mappings (fn [prompt_buf map]
                           (map
                             [:i :n]
                             :<C-h>
@@ -218,15 +201,11 @@
                             [:i :n]
                             :<C-e>
                             (fn []
-                              (print "yolo")
                               (var picker (state.get_current_picker prompt_buf))
-                              (var newdir (picker._get_prompt picker))
                               (var entry (state.get_selected_entry))
-                              (var entry_dir ".")
+                              (var newdir "")
                               (when (?. entry :value)
-                                (set entry_dir (extract_first_dir (. entry :value))))
-                              (when (= 0 (length newdir))
-                                (set newdir entry_dir))
+                                (set newdir (extract_first_dir (. entry :value))))
                               (set lcwd (vim.fn.resolve (.. lcwd "/" newdir)))
                               (when (should_cd (. opts :cwd) lcwd)
                                 (tset opts :cwd lcwd)
@@ -241,13 +220,10 @@
                             :<tab>
                             (fn []
                               (var picker (state.get_current_picker prompt_buf))
-                              (var newdir (picker._get_prompt picker))
                               (var entry (state.get_selected_entry))
-                              (var entry_dir ".")
+                              (var newdir "")
                               (when (?. entry :value)
-                                (set entry_dir (extract_dir (. entry :value))))
-                              (when (= 0 (length newdir))
-                                (set newdir entry_dir))
+                                (set newdir (extract_dirs (. entry :value))))
                               (set lcwd (vim.fn.resolve (.. lcwd "/" newdir)))
                               (when (should_cd (. opts :cwd) lcwd)
                                 (tset opts :cwd lcwd)
@@ -261,16 +237,16 @@
                             [:i :n]
                             :<S-tab>
                             (fn []
+                              ;; dont go up if we are already at the root
                               (when (not (= lcwd :/))
-                                (set lcwd (vim.fn.resolve (.. lcwd "/.."))))
-                              ;;(print lcwd)
-                              (tset opts :cwd lcwd)
-                              (tset opts :entry_maker (make_entry.gen_from_file opts))
-                              (p.refresh_previewer p)
-                              (p.refresh
-                                p
-                                (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
-                                {:reset_prompt true})))
+                                (set lcwd (vim.fn.resolve (.. lcwd "/..")))
+                                (tset opts :cwd lcwd)
+                                (tset opts :entry_maker (make_entry.gen_from_file opts))
+                                (p.refresh_previewer p)
+                                (p.refresh
+                                  p
+                                  (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
+                                  {:reset_prompt true}))))
                           true)}))
     (p.find p)))
 

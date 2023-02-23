@@ -53,14 +53,14 @@
 
 (global cons
   (fn [_lhs _rhs]
+    (assert (not (in (type! _lhs) [:function :table])))
+    (assert (not (in (type! _rhs) [:function :table])))
     (var lhs _lhs)
     (var rhs _rhs)
     (when (in (type! lhs) [:number :string])
       (set lhs [lhs]))
     (when (in (type! rhs) [:number :string])
       (set rhs [rhs]))
-    (assert (not (in (type! lhs) [:function :table])))
-    (assert (not (in (type! rhs) [:function :table])))
     (if (= 0 (length rhs))
       lhs
       (cons (append lhs (car rhs)) (cdr rhs)))))
