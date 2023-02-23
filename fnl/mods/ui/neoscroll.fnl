@@ -3,7 +3,8 @@
     ns neoscroll
     config neoscroll.config }})
 
-(ns.setup)
+(ns.setup {
+  :mappings ["<C-u>" "<C-d>" "<C-y>" "<C-e>" "zt" "zz" "zb"]})
 
 (config.set_mappings {
   :<C-u> ["scroll" ["-vim.wo.scroll" "true" "250"]]
