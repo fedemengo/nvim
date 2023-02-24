@@ -220,7 +220,7 @@
                             :<C-e>
                             (fn []
                               (var nwd (first_dir_from_entry prompt_buf cwd))
-                              (when (should_cd (. opts :cwd) nwd)
+                              (when (should_cd cwd nwd)
                                 (set cwd nwd)
                                 (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
@@ -230,7 +230,7 @@
                             :<tab>
                             (fn []
                               (var nwd (all_dirs_from_entry prompt_buf cwd))
-                              (when (should_cd (. opts :cwd) nwd)
+                              (when (should_cd cwd nwd)
                                 (set cwd nwd)
                                 (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))

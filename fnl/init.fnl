@@ -19,11 +19,9 @@
 (global in
   (fn [x lst]
     "Returns true if <x> is in <lst>"
-    (var found nil)
-    (each [k v (pairs lst)]
-      (when (= x v)
-        (set found true)))
-    found))
+    (accumulate [found false
+                 _ v (pairs lst)]
+      (or found (= x v)))))
 
 ;; car and cdr to let the magic begin
 (global car
