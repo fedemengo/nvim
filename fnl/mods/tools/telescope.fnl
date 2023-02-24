@@ -172,7 +172,8 @@
   (var new_dir "")
   (when (?. entry :value)
     (set new_dir (dir_extractor (. entry :value))))
-  (vim.fn.resolve (.. curr_dir "/" new_dir)))
+  (var full_path (vim.fn.resolve (.. curr_dir "/" new_dir)))
+  (full_path:gsub "//" "/"))
 
 (fn first_dir_from_entry [prompt_buf curr_dir]
   (dirs_from_entry prompt_buf curr_dir extract_first_dir))
@@ -182,7 +183,8 @@
 
 (fn new_magic_finder_job [opts]
   "Create a new finder job for the magic picker"
-  (var fcmd ["fd" "--type" "f" "--color" "never" "--follow" "--max-depth" "4" "--max-results" "1000"])
+  (var fcmd ["fd" "--type" "f" "--color" "never" "--follow" "--max-results" "5000"])
+  (set fcmd (cons fcmd ["--max-depth" (. opts :fcmd_depth)]))
   (when (. opts :hidden)
     (set fcmd (cons fcmd "--hidden")))
   (finders.new_oneshot_job fcmd opts))
@@ -199,8 +201,10 @@
   (fn [_opts]
     (var opts (or _opts {}))
     (var cwd (utils.buffer_dir))
+    (tset opts :fcmd_depth 4)
     (tset opts :cwd cwd)
     (tset opts :entry_maker (make_entry.gen_from_file opts))
+    (tset opts :prompt_title (.. "Magic in " (. opts :cwd)))
     (var p (pickers.new
       opts
       {:finder (new_magic_finder_job opts)
@@ -208,6 +212,21 @@
        :sorter (conf.file_sorter opts)
        :cache_picker false
        :attach_mappings (fn [prompt_buf map]
+                          (map
+                            [:n]
+                            :S
+                            (fn []
+                              (when (> (. opts :fcmd_depth) 1)
+                                (tset opts :fcmd_depth (- (. opts :fcmd_depth) 1))
+                                (print (.. "search in " (. opts :cwd) " @ depth " (. opts :fcmd_depth)))
+                                (refresh p opts {:reset_prompt false}))))
+                          (map
+                            [:n]
+                            :D
+                            (fn []
+                              (tset opts :fcmd_depth (+ (. opts :fcmd_depth) 1))
+                              (print (.. "search in " (. opts :cwd) " @ depth " (. opts :fcmd_depth)))
+                              (refresh p opts {:reset_prompt false})))
                           (map
                             [:i :n]
                             :<C-h>
@@ -220,10 +239,11 @@
                             :<C-e>
                             (fn []
                               (var nwd (first_dir_from_entry prompt_buf cwd))
-                              (when (should_cd cwd nwd)
+                              (when (should_cd (. opts :cwd) nwd)
                                 (set cwd nwd)
                                 (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
+                                (print (.. "search in " (. opts :cwd) " @ depth " (. opts :fcmd_depth)))
                                 (refresh p opts {:reset_prompt false}))))
                           (map
                             [:i :n]
@@ -234,7 +254,8 @@
                                 (set cwd nwd)
                                 (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
-                                (refresh p opts {:reset_prompt true}))))
+                                (print (.. "search in " (. opts :cwd) " @ depth " (. opts :fcmd_depth)))
+                                (refresh p opts {:reset_prompt true :prompt_title (.. "Magic in " (. opts :cwd)) }))))
                           (map
                             [:i :n]
                             :<S-tab>
@@ -243,6 +264,7 @@
                                 (set cwd (vim.fn.resolve (.. cwd "/..")))
                                 (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
+                                (print (.. "search in " (. opts :cwd) " @ depth " (. opts :fcmd_depth)))
                                 (refresh p opts {:reset_prompt true}))))
                           true)}))
     (p.find p)))
@@ -251,4 +273,5 @@
   (bindf magic ivy_config))
 
 (map [:n] :fj themed_magic            {:desc "Find and move around"})
+(map [:n] :<C-space> themed_magic            {:desc "Find and move around"})
 
