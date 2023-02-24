@@ -81,6 +81,7 @@
     :fatih/vim-go {:run ":GoUpdateBinaries" }
     :lewis6991/gitsigns.nvim {:mod :tools.gitsigns }
     :ray-x/lsp_signature.nvim {}
+    :wakatime/vim-wakatime {}
 
     :VonHeikemen/lsp-zero.nvim {
       :requires [
