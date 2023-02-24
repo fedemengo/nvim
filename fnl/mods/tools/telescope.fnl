@@ -154,10 +154,10 @@
 (var state (require :telescope.actions.state))
 
 (fn should_cd [old new]
+  "Check if we should change directory"
   (and
-    (= 1 (vim.fn.isdirectory new))
-    (not (= old new))))
-
+    (= 1 (vim.fn.isdirectory new)) ;; new is an existing directory
+    (not (= old new)))) ;; old and new are not the same
 
 (fn extract_dirs [path]
   (vim.fn.fnamemodify path ":h"))
@@ -165,23 +165,45 @@
 (fn extract_first_dir [path]
   (car (vim.split path :/)))
 
-(fn get_find_cmd [default opts]
-  (if (. opts :hidden)
-    (cons default "--hidden")
-    default))
+(fn dirs_from_entry [prompt_buf curr_dir dir_extractor]
+  "Extract the directory from the selected entry in the current picker"
+  (var picker (state.get_current_picker prompt_buf))
+  (var entry (state.get_selected_entry))
+  (var new_dir "")
+  (when (?. entry :value)
+    (set new_dir (dir_extractor (. entry :value))))
+  (vim.fn.resolve (.. curr_dir "/" new_dir)))
+
+(fn first_dir_from_entry [prompt_buf curr_dir]
+  (dirs_from_entry prompt_buf curr_dir extract_first_dir))
+
+(fn all_dirs_from_entry [prompt_buf curr_dir]
+  (dirs_from_entry prompt_buf curr_dir extract_dirs))
+
+(fn new_magic_finder_job [opts]
+  "Create a new finder job for the magic picker"
+  (var fcmd ["fd" "--type" "f" "--color" "never" "--follow" "--max-depth" "4" "--max-results" "1000"])
+  (when (. opts :hidden)
+    (set fcmd (cons fcmd "--hidden")))
+  (finders.new_oneshot_job fcmd opts))
+
+(fn refresh [picker opts popts]
+  "Refresh the picker with new options"
+  (picker.refresh_previewer picker)
+  (picker.refresh
+    picker
+    (new_magic_finder_job opts)
+    popts))
 
 (var magic
   (fn [_opts]
     (var opts (or _opts {}))
     (var cwd (utils.buffer_dir))
-    (var lcwd cwd)
     (tset opts :cwd cwd)
-    (tset opts :hidden (or (. opts :hidden) false))
     (tset opts :entry_maker (make_entry.gen_from_file opts))
-    (var fcmd ["fd" "--type" "f" "--color" "never" "--follow" "--max-depth" "4" "--max-results" "1000"])
     (var p (pickers.new
       opts
-      {:finder (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
+      {:finder (new_magic_finder_job opts)
        :previewer (conf.grep_previewer opts)
        :sorter (conf.file_sorter opts)
        :cache_picker false
@@ -192,61 +214,36 @@
                             (fn []
                               (tset opts :hidden (not (. opts :hidden)))
                               (tset opts :entry_maker (make_entry.gen_from_file opts))
-                              (p.refresh_previewer p)
-                              (p.refresh
-                                p
-                                (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
-                                {:reset_prompt false})))
+                              (refresh p opts {:reset_prompt false})))
                           (map
                             [:i :n]
                             :<C-e>
                             (fn []
-                              (var picker (state.get_current_picker prompt_buf))
-                              (var entry (state.get_selected_entry))
-                              (var newdir "")
-                              (when (?. entry :value)
-                                (set newdir (extract_first_dir (. entry :value))))
-                              (set lcwd (vim.fn.resolve (.. lcwd "/" newdir)))
-                              (when (should_cd (. opts :cwd) lcwd)
-                                (tset opts :cwd lcwd)
+                              (var nwd (first_dir_from_entry prompt_buf cwd))
+                              (when (should_cd (. opts :cwd) nwd)
+                                (set cwd nwd)
+                                (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
-                                (p.refresh_previewer p)
-                                (p.refresh
-                                  p
-                                  (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
-                                  {:reset_prompt false}))))
+                                (refresh p opts {:reset_prompt false}))))
                           (map
                             [:i :n]
                             :<tab>
                             (fn []
-                              (var picker (state.get_current_picker prompt_buf))
-                              (var entry (state.get_selected_entry))
-                              (var newdir "")
-                              (when (?. entry :value)
-                                (set newdir (extract_dirs (. entry :value))))
-                              (set lcwd (vim.fn.resolve (.. lcwd "/" newdir)))
-                              (when (should_cd (. opts :cwd) lcwd)
-                                (tset opts :cwd lcwd)
+                              (var nwd (all_dirs_from_entry prompt_buf cwd))
+                              (when (should_cd (. opts :cwd) nwd)
+                                (set cwd nwd)
+                                (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
-                                (p.refresh_previewer p)
-                                (p.refresh
-                                  p
-                                  (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
-                                  {:reset_prompt true}))))
+                                (refresh p opts {:reset_prompt true}))))
                           (map
                             [:i :n]
                             :<S-tab>
                             (fn []
-                              ;; dont go up if we are already at the root
-                              (when (not (= lcwd :/))
-                                (set lcwd (vim.fn.resolve (.. lcwd "/..")))
-                                (tset opts :cwd lcwd)
+                              (when (not (= cwd "/"))
+                                (set cwd (vim.fn.resolve (.. cwd "/..")))
+                                (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
-                                (p.refresh_previewer p)
-                                (p.refresh
-                                  p
-                                  (finders.new_oneshot_job (get_find_cmd fcmd opts) opts)
-                                  {:reset_prompt true}))))
+                                (refresh p opts {:reset_prompt true}))))
                           true)}))
     (p.find p)))
 
