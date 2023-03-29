@@ -123,8 +123,8 @@
 
 (map [:n] :<C-a> (bindf themed_count_find_files {:hidden true}) {:desc "Find all files [hidden]"})
 (map [:n] :<C-f> themed_count_find_files                        {:desc "Find files"})
-(map [:n] :<C-g> themed_count_live_grep                         {:desc "Grep string"})
 
+(map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)   {:desc "Find symbols [LSP]"})
 (map [:n] :fs (bindf builtin.grep_string ivy_config)            {:desc "Find string"})
 (map [:n] :fz (bindf builtin.grep_string fzf_opts_theme)        {:desc "Fuzzy grep string"})
 (map [:n] :fb (bindf builtin.buffers ivy_config)                {:desc "Buffer list"})
