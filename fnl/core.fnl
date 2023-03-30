@@ -1,10 +1,17 @@
 (module core)
 ;; autocmd
 
+(fn restore-cursor []
+  (when (<= (vim.fn.line "'\"") (vim.fn.line "$"))
+    (vim.fn.execute "normal! g`\"")))
+
 (when (= 1 (vim.fn.has :autocmd))
   ;; restore cursor last position in file, silent since for new file would error
-  (vim.cmd "autocmd BufWinLeave * if expand('%:p') !='' | silent! mkview | endif")
-  (vim.cmd "autocmd BufWinEnter * silent! loadview")
+  (vim.api.nvim_create_autocmd :BufReadPost {
+    :pattern "*"
+    :callback restore-cursor
+  })
+
   ;; switch off relative number in insert mode
   (vim.cmd "autocmd InsertEnter * :set norelativenumber")
   (vim.cmd "autocmd InsertLeave * :set relativenumber")
@@ -65,6 +72,10 @@
 
 (set vim.o.list true)
 (set vim.opt.listchars {:tab "▸ " :space "⋅" :eol "↵"})
+
+(set vim.o.foldenable false)
+(set vim.o.foldmethod :expr)
+(set vim.o.foldexpr "nvim_treesitter#foldexpr()")
 
 ;; undo dir
 (local undodir_path (.. (os.getenv :HOME) :/.nvim/undo-dir/))

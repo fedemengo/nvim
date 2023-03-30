@@ -27,7 +27,6 @@
     :<C-n> (cmp.mapping.select_next_item cmp_select)
     :<C-e> (cmp.mapping.abort)
     :<C-y> (cmp.mapping.confirm {:select true})
-    :<CR> (cmp.mapping.confirm {:select true})
     :<S-Tab> (cmp.mapping.complete)})
   :experimental {
     :native_menu false
