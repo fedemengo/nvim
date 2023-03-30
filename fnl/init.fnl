@@ -1,5 +1,30 @@
 (module init)
 
+(global omit
+  (fn [t keys]
+    "Returns a copy of <t> without the keys in <keys>"
+    (local nt {})
+    (each [k v (pairs t)]
+      (when (not (in k keys))
+        (tset nt k v)))
+    nt))
+
+(global deep-copy
+  (fn [orig]
+    (let [copy (if (table? orig)
+      {}
+      orig)]
+      (when (table? orig)
+        (each [orig-key orig-value (pairs orig)]
+          (tset copy (deep-copy orig-key) (deep-copy orig-value)))
+        (setmetatable copy (deep-copy (getmetatable orig))))
+      copy)))
+
+(global table?
+  (fn [t]
+    "Returns true if <t> is a table"
+    (= (type! t) :table)))
+
 (global lengtht
   (fn [t]
     "Returns the length of a proper table"

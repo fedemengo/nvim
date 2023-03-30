@@ -199,7 +199,7 @@
 
 (var magic
   (fn [_opts]
-    (var opts (or _opts {}))
+    (var opts (deep-copy (or _opts {})))
     (var cwd (utils.buffer_dir))
     (tset opts :fcmd_depth 4)
     (tset opts :cwd cwd)

@@ -125,3 +125,17 @@
 (assert-eq [4 5 6] nums2 "cons should not modify the element")
 (assert-eq [1 2 3 4 5 6] (cons [1 2 3 4 5] 6))
 
+(assert-eq {:a 1 :b 2} (omit {:a 1 :b 2 :c 3} [:c]) "omit should remove the key")
+(assert-eq {:z 1} (omit {:a 1 :b 2 :c 3 :z 1} [:a :b :c]) "omit should remove the key")
+
+(assert-eq {:a 1 :b 2 :c 3} (deep-copy {:a 1 :b 2 :c 3}) "deep copy should copy the table")
+(var q {:a 1 :b 2 :c 3})
+(var t1 (deep-copy q))
+(var t2 (deep-copy q))
+(assert-eq t1 t2 "deep copied tables should be equal")
+(tset t1 :a 2)
+(assert-neq t1 t2 "tables should be different")
+(assert-neq t1 q "tables should be different")
+(assert-eq t2 q "tables should remain equal")
+(assert-eq t1 {:a 2 :b 2 :c 3} "deep copy should copy the table")
+
