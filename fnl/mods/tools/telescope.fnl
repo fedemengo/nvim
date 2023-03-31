@@ -1,11 +1,15 @@
 (module mods.tools.telescope
   { autoload {
+    ;;log log
     telescope telescope
     utils telescope.utils
     builtin telescope.builtin
     actions telescope.actions
     themes telescope.themes
     generate telescope.actions.generate }})
+
+;;(log.withcaller false)
+;;(log.trace "Loading telescope")
 
 (telescope.setup {
   :defaults {
