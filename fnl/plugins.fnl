@@ -42,10 +42,14 @@
     :Olical/aniseed {}
     :lewis6991/impatient.nvim {}
     :NLKNguyen/papercolor-theme {}
+    :fedemengo/github-nvim-theme {}
 
     :zbirenbaum/copilot.lua {:cmd "Copilot" :event "InsertEnter" :config (setup "copilot" {:suggestion { :enabled false }
                                                                                            :panel { :enabled false }})}
     :zbirenbaum/copilot-cmp {:config (setup "copilot_cmp")}
+
+    ;; dev
+    :rktjmp/hotpot.nvim {}
 
     ;; utils
     :folke/which-key.nvim {:config (setup "which-key") }
