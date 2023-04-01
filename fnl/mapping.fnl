@@ -3,16 +3,17 @@
 ;; open new file at current line in new tab
 (fn opentab-at-location []
   (if (= 0 (length (vim.fn.expand "%")))
-    (vim.cmd "tabedit") ;; open empty new tab
+    (vim.cmd "tabedit") ;; open empty new tab if no file is open
     (let [line (vim.fn.line ".")
           col (vim.fn.col ".")]
-      (vim.cmd "tabedit %")
-      (vim.api.nvim_win_set_cursor 0 [line (- col 1)])))) ;; :h nvim_win_set_cursor()
+      (vim.cmd "tabedit %") ;; open current file in new tab
+      (vim.api.nvim_win_set_cursor 0 [line (- col 1)])))) ;; move to location :h nvim_win_set_cursor()
 
 (fn opentab-at-location-and-back []
   (opentab-at-location)
   (vim.cmd "tabprev"))
 
+;; for themes respecting vim.o.background
 (fn toggle-theme []
   (if (= "dark" (. vim.o "background"))
     (set vim.o.background "light")
@@ -35,6 +36,16 @@
         relfp (fp:gsub (os.getenv :HOME) :$HOME)]
     (vim.cmd (.. "silent! let @+='" relfp ":" line "'"))))
 
+;; <cr> enters command mode everywhere except in quickfix
+(let [group (vim.api.nvim_create_augroup "filetype-mappings" {})]
+  (vim.api.nvim_create_autocmd
+    "BufEnter"
+    {:group group
+     :callback (fn []
+                (if (= "qf" vim.bo.filetype)
+                  (unmap [:n] "<cr>")
+                  (map [:n] "<cr>" ":")))}))
+
 ;; search with s instead of f
 (map [:n] :s :f)
 (map [:n] :S :F)
@@ -45,15 +56,13 @@
 (map [:n :i :v :x :c] :<left>   :<nop>)
 (map [:n :i :v :x :c] :<right>  :<nop>)
 
+;; jk is the new esc
 (map [:i :t :v :x :c] :jk :<Esc>)
 (map [:i :t :v :x :c] :jk "<C-\\><C-n>")
 
 ;; quick movement between splits
 (each [_ k (pairs [:h :j :k :l])]
   (map ["n"] (.. "<C-" k ">") (.. "<C-w>" k)))
-
-;; from normal to command mode with enter
-(map [:n] :<cr> ":")
 
 ;; keep cursor at location after visual yank
 (map [:v] :y "myy`y")
@@ -63,11 +72,12 @@
 (map [:n] :ts (bindcmd ["split" "term"])  {:desc "Open term in horizontal split"})
 (map [:n :t] :<leader>e (bindcmd "exit")  {:desc "Close current buffer"})
 
-;; keep visual while indenting left/right
+;; keep visual mode while indenting left/right
 (map [:v :s] :< :<gv)
 (map [:v :s] :> :>gv)
 (map [:n]       :gf          (bindcmd "edit <cfile>")                           {:desc "Edit file under cursor"})
 
+;; hide search highlight
 (map [:n]       :<Esc>       (bindcmd "silent! nohls")                          {:desc "Clear search highlight"})
 (map [:n]       :<C-s>       (bindcmd ["tabnew" "Startify"])                    {:desc "Launch Startify"})
 (map [:n :i :v] :<C-g>       (bindcmd "echo expand('%:p') . ':' . line(\".\")") {:desc "Print full path of current buffer"})

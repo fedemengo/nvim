@@ -34,6 +34,7 @@
       nil)))
 
 (global map vim.keymap.set)
+(global unmap vim.keymap.del)
 
 (global merge-table (fn [a b]
   (let [t {}]
