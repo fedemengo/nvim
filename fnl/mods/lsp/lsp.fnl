@@ -26,12 +26,14 @@
     :<C-p> (cmp.mapping.select_prev_item cmp_select)
     :<C-n> (cmp.mapping.select_next_item cmp_select)
     :<C-e> (cmp.mapping.abort)
-    :<C-y> (cmp.mapping.confirm {:select true})
+    :<C-y> (cmp.mapping.confirm {:select true
+                                 :behavior cmp.ConfirmBehavior.Replace})
     :<S-Tab> (cmp.mapping.complete)})
   :experimental {
     :native_menu false
     :ghost_text true}
   :sources (cmp.config.sources [
+    { :name "copilot" }
     { :name "nvim_lsp" }
     { :name "nvim_lua" }
     { :name "conjure" }
