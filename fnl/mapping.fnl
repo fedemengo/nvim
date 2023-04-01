@@ -48,7 +48,7 @@
 
 (let [group (vim.api.nvim_create_augroup "window-switching" {})]
   (vim.api.nvim_create_autocmd
-    "WinEnter"
+    ["VimEnter" "WinEnter"]
     {:group group
      :callback (fn []
                 (set vim.o.cursorline true)
