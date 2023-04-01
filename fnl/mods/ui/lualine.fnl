@@ -16,14 +16,15 @@
     :globalstatus false }
   :sections {
     :lualine_a ["mode"]
-    :lualine_b ["branch"  "diff"]
-    :lualine_c [
+    :lualine_b [
+        "filename"
         "diagnostics"
         { :sources [ "nvim_diagnostic"  "vim_lsp" ]}
         { :sections [ "error" "warn" "info" "hint" ]}
         { :colored true }
         { :diagnostic_color { :error { :fg "#ff0000" } } }]
-    :lualine_x [ gps.get_location {:cond gps.is_available }]
-    :lualine_y ["filename"  "filetype"]
+    :lualine_c [ gps.get_location {:cond gps.is_available }]
+    :lualine_x ["branch"  "diff"]
+    :lualine_y ["filetype"]
     :lualine_z ["progress" "location"]}})
 
