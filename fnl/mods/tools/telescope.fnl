@@ -265,13 +265,14 @@
                                 (tset opts :cwd cwd)
                                 (tset opts :entry_maker (make_entry.gen_from_file opts))
                                 (print (.. "search in " (. opts :cwd) " @ depth " (. opts :fcmd_depth)))
-                                (refresh p opts {:reset_prompt true}))))
+                                (refresh p opts {:reset_prompt false}))))
                           true)}))
     (p.find p)))
 
 (local themed_magic
   (bindf magic ivy_config))
 
-(map [:n] :fj themed_magic            {:desc "Find and move around"})
-(map [:n] :<C-space> themed_magic            {:desc "Find and move around"})
+(map [:n] :<Tab>      themed_magic  {:desc "Find and move around"})
+(map [:n] :fj         themed_magic  {:desc "Find and move around"})
+(map [:n] :<C-space>  themed_magic  {:desc "Find and move around"})
 
