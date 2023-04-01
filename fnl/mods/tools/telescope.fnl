@@ -163,11 +163,11 @@
   (vim.fn.fnamemodify path ":h"))
 
 (fn extract_first_dir [path]
-  (car (vim.split path :/)))
+  (set clean (path:gsub "%./" ""))  ;; http://www.lua.org/pil/20.2.html#:~:text=character%20%60%25%C2%B4%20works%20as%20an%20escape
+  (car (vim.split clean :/)))
 
-(fn dirs_from_entry [prompt_buf curr_dir dir_extractor]
+(fn dirs_from_entry [curr_dir dir_extractor]
   "Extract the directory from the selected entry in the current picker"
-  (var picker (state.get_current_picker prompt_buf))
   (var entry (state.get_selected_entry))
   (var new_dir "")
   (when (?. entry :value)
@@ -175,11 +175,11 @@
   (var full_path (vim.fn.resolve (.. curr_dir "/" new_dir)))
   (full_path:gsub "//" "/"))
 
-(fn first_dir_from_entry [prompt_buf curr_dir]
-  (dirs_from_entry prompt_buf curr_dir extract_first_dir))
+(fn first_dir_from_entry [curr_dir]
+  (dirs_from_entry curr_dir extract_first_dir))
 
-(fn all_dirs_from_entry [prompt_buf curr_dir]
-  (dirs_from_entry prompt_buf curr_dir extract_dirs))
+(fn all_dirs_from_entry [curr_dir]
+  (dirs_from_entry curr_dir extract_dirs))
 
 (fn new_magic_finder_job [opts]
   "Create a new finder job for the magic picker"
@@ -211,7 +211,7 @@
        :previewer (conf.grep_previewer opts)
        :sorter (conf.file_sorter opts)
        :cache_picker false
-       :attach_mappings (fn [prompt_buf map]
+       :attach_mappings (fn [_ map]
                           (map
                             [:n]
                             :S
@@ -238,7 +238,7 @@
                             [:i :n]
                             :<C-e>
                             (fn []
-                              (var nwd (first_dir_from_entry prompt_buf cwd))
+                              (var nwd (first_dir_from_entry cwd))
                               (when (should_cd (. opts :cwd) nwd)
                                 (set cwd nwd)
                                 (tset opts :cwd cwd)
@@ -249,7 +249,7 @@
                             [:i :n]
                             :<tab>
                             (fn []
-                              (var nwd (all_dirs_from_entry prompt_buf cwd))
+                              (var nwd (all_dirs_from_entry cwd))
                               (when (should_cd cwd nwd)
                                 (set cwd nwd)
                                 (tset opts :cwd cwd)
