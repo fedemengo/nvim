@@ -46,6 +46,21 @@
                   (unmap [:n] "<cr>")
                   (map [:n] "<cr>" ":")))}))
 
+(let [group (vim.api.nvim_create_augroup "window-switching" {})]
+  (vim.api.nvim_create_autocmd
+    "WinEnter"
+    {:group group
+     :callback (fn []
+                (set vim.o.cursorline true)
+                (set vim.o.cursorcolumn true))})
+  (vim.api.nvim_create_autocmd
+      "WinLeave"
+      {:group group
+       :callback (fn []
+                  (set vim.o.cursorline false)
+                  (set vim.o.cursorcolumn false))}))
+
+
 ;; search with s instead of f
 (map [:n] :s :f)
 (map [:n] :S :F)

@@ -35,8 +35,6 @@
 (set vim.o.autowrite true)
 (set vim.o.autoindent true)
 
-(set vim.o.cursorcolumn true)
-(set vim.o.cursorline true)
 (set vim.o.scrolloff 15)
 (set vim.o.hlsearch true)
 (set vim.o.incsearch true)
