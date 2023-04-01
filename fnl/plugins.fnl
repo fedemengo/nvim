@@ -12,20 +12,15 @@
   (safe-require (.. :mods "." mod)))
 
 (defn- use [...]
-  (let [packs [...]
-        pack_path (.. (vim.fn.stdpath "data" ) "/site/pack/packer/start/")]
+  (let [packs [...]]
     (packer.startup
       {1 (fn [use]
             (for [i 1 (length packs) 2]
               (let [name (. packs i)                ;; plugin name
-                    opts (. packs (+ i 1))          ;; plugin opts
-                    plugin (. (vim.fn.split name "/") 2)
-                    doc_path (.. plugin "/doc")]
+                    opts (. packs (+ i 1))]         ;; plugin opts
                 (-?> (. opts :mod) (safe-mod-require))  ;; optional opts mods
                 (table.insert opts 1 name)
-                (use opts)
-                (when (= 0 (vim.fn.empty (vim.fn.glob doc_path))) ;; load docs
-                  (vim.cmd (.. "helptags " doc_path))))))
+                (use opts))))
        :config {
         :display {
           :open_fn (. (require :packer.util) :float)}}})))
@@ -93,6 +88,7 @@
         [:hrsh7th/nvim-cmp]
         [:hrsh7th/cmp-buffer]
         [:hrsh7th/cmp-path]
+        [:hrsh7th/cmp-cmdline]
         [:saadparwaiz1/cmp_luasnip]
         [:hrsh7th/cmp-nvim-lsp]
         [:hrsh7th/cmp-nvim-lua]
