@@ -2,7 +2,6 @@
   {autoload {
     cmp cmp
     cmp_nvim_lsp cmp_nvim_lsp
-    luasnip luasnip
     lspkind lspkind
     lspsignature lsp_signature
     lspconfig lspconfig
@@ -15,8 +14,6 @@
     tbuiltin telescope.builtin }})
 
 (cmp.setup {
-  :snippet {
-    :expand (fn [args] (luasnip.lsp_expand (. args :body)))}
   :window {
     :completion (cmp.config.window.bordered)
     :documentation (cmp.config.window.bordered)}
@@ -38,7 +35,6 @@
     { :name "nvim_lua" }
     { :name "conjure" }
     { :name "path" }
-    { :name "luasnip" }
     { :name "buffer" :keyword_length 5 }])
   :formatting {
     :format (lspkind.cmp_format {
