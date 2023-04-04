@@ -1,6 +1,6 @@
 (module mods.tools.telescope
   { autoload {
-    ;;log log
+    log "mods/dev/log"
     telescope telescope
     utils telescope.utils
     builtin telescope.builtin
@@ -8,7 +8,11 @@
     themes telescope.themes
     generate telescope.actions.generate }})
 
-;;(log.withcaller false)
+;;(log.setup {
+;;            :outfile "/tmp/nvim.log"
+;;            :color true
+;;            :level "trace" })
+;;
 ;;(log.trace "Loading telescope")
 
 (telescope.setup {

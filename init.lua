@@ -19,13 +19,10 @@ ensure("fedemengo", "github-nvim-theme")
 
 require("impatient").enable_profile()
 
---local log = require("log").setup({
---  level = "trace",
---  outfile = "/tmp/nvim.log",
---  caller = false
---})
+-- require("mods/dev/profile")
 --
---log.trace("Hello world", { "foo", "bar", key ="value" }, 1, 2, 3)
+-- local log = require("mods/dev/log").setup({outfile = "/tmp/nvim.log", color = true})
+-- log.trace("Hello world", { "foo", "bar", key ="value" }, 1, 2, 3)
 
 vim.g["aniseed#env"] = {
 	module = "init",
