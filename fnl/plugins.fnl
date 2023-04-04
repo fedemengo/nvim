@@ -50,6 +50,7 @@
 
     ;; dev
     :rktjmp/hotpot.nvim {}
+    :stevearc/profile.nvim {:mod :dev.profile}
 
     ;; utils
     :folke/which-key.nvim {:config (setup "which-key") }
