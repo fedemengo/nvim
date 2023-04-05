@@ -51,7 +51,7 @@
 
 (mason.setup)
 (masonlsp.setup {
-  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "lua_ls" "jsonls" "sqls" "pylsp" "jdtls" "rust_analyzer" "fennel_language_server"]
+  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "lua_ls" "jsonls" "sqls" "pylsp" "jdtls" "rust_analyzer"]
   :automatic_installation true})
 (masonnullls.setup {:automatic_setup true})
 
@@ -102,12 +102,12 @@
   :lua_ls {
     :settings {
       :Lua {:diagnostics {:globals ["vim"]}}}}
-  :fennel_language_server {:default_config {:cmd [:$HOME/.cargo/bin/fennel-language-server]
-                                            :filetypes [:fennel]
-                                            :single_file_support true
-                                            :root_dir (lsputil.root_pattern :fnl)
-                                            :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
-                                                                :diagnostics {:globals [:vim]}}}}}
+  ;;:fennel_language_server {:default_config {:cmd [:$HOME/.cargo/bin/fennel-language-server]
+  ;;                                          :filetypes [:fennel]
+  ;;                                          :single_file_support true
+  ;;                                          :root_dir (lsputil.root_pattern :fnl)
+  ;;                                          :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
+  ;;                                                              :diagnostics {:globals [:vim]}}}}}
   :clangd {
     :autostart true
     :filetypes ["c" "cpp" "cuda"]}})
