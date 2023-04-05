@@ -5,12 +5,36 @@
   (when (<= (vim.fn.line "'\"") (vim.fn.line "$"))
     (vim.fn.execute "normal! g`\"")))
 
-(when (= 1 (vim.fn.has :autocmd))
+(when (vim.fn.has :autocmd)
   ;; restore cursor last position in file, silent since for new file would error
   (vim.api.nvim_create_autocmd :BufReadPost {
     :pattern "*"
     :callback restore-cursor
   })
+
+  ;; <cr> enters command mode everywhere except in quickfix
+  (let [group (vim.api.nvim_create_augroup "filetype-mappings" {})]
+    (vim.api.nvim_create_autocmd
+      "BufEnter"
+      {:group group
+       :callback (fn []
+                  (if (= "qf" vim.bo.filetype)
+                    (unmap [:n] "<cr>")
+                    (map [:n] "<cr>" ":")))}))
+
+  (let [group (vim.api.nvim_create_augroup "window-switching" {})]
+    (vim.api.nvim_create_autocmd
+      ["VimEnter" "WinEnter"]
+      {:group group
+       :callback (fn []
+                  (set vim.o.cursorline true)
+                  (set vim.o.cursorcolumn true))})
+    (vim.api.nvim_create_autocmd
+        "WinLeave"
+        {:group group
+         :callback (fn []
+                    (set vim.o.cursorline true)
+                    (set vim.o.cursorcolumn false))}))
 
   ;; switch off relative number in insert mode
   (vim.cmd "autocmd InsertEnter * :set norelativenumber")
@@ -83,8 +107,8 @@
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 
-(vim.cmd "colorscheme github_dimmed")
-;;(vim.cmd "colorscheme PaperColor")
+;;(vim.cmd "colorscheme github_dimmed")
+(vim.cmd "colorscheme PaperColor")
 (set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")

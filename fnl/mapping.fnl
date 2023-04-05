@@ -36,30 +36,6 @@
         relfp (fp:gsub (os.getenv :HOME) :$HOME)]
     (vim.cmd (.. "silent! let @+='" relfp ":" line "'"))))
 
-;; <cr> enters command mode everywhere except in quickfix
-(let [group (vim.api.nvim_create_augroup "filetype-mappings" {})]
-  (vim.api.nvim_create_autocmd
-    "BufEnter"
-    {:group group
-     :callback (fn []
-                (if (= "qf" vim.bo.filetype)
-                  (unmap [:n] "<cr>")
-                  (map [:n] "<cr>" ":")))}))
-
-(let [group (vim.api.nvim_create_augroup "window-switching" {})]
-  (vim.api.nvim_create_autocmd
-    ["VimEnter" "WinEnter"]
-    {:group group
-     :callback (fn []
-                (set vim.o.cursorline true)
-                (set vim.o.cursorcolumn true))})
-  (vim.api.nvim_create_autocmd
-      "WinLeave"
-      {:group group
-       :callback (fn []
-                  (set vim.o.cursorline false)
-                  (set vim.o.cursorcolumn false))}))
-
 (fn eval-expression []
   (let [(_ sr sc _) (unpack (vim.fn.getpos "v"))
         (_ er ec _) (unpack (vim.fn.getpos "."))]

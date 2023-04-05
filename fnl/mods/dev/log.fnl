@@ -24,34 +24,47 @@
     (* (math.floor (+ x 0.5)) inc)
     (* (math.ceil (- x 0.5)) inc)))
 
-(var _tostring tostring)
-
-(global tabletostring
+(global table-to-string
   (fn [t]
     (var str "")
     (each [k v (pairs t)]
-      (case (type v)
-        "table" (set str (string.format "%s\"%s\": %s, " str (vtostring k) (tabletostring v)))
-        _ (set str (string.format "%s\"%s\": %s, " str (vtostring k) (vtostring v)))))
+      (case (type! v)
+        "table" (set str (string.format "%s\"%s\": %s, " str (val-to-string k) (table-to-string v)))
+        "list"  (set str (string.format "%s\"%s\": %s, " str (val-to-string k) (list-to-string v)))
+        _       (set str (string.format "%s\"%s\": \"%s\", " str (val-to-string k) (val-to-string v)))))
     (set str (string.sub str 1 -3))
     (string.format "{%s}" str)))
 
-(global vtostring
+(global list-to-string
+  (fn [t]
+    (var str "")
+    (each [k v (pairs t)]
+      (case (type! v)
+        "table"   (set str (string.format "%s\"%s\", " str (table-to-string v)))
+        "list"    (set str (string.format "%s\"%s\", " str (list-to-string v)))
+        "number"  (set str (string.format "%s%s, " str (val-to-string v)))
+        _         (set str (string.format "%s\"%s\", " str (val-to-string v)))))
+    (set str (string.sub str 1 -3))
+    (string.format "[%s]" str)))
+
+(global val-to-string
   (fn [...]
     (var t {})
     (var args [...])
     (each [i v (ipairs args)]
-      (case (type v)
-        "number" (tset t i (round v 0.01))
-        "table"  (tset t i (tabletostring v))
-        _ (tset t i (_tostring v))))
+      (case (type! v)
+        "number"    (tset t i (round v 0.01))
+        "table"     (tset t i (table-to-string v))
+        "list"      (tset t i (list-to-string v))
+        "function"  (tset t i "<func>")
+        _           (tset t i (tostring v))))
     (table.concat t " ")))
 
 (each [i mode (ipairs modes)]
   (var upper (string.upper (. mode :name)))
   (tset log (. mode :name) (fn [...]
                     (when (>= i (. levels (. log :level)))
-                      (var msg (vtostring [...]))
+                      (var msg (val-to-string ...))
                       (var info (debug.getinfo 2 "Sl"))
                       (var short info.short_src)
                       (var home (or (os.getenv "HOME") "~"))
@@ -62,12 +75,12 @@
                       (when (. log :outfile)
                         (let [f (io.open (. log :outfile) "a")]
                           (var str (string.format "%s[%-6s%s]%s %s %s"
-                                                  (if (. log :usercolor)
+                                                  (if (. log :usecolor)
                                                     (. mode :color)
                                                     "")
                                                   upper
                                                   (os.date "%H:%M:%S")
-                                                  (if (. log :usercolor)
+                                                  (if (. log :usecolor)
                                                     "\27[0m"
                                                     "")
                                                   (if (. log :caller)

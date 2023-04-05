@@ -110,6 +110,14 @@
 
 (assert= (lengtht s) 3 "length of table")
 (assert= (lengtht v) 5 "length of table")
+(assert= (length s) 0  "length of table")
+(assert= (length t) 0  "length of table")
+(assert= (length v) 0  "length of table")
+(assert= (length [1 2 3 4]) 4  "length of table")
+(assert= (lengtht [1 2 3 4]) 4  "length of table")
+
+(assert= (type! s) :table "type of table")
+(assert= (type! [1 2 3 4]) :list "type of list")
 
 (assert-eq  (merge-table s t) {:a 2 :b 3 :c 4 :d 5 :e 10 :f 15})
 (assert-neq (merge-table s t) v "merge table")
