@@ -1,15 +1,17 @@
 (var profile (require :profile))
+(var on false)
 
 (fn start-and-log []
   (when (not (profile.is_recording))
     (profile.start "*")
     (print "profiler started")))
 
-(let [pval (or (os.getenv :NVIM_PROFILE) "")
-      lower (string.lower pval)]
-  (if (string.match lower "^start")
-    (start-and-log)
-    (profile.instrument "*")))
+(when on 
+  (let [pval (or (os.getenv :NVIM_PROFILE) "")
+        lower (string.lower pval)]
+    (if (string.match lower "^start")
+      (start-and-log)
+      (profile.instrument "*"))))
 
 (fn save [filename]
   (profile.export filename)
