@@ -1,5 +1,25 @@
 (module init)
 
+(global ++
+  (fn [x]
+    (+ x 1)))
+
+(global --
+  (fn [x]
+    (- x 1)))
+
+(global min
+  (fn [a b]
+    (if (< a b)
+      a
+      b)))
+
+(global max
+  (fn [a b]
+    (if (> a b)
+      a
+      b)))
+
 (global omit
   (fn [t keys]
     "Returns a copy of <t> without the keys in <keys>"
@@ -8,6 +28,13 @@
       (when (not (in k keys))
         (tset nt k v)))
     nt))
+
+(global safe-eval
+  (fn  [expr]
+    (let [(f err) (load (.. "return " expr))]
+      (if f
+        (f)
+        (.. "err" err)))))
 
 (global deep-copy
   (fn [orig]

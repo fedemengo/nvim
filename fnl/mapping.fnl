@@ -60,6 +60,20 @@
                   (set vim.o.cursorline false)
                   (set vim.o.cursorcolumn false))}))
 
+(fn eval-expression []
+  (let [(_ sr sc _) (unpack (vim.fn.getpos "v"))
+        (_ er ec _) (unpack (vim.fn.getpos "."))]
+    (if (~= sr er)
+      (print "cannot eval multiline expression")
+      (let [line (car (vim.fn.getline sr er))
+            text (string.sub line sc ec)
+            startcol (-- sc)
+            endcol (min ec (length line))]
+        (var res (safe-eval text))
+        (var newline (.. (string.sub line 0 startcol) text "=" res (string.sub line (++ endcol))))
+        (vim.api.nvim_buf_set_text 0 (-- sr) 0 (-- er) (length line) [newline])))))
+
+(map [:v] :<leader><space> eval-expression {:desc "Evaluate expression"})
 
 ;; search with s instead of f
 (map [:n] :s :f)

@@ -76,6 +76,9 @@
 (fn assert-neq [exp act msg]
   (assert (not (equal exp act)) (log-msg msg exp act)))
 
+(fn assert-prefix [exp act msg]
+  (assert (= (string.sub act 1 (string.len exp)) exp) (log-msg msg exp act)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; test cases
 
@@ -138,4 +141,9 @@
 (assert-neq t1 q "tables should be different")
 (assert-eq t2 q "tables should remain equal")
 (assert-eq t1 {:a 2 :b 2 :c 3} "deep copy should copy the table")
+
+(assert=        256 (safe-eval "2^8") "2^8 should be 256")
+;;(assert-prefix  "err" (safe-eval "2^x8") "2^8 should be 256")
+(assert= 2 (min 2 3) "min of 2 and 3 should be 2")
+(assert= 3 (max 2 3) "max of 2 and 3 should be 3")
 
