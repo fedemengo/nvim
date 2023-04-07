@@ -1,5 +1,6 @@
 (module mods.lsp.lsp
   {autoload {
+    log "mods/dev/log"
     cmp cmp
     cmp_nvim_lsp cmp_nvim_lsp
     lspkind lspkind
@@ -12,6 +13,14 @@
     masonnullls mason-null-ls
     themes telescope.themes
     tbuiltin telescope.builtin }})
+
+(log.setup {
+            :outfile "/tmp/nvim.lsp.log"
+            :color true
+            :level "trace" })
+
+(log.trace "Loading lsp servers")
+
 
 (cmp.setup {
   :window {
@@ -82,7 +91,7 @@
     :settings {
       :gopls {
         :usePlaceholders true
-        :buildFlags ["-tags=integration"]
+        :buildFlags ["-v" "-tags=integration,test"]
         :gofumpt true
         :experimentalPostfixCompletions true
         :analyses {
@@ -116,6 +125,7 @@
   (each [_ server (ipairs (get_servers))]
     (let [server_config (. lspconfig server)
           opts (or (. lsp_opt server) {})]
+      (log.trace "Loading server" server opts)
       (tset opts :on_attach on_attach)
       (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
       (server_config.setup opts))))
