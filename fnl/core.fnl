@@ -96,7 +96,8 @@
 (set vim.o.list true)
 (set vim.opt.listchars {:tab "▸ " :space "⋅" :eol "↵"})
 
-(set vim.o.foldenable false)
+(set vim.o.foldenable true)
+(set vim.o.foldlevel 99)
 (set vim.o.foldmethod :expr)
 (set vim.o.foldexpr "nvim_treesitter#foldexpr()")
 
