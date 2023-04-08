@@ -80,6 +80,7 @@
 
 (set vim.o.title true)
 (set vim.o.termguicolors true)
+(set vim.o.guicursor :n-v-c-sm:block)
 (set vim.o.mouse nil)
 (set vim.o.encoding :utf-8)
 (set vim.o.spell false)

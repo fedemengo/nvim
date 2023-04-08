@@ -65,6 +65,10 @@
 (map [:i :t :v :x :c] :jk :<Esc>)
 (map [:i :t :v :x :c] :jk "<C-\\><C-n>")
 
+;; move in cmd mode
+(map [:c] :<C-b>   :<S-Left>)
+(map [:c] :<C-f>   :<S-Right>)
+
 ;; quick movement between splits
 (each [_ k (pairs [:h :j :k :l])]
   (map ["n"] (.. "<C-" k ">") (.. "<C-w>" k)))
