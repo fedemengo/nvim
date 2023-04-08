@@ -9,7 +9,8 @@ cat > $TESTFILE << EOF
 
 EOF
 
-cat "$PWD/fnl/init.fnl" | sed '/module/d;/require/d' >> $TESTFILE
+cat "$PWD/fnl/umacros/nvim.fnl" | sed '/module/d;/require/d' >> $TESTFILE
+cat "$PWD/fnl/umacros/util.fnl" | sed '/module/d;/require/d' >> $TESTFILE
 
 cat "$PWD/tests/test.fnl" | sed '/module/d;/require/d' >> $TESTFILE
 
