@@ -52,6 +52,11 @@
     :rktjmp/hotpot.nvim {}
     :stevearc/profile.nvim {:mod :dev.profile}
 
+    :ruifm/gitlinker.nvim {
+      :requires [
+        [:nvim-lua/plenary.nvim]]
+      :config (setup "gitlinker")}
+
     ;; utils
     :folke/which-key.nvim {:config (setup "which-key") }
     :nvim-telescope/telescope-fzf-native.nvim {:run "make" }
