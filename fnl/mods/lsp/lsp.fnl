@@ -1,6 +1,7 @@
 (module mods.lsp.lsp
   {autoload {
     log "mods/dev/log"
+    navic nvim-navic
     cmp cmp
     cmp_nvim_lsp cmp_nvim_lsp
     lspkind lspkind
@@ -60,12 +61,13 @@
 
 (mason.setup)
 (masonlsp.setup {
-  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "lua_ls" "jsonls" "sqls" "pylsp" "jdtls" "rust_analyzer"]
+  :ensure_installed ["gopls" "clangd" "bashls" "dockerls" "lua_ls" "jsonls" "sqlls" "pylsp" "jdtls" "rust_analyzer"]
   :automatic_installation true})
 (masonnullls.setup {:automatic_setup true})
 
 (local on_attach (fn [client buf]
   (vim.api.nvim_buf_set_option buf "omnifunc" "v:lua.vim.lsp.omnifunc")
+  (navic.attach client buf)
   (lspsignature.on_attach {
     :bind true
     :handler_opts {:border "rounded"}
