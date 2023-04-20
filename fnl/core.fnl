@@ -1,19 +1,48 @@
 (module core)
 ;; autocmd
 
-(fn restore-cursor []
-  (when (<= (vim.fn.line "'\"") (vim.fn.line "$"))
-    (vim.fn.execute "normal! g`\"")))
-
 (when (vim.fn.has :autocmd)
-  ;; restore cursor last position in file, silent since for new file would error
-  (vim.api.nvim_create_autocmd :BufReadPost {
-    :pattern "*"
-    :callback restore-cursor
-  })
+  (let [group (vim.api.nvim_create_augroup "misc" {:clear true})]
+    ;; restore cursor last position in filesilent since for new file would error
+    (vim.api.nvim_create_autocmd
+      :BufReadPost
+      {:group group
+       :pattern "*"
+       :callback (fn restore-cursor []
+                  (when (<= (vim.fn.line "'\"") (vim.fn.line "$"))
+                    (vim.fn.execute "normal! g`\"")))})
 
-  ;; <cr> enters command mode everywhere except in quickfix
-  (let [group (vim.api.nvim_create_augroup "filetype-mappings" {})]
+    ;; switch off relative number in insert mode
+    (vim.api.nvim_create_autocmd
+      "InsertEnter"
+      {:group group
+       :command "set norelativenumber"})
+    (vim.api.nvim_create_autocmd
+      "InsertLeave"
+      {:group group
+       :command "set relativenumber"})
+
+    ;; enable number in telescope preview
+    (vim.api.nvim_create_autocmd
+      "User TelescopePreviewerLoaded"
+      {:group group
+       :command "setlocal number"})
+
+    ;; delete empty space from the end of lines on every save
+    (vim.api.nvim_create_autocmd
+      "BufWritePre"
+      {:group group
+       :command "%s/\\s\\+$//e"}))
+
+  (let [group (vim.api.nvim_create_augroup "filetype-mappings" {:clear true})]
+    ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
+    (vim.api.nvim_create_autocmd
+      "FileType"
+      {:group group
+       :pattern "*"
+       :command "set lisp iskeyword-=_ iskeyword-=."})
+
+    ;; <cr> enters command mode everywhere except in quickfix
     (vim.api.nvim_create_autocmd
       "BufEnter"
       {:group group
@@ -22,7 +51,7 @@
                     (unmap [:n] "<cr>")
                     (map [:n] "<cr>" ":")))}))
 
-  (let [group (vim.api.nvim_create_augroup "window-switching" {})]
+  (let [group (vim.api.nvim_create_augroup "window-switching" {:clear true})]
     (vim.api.nvim_create_autocmd
       ["VimEnter" "WinEnter"]
       {:group group
@@ -36,18 +65,18 @@
                     (set vim.o.cursorline true)
                     (set vim.o.cursorcolumn false))}))
 
-  ;; switch off relative number in insert mode
-  (vim.cmd "autocmd InsertEnter * :set norelativenumber")
-  (vim.cmd "autocmd InsertLeave * :set relativenumber")
-  ;; delete empty space from the end of lines on every save
-  (vim.cmd "autocmd BufWritePre * :%s/\\s\\+$//e")
-  (vim.cmd "autocmd InsertLeave * if &readonly == 0 && filereadable(bufname('%')) | silent! update | endif")
+  (let [group (vim.api.nvim_create_augroup "autosave" {:clear true})]
+    (vim.api.nvim_create_autocmd
+      "InsertLeave"
+      {:group group
+       :callback (fn []
+                 (when (and (not vim.bo.readonly)
+                            (vim.fn.filereadable (vim.fn.expand "%")))
+                   (vim.cmd "silent! update")))})))
 
-  (vim.cmd "autocmd User TelescopePreviewerLoaded setlocal number")
   ;; load all go mods
-  (vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ...")
-  ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
-  (vim.cmd "autocmd FileType fennel :set lisp iskeyword-=_ iskeyword-=."))
+  ;;(vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ...")
+
 
 (set vim.g.mapleader ";")
 

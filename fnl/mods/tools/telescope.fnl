@@ -272,6 +272,7 @@
 (local themed_magic
   (bindf magic ivy_config))
 
+(map [:n] :F         themed_magic  {:desc "Find and move around"})
 (map [:n] :fj         themed_magic  {:desc "Find and move around"})
 (map [:n] :<C-space>  themed_magic  {:desc "Find and move around"})
 
