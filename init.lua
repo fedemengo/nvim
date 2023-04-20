@@ -13,7 +13,7 @@ ensure("Olical", "aniseed")
 ensure("lewis6991", "impatient.nvim")
 require("impatient").enable_profile()
 
--- require("mods/dev/profile")
+--require("mods/dev/profile")
 
 vim.g["aniseed#env"] = { module = "init", compile = true }
 

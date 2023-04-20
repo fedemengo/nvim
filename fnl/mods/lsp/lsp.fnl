@@ -16,12 +16,9 @@
     tbuiltin telescope.builtin }})
 
 (log.setup {
-            :outfile "/tmp/nvim.lsp.log"
-            :color true
-            :level "trace" })
-
-(log.trace "Loading lsp servers")
-
+  :outfile :/tmp/nvim.lsp.log
+  :color true
+  :level trace })
 
 (cmp.setup {
   :window {
@@ -137,7 +134,7 @@
   (each [_ server (ipairs (get_servers))]
     (let [server_config (. lspconfig server)
           opts (or (. lsp_opt server) {})]
-      (log.trace "Loading server" server opts)
+      (log.trace "Setting up LSP for" server opts)
       (tset opts :on_attach on_attach)
       (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
       (server_config.setup opts))))

@@ -6,7 +6,7 @@
     (profile.start "*")
     (print "profiler started")))
 
-(when on 
+(when on
   (let [pval (or (os.getenv :NVIM_PROFILE) "")
         lower (string.lower pval)]
     (if (string.match lower "^start")
