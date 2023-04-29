@@ -6,10 +6,10 @@
 (global bindf
   (fn [...]
     (let [f-args [...]  ;; first argument is function, then n args
-          f (car f-args)
+          func (car f-args)
           args (cdr f-args)]
       (fn [call-args]
-        (f (unpack (merge-table args call-args)))))))
+        (func (unpack (merge-table args call-args)))))))
 
 (global bindcmd
   (fn [cmds]

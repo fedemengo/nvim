@@ -128,6 +128,7 @@
   ;;                                                              :diagnostics {:globals [:vim]}}}}}
   :clangd {
     :autostart true
+    :capabilities { :offsetEncoding "utf-8" }
     :filetypes ["c" "cpp" "cuda"]}})
 
 (let [get_servers (. masonlsp :get_installed_servers)]
