@@ -65,6 +65,25 @@
                     (set vim.o.cursorline true)
                     (set vim.o.cursorcolumn false))}))
 
+  (let [group (vim.api.nvim_create_augroup "large-files" {:clear true})]
+    (vim.api.nvim_create_autocmd
+      "BufReadPre"
+      {:group group
+       :callback (fn [ev]
+                    ; cannot get number of lines if buffer is not fully read
+                    ;(when (or (> (vim.api.nvim_buf_line_count bufnr) 5_000))
+                    ;          (> (vim.fn.getfsize (vim.fn.bufname bufnr)) (* 1024 1024))
+                    (when (> (vim.fn.getfsize (vim.fn.bufname (. ev :buf))) (* 1024 1024))
+                      (set vim.o.foldmethod :indent)))})
+
+    (vim.api.nvim_create_autocmd
+      "BufReadPre"
+      {:group group
+       :callback (fn [ev]
+                    (when (<= (vim.fn.getfsize (vim.fn.bufname (. ev :buf))) (* 1024 1024))
+                      (set vim.o.foldmethod :expr)))}))
+
+
   (let [group (vim.api.nvim_create_augroup "autosave" {:clear true})]
     (vim.api.nvim_create_autocmd
       "InsertLeave"
@@ -77,6 +96,7 @@
   ;; load all go mods
   ;;(vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ...")
 
+(set vim.g.editorconfig false)
 
 (set vim.g.mapleader ";")
 
@@ -125,9 +145,8 @@
 (set vim.o.list true)
 (set vim.opt.listchars {:tab "▸ " :space "⋅" :eol "↵"})
 
-(set vim.o.foldenable true)
-(set vim.o.foldlevel 99)
-(set vim.o.foldmethod :expr)
+; open all folds by default
+(set vim.o.foldenable false)
 (set vim.o.foldexpr "nvim_treesitter#foldexpr()")
 
 ;; undo dir
