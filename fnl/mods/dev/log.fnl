@@ -66,12 +66,15 @@
                     (when (>= i (. levels (. log :level)))
                       (var msg (val-to-string ...))
                       (var info (debug.getinfo 2 "Sl"))
-                      (var short info.short_src)
+                      (var short (or (?. info :short_src) ""))
+                      (var cline (?. info :currentline))
                       (var home (or (os.getenv "HOME") "~"))
                       (short:gsub (.. home "/.dotfiles/.config/nvim") "nvim/")
                       (short:gsub (.. home "/.config/nvim") "nvim/")
                       (short:gsub home "~")
-                      (var lineinfo (.. short ":" info.currentline))
+                      (var lineinfo short)
+                      (when cline
+                        (set lineinfo (.. short ":" cline)))
                       (when (. log :outfile)
                         (let [f (io.open (. log :outfile) "a")]
                           (var str (string.format "%s[%-6s%s]%s %s %s"
