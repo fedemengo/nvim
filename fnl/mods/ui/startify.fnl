@@ -5,6 +5,10 @@
 (set vim.g.startify_bookmarks (vim.fn.systemlist "cut -sd' ' -f 2- ~/.nvim-bookmarks"))
 (set vim.g.startify_custom_header "startify#center(startify#fortune#cowsay())")
 
+(set vim.g.startify_commands [
+  ["Health" "checkhealth"]
+  ["Quit all"       "qa!"]])
+
 (fn git-modified []
   (let [files (vim.fn.systemlist "git ls-files -m 2>/dev/null")]
     (vim.fn.map files "{'line': v:val, 'path': v:val}")))
@@ -18,7 +22,7 @@
   {:type "sessions"     :header ["   Sessions"]                       }
   {:type "files"        :header ["   MRU"]                            }
   {:type "dir"          :header [(.. "   MRU in " (vim.fn.getcwd))]   }
+  {:type "commands"     :header ["   Commands"]                       }
   {:type git-modified   :header ["   Git modified"]                   }
-  {:type git-untracked  :header ["   Git untracked"]                  }
-  {:type "commands"     :header ["   Commands"]                       }])
+  {:type git-untracked  :header ["   Git untracked"]                  }])
 
