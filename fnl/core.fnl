@@ -74,6 +74,15 @@
                     (set vim.o.cursorline true)
                     (set vim.o.cursorcolumn false))}))
 
+  (let [group (vim.api.nvim_create_augroup "go-format" {:clear true})]
+    (vim.api.nvim_create_autocmd
+      "BufWritePre"
+      {:group group
+       :pattern "*.go"
+       :callback (fn []
+                   (set gof (require "go.format"))
+                   (gof.goimport))}))
+
   (let [group (vim.api.nvim_create_augroup "large-files" {:clear true})]
     (vim.api.nvim_create_autocmd
       "BufReadPre"
@@ -102,9 +111,6 @@
                  (when (and (not vim.bo.readonly)
                             (vim.fn.filereadable (vim.fn.expand "%")))
                    (vim.cmd "silent! update")))})))
-
-  ;; load all go mods
-  ;;(vim.cmd "autocmd BufRead \"$GOPATH/src/*/*.go\" :GoGuruScope ...")
 
 (set vim.g.editorconfig false)
 

@@ -15,6 +15,15 @@ Nvim config in fennel (lisp)
 - fd/fd-find
 - rg
 
+### Plugins
+
+Different plugins will require different binaries, here some
+
+- fd
+- rg
+- gopls
+- prettier
+
 ## Bootstrap
 
 Install required plugins with `:PackerInstall`, that's it

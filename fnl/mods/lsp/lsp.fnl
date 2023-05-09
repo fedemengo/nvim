@@ -98,10 +98,11 @@
     :cmd ["gopls" "serve"]
     :filetypes ["go" "gomod"]
     :root_dir (lsputil.root_pattern "go.work" "go.mod" ".git")
+    :flags {:allow_incremental_sync true :debounce_text_changes 1_000}
     :settings {
       :gopls {
-        :usePlaceholders true
-        :buildFlags ["-v" "-tags=integration,test"]
+        :completeUnimported true
+        :buildFlags ["-tags" "integration"]
         :gofumpt true
         :experimentalPostfixCompletions true
         :analyses {
@@ -155,5 +156,7 @@
     nullls.builtins.formatting.stylua
     (nullls.builtins.formatting.autopep8.with {:extra_args ["--indent-size=2" "--ignore=E121"]})
     nullls.builtins.formatting.fnlfmt
+    nullls.builtins.formatting.goimports
+    nullls.builtins.formatting.gofumpt
     nullls.builtins.formatting.prettier]})
 
