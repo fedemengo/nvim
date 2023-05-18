@@ -39,7 +39,7 @@
     (vim.api.nvim_create_autocmd
       "FileType"
       {:group group
-       :pattern "*"
+       :pattern "fennel,lisp"
        :command "set lisp iskeyword-=_ iskeyword-=."})
 
     ;; <cr> enters command mode everywhere except in quickfix
