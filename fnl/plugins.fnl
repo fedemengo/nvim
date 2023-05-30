@@ -1,6 +1,6 @@
 (module plugins
   {autoload {
-    packer packer }})
+    packer :packer }})
 
 (defn safe-require [mod]
   (let [(ok? val-or-err) (pcall require mod)]
@@ -44,8 +44,9 @@
     :NLKNguyen/papercolor-theme {}
     :fedemengo/github-nvim-theme {}
 
-    :zbirenbaum/copilot.lua {:cmd "Copilot" :event "InsertEnter" :config (setup "copilot" {:suggestion { :enabled false }
-                                                                                           :panel { :enabled false }})}
+    :zbirenbaum/copilot.lua {:cmd "Copilot" :event "InsertEnter" :config (setup "copilot" {:suggestion
+                                                                                           {:enabled false}
+                                                                                            :panel {:enabled false}})}
     :zbirenbaum/copilot-cmp {:config (setup "copilot_cmp")}
 
     ;; dev

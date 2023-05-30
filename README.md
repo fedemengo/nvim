@@ -9,6 +9,11 @@ Nvim config in fennel (lisp)
 ## Requirements
 
 - [fennel](https://fennel-lang.org)
+- npm - for some language server
+- node16 - for copilot
+- python3.10-venv
+- fd/fd-find
+- rg
 
 ## Bootstrap
 
