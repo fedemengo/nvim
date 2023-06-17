@@ -60,6 +60,7 @@
 (masonlsp.setup {
   :ensure_installed [
     "gopls"
+    ;"fennel_language_server"
     "clangd"
     "bashls"
     "dockerls"
@@ -80,16 +81,16 @@
     :handler_opts {:border "rounded"}
     :hint_enable false
   } buf)
-  (map [:n]     :<leader>cw vim.lsp.buf.rename                        {:desc "Rename symbol [LSP]" :buffer buf})
-  (map [:n :v]  :<leader>ca vim.lsp.buf.code_action                   {:desc "Code actions [LSP]" :buffer buf})
-  (map [:n]     :gt         vim.lsp.buf.type_definition               {:desc "Type definition [LSP]" :buffer buf})
-  (map [:n]     :gD         vim.lsp.buf.declaration                   {:desc "Go to declaration [LSP]" :buffer buf})
-  (map [:n]     :K          vim.lsp.buf.hover                         {:desc "Hover [LSP]" :buffer buf})
-  (map [:n]     :fk         (bindf vim.lsp.buf.format {:async true})  {:desc "Format code [LSP]" :buffer buf})
-  (map [:n]     "]d"        vim.diagnostic.goto_prev                  {:desc "Next diagnostic" :buffer buf})
-  (map [:n]     "[s"        vim.diagnostic.show                       {:desc "Show diagnostic" :buffer buf})
-  (map [:n]     "[h"        vim.diagnostic.hide                       {:desc "Hide diagnostic" :buffer buf})
-  (map [:n]     :go         vim.diagnostic.open_float                 {:desc "Open diagnostic" :buffer buf})))
+  (map [:n]     :<leader>cw vim.lsp.buf.rename                           {:desc "Rename symbol [LSP]" :buffer buf})
+  (map [:n :v]  :<leader>ca vim.lsp.buf.code_action                      {:desc "Code actions [LSP]" :buffer buf})
+  (map [:n]     :gt         vim.lsp.buf.type_definition                  {:desc "Type definition [LSP]" :buffer buf})
+  (map [:n]     :gD         vim.lsp.buf.declaration                      {:desc "Go to declaration [LSP]" :buffer buf})
+  (map [:n]     :K          vim.lsp.buf.hover                            {:desc "Hover [LSP]" :buffer buf})
+  (map [:n]     :fk         (bindf vim.lsp.buf.format {:async true})     {:desc "Format code [LSP]" :buffer buf})
+  (map [:n]     "]d"        vim.diagnostic.goto_prev                     {:desc "Next diagnostic" :buffer buf})
+  (map [:n]     "[s"        vim.diagnostic.show                          {:desc "Show diagnostic" :buffer buf})
+  (map [:n]     "[h"        vim.diagnostic.hide                          {:desc "Hide diagnostic" :buffer buf})
+  (map [:n]     :go         vim.diagnostic.open_float                    {:desc "Open diagnostic" :buffer buf})))
 
 (local lsp_opt {
   :gopls {
@@ -126,6 +127,14 @@
   ;;                                          :root_dir (lsputil.root_pattern :fnl)
   ;;                                          :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
   ;;                                                              :diagnostics {:globals [:vim]}}}}}
+  :pylsp {
+    :settings {
+      :pylsp {
+        :plugins {
+          :pycodestyle {
+            :enable true
+            :ignore ["E302"]
+            :indentSize 2}}}}}
   :clangd {
     :autostart true
     :capabilities { :offsetEncoding "utf-8" }
@@ -140,9 +149,11 @@
       (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
       (server_config.setup opts))))
 
+;; https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#configuration
 (nullls.setup {
   :sources [
     nullls.builtins.formatting.stylua
+    (nullls.builtins.formatting.autopep8.with {:extra_args ["--indent-size=2" "--ignore=E121"]})
     nullls.builtins.formatting.fnlfmt
     nullls.builtins.formatting.prettier]})
 

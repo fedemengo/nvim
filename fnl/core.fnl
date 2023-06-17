@@ -35,12 +35,21 @@
        :command "%s/\\s\\+$//e"}))
 
   (let [group (vim.api.nvim_create_augroup "filetype-mappings" {:clear true})]
+    (vim.api.nvim_create_autocmd
+      "FileType"
+      {:group group
+       :pattern "python"
+       :callback (fn []
+                  (set vim.o.shiftwidth 2)
+                  (set vim.o.tabstop 2)
+                  (set vim.o.softtabstop 2))})
+
     ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
     (vim.api.nvim_create_autocmd
       "FileType"
       {:group group
        :pattern "fennel,lisp"
-       :command "set lisp iskeyword-=_ iskeyword-=."})
+       :command "setlocal lisp iskeyword-=_ iskeyword-=."})
 
     ;; <cr> enters command mode everywhere except in quickfix
     (vim.api.nvim_create_autocmd
@@ -70,18 +79,19 @@
       "BufReadPre"
       {:group group
        :callback (fn [ev]
-                    ; cannot get number of lines if buffer is not fully read
-                    ;(when (or (> (vim.api.nvim_buf_line_count bufnr) 5_000))
-                    ;          (> (vim.fn.getfsize (vim.fn.bufname bufnr)) (* 1024 1024))
-                    (when (> (vim.fn.getfsize (vim.fn.bufname (. ev :buf))) (* 1024 1024))
-                      (set vim.o.foldmethod :indent)))})
+                    ;; cannot get number of lines if buffer is not fully read
+                    ;;(when (or (> (vim.api.nvim_buf_line_count bufnr) 5_000))
+                    ;;          (> (vim.fn.getfsize (vim.fn.bufname bufnr)) (* 1024 1024))
+                    (if (<= (vim.fn.getfsize (vim.fn.bufname (. ev :buf))) (* 1024 1024))
+                      (set vim.o.foldmethod :expr)
+                      (set vim.o.foldmethod :indent)))}))
 
-    (vim.api.nvim_create_autocmd
-      "BufReadPre"
-      {:group group
-       :callback (fn [ev]
-                    (when (<= (vim.fn.getfsize (vim.fn.bufname (. ev :buf))) (* 1024 1024))
-                      (set vim.o.foldmethod :expr)))}))
+  ;;(let [group (vim.api.nvim_create_augroup "diagnotics" {:clear true})]
+  ;;  (vim.api.nvim_create_autocmd
+  ;;    "DiagnosticChanged"
+  ;;    {:group group
+  ;;     :callback (fn [ev]
+  ;;                 (log.debug ev))})))
 
 
   (let [group (vim.api.nvim_create_augroup "autosave" {:clear true})]
@@ -114,11 +124,11 @@
 (set vim.o.ignorecase true)
 (set vim.o.smartcase true)
 
-(local indent 4)
-(set vim.o.shiftwidth indent)
-(set vim.o.tabstop indent)
-(set vim.o.softtabstop indent)
-(set vim.o.expandtab true)
+(let [indent 4]
+  (set vim.o.shiftwidth indent)
+  (set vim.o.tabstop indent)
+  (set vim.o.softtabstop indent)
+  (set vim.o.expandtab true))
 
 (set vim.o.splitbelow true)
 (set vim.o.splitright true)
@@ -142,7 +152,7 @@
 (set vim.o.updatetime interval)
 
 (set vim.o.list true)
-(set vim.opt.listchars {:tab "▸ " :space "⋅" :eol "↵"})
+(set vim.opt.listchars {:tab "▸ " :eol "↵"}) ; :space "⋅"})
 
 ; open all folds by default
 (set vim.o.foldenable false)

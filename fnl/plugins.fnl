@@ -44,6 +44,7 @@
     :NLKNguyen/papercolor-theme {}
     :fedemengo/github-nvim-theme {}
 
+    ;; ln -s pack/packer/opt/copilot.lua pack/packer/start/coplit.lua
     :zbirenbaum/copilot.lua {:cmd "Copilot" :event "InsertEnter" :config (setup "copilot" {:suggestion
                                                                                            {:enabled false}
                                                                                             :panel {:enabled false}})}
@@ -93,6 +94,7 @@
     :ray-x/lsp_signature.nvim {}
     :simrat39/symbols-outline.nvim {:mod :lsp.symbols }
     :wakatime/vim-wakatime {}
+    :Vonr/align.nvim {:mod :tools.align }
 
     :VonHeikemen/lsp-zero.nvim {
       :requires [
