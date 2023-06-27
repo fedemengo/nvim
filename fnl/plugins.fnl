@@ -89,7 +89,6 @@
 
     ;; programming
     :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter }
-    :fatih/vim-go {:run ":GoUpdateBinaries" }
     :ray-x/go.nvim {:config (setup "go" {:lsp_codelens false}) }
     :lewis6991/gitsigns.nvim {:mod :tools.gitsigns }
     :ray-x/lsp_signature.nvim {}
