@@ -156,6 +156,7 @@
     nullls.builtins.formatting.stylua
     (nullls.builtins.formatting.autopep8.with {:extra_args ["--indent-size=2" "--ignore=E121"]})
     nullls.builtins.formatting.fnlfmt
+    nullls.builtins.formatting.shfmt
     nullls.builtins.formatting.goimports
     nullls.builtins.formatting.gofumpt
     nullls.builtins.formatting.prettier]})

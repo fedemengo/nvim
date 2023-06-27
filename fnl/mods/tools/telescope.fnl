@@ -129,7 +129,7 @@
 (map [:n] :fa (bindf themed_count_find_files {:hidden true})    {:desc "Find all files [hidden]"})
 (map [:n] :fg themed_count_live_grep                            {:desc "Grep string"})
 
-(map [:n] :<C-a> (bindf themed_count_find_files {:hidden true}) {:desc "Find all files [hidden]"})
+(map [:n] :<C-h> (bindf themed_count_find_files {:hidden true}) {:desc "Find all files [hidden]"})
 (map [:n] :<C-f> themed_count_find_files                        {:desc "Find files"})
 
 (map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)   {:desc "Find symbols [LSP]"})
