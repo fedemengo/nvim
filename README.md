@@ -15,6 +15,11 @@ Nvim config in fennel (lisp)
 - fd/fd-find
 - rg
 
+other stuff for LSPs
+
+- pylsp-mypy
+- pep8
+
 ### Plugins
 
 Different plugins will require different binaries, here some
