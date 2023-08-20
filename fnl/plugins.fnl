@@ -38,40 +38,49 @@
               (plugin.setup arg))
             (plugin.setup))))))
 
-(use ;; ensured
-     :wbthomason/packer.nvim {} :Olical/aniseed {} :lewis6991/impatient.nvim {}
-     :NLKNguyen/papercolor-theme {} :fedemengo/github-nvim-theme {}
-     ;; ln -s pack/packer/opt/copilot.lua pack/packer/start/coplit.lua
-     :zbirenbaum/copilot.lua
-     {:cmd :Copilot
-      :event :InsertEnter
-      :config (setup :copilot
-                     {:suggestion {:enabled false} :panel {:enabled false}})}
-     :zbirenbaum/copilot-cmp {:config (setup :copilot_cmp)} ;; dev
-     :rktjmp/hotpot.nvim {} :stevearc/profile.nvim {:mod :dev.profile}
-     :ruifm/gitlinker.nvim
-     {:requires [[:nvim-lua/plenary.nvim]] :config (setup :gitlinker)} ;; utils
-     :folke/which-key.nvim {:config (setup :which-key)}
+(use
+     ;; ensured
+     :wbthomason/packer.nvim {}
+     :Olical/aniseed {}
+     :lewis6991/impatient.nvim {}
+     :NLKNguyen/papercolor-theme {}
+     :fedemengo/github-nvim-theme {}
+     ;; ln -s ~/.local/share/nvim/site/pack/packer/opt/copilot.lua ~/.local/share/nvim/site/pack/packer/start/copilot.lua
+     :zbirenbaum/copilot.lua {:cmd :Copilot
+                             :event :InsertEnter
+                             :mod :dev.copilot}
+     :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
+     ;; dev
+     :rktjmp/hotpot.nvim {}
+     :stevearc/profile.nvim {:mod :dev.profile}
+     :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
+     ;; utils
+     :folke/which-key.nvim {:mod :tools.which-key}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
-     :nvim-telescope/telescope.nvim
-     {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
-      :mod :tools.telescope} :kevinhwang91/nvim-hlslens
-     {:config (setup :hlslens)} :lukas-reineke/indent-blankline.nvim
-     {:mod :ui.indentblank} :norcalli/nvim-colorizer.lua
-     {:config (setup :colorizer)} :numToStr/FTerm.nvim {:mod :tools.fterm}
-     :SmiteshP/nvim-navic {} :nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
-     :jdhao/better-escape.vim {:mod :tools.better-escape} :mhinz/vim-startify
-     {:mod :ui.startify} :karb94/neoscroll.nvim {:mod :ui.neoscroll}
-     :ggandor/leap.nvim {:config (setup :leap {})} :windwp/nvim-autopairs {}
+     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :tools.telescope}
+     :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
+     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank}
+     :norcalli/nvim-colorizer.lua {:mod :ui.colorizer}
+     :numToStr/FTerm.nvim {:mod :tools.fterm}
+     ;;:SmiteshP/nvim-navic {}
+     :nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
+     :jdhao/better-escape.vim {:mod :tools.better-escape}
+     :mhinz/vim-startify {:mod :ui.startify}
+     :karb94/neoscroll.nvim {:mod :ui.neoscroll}
+     :ggandor/leap.nvim {:mod :tools.leap}
+     :windwp/nvim-autopairs {}
      ;; theme
-     :folke/zen-mode.nvim {:mod :ui.zenmode} :nvim-lualine/lualine.nvim
-     {:mod :ui.lualine} :akinsho/bufferline.nvim
-     {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab} ;; programming
+     :folke/zen-mode.nvim {:mod :ui.zenmode}
+     :nvim-lualine/lualine.nvim {:mod :ui.lualine}
+     :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
+     ;; programming
      :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter}
-     :ray-x/go.nvim {:config (setup :go {:lsp_codelens false})}
-     :lewis6991/gitsigns.nvim {:mod :tools.gitsigns} :ray-x/lsp_signature.nvim
-     {} :simrat39/symbols-outline.nvim {:mod :lsp.symbols}
-     :wakatime/vim-wakatime {} :Vonr/align.nvim {:mod :tools.align}
+     :ray-x/go.nvim {:mod :dev.go_nvim}
+     :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
+     :ray-x/lsp_signature.nvim {}
+     :simrat39/symbols-outline.nvim {:mod :lsp.symbols}
+     :wakatime/vim-wakatime {}
+     :Vonr/align.nvim {:mod :tools.align}
      :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
                                            [:williamboman/mason.nvim]
                                            [:williamboman/mason-lspconfig.nvim]
