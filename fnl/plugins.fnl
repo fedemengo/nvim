@@ -62,7 +62,7 @@
      :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank}
      :norcalli/nvim-colorizer.lua {:mod :ui.colorizer}
      :numToStr/FTerm.nvim {:mod :tools.fterm}
-     ;;:SmiteshP/nvim-navic {}
+     :SmiteshP/nvim-navic {}
      :nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
      :jdhao/better-escape.vim {:mod :tools.better-escape}
      :mhinz/vim-startify {:mod :ui.startify}
