@@ -26,7 +26,7 @@
   (let [group (vim.api.nvim_create_augroup :filetype-mappings {:clear true})]
     (vim.api.nvim_create_autocmd :FileType
                                  {: group
-                                  :pattern :python
+                                  :pattern "python,json"
                                   :callback (fn []
                                               (set vim.o.shiftwidth 2)
                                               (set vim.o.tabstop 2)
@@ -43,6 +43,7 @@
                                               (if (= :qf vim.bo.filetype)
                                                   (unmap [:n] :<cr>)
                                                   (map [:n] :<cr> ":")))}))
+
   (let [group (vim.api.nvim_create_augroup :window-switching {:clear true})]
     (vim.api.nvim_create_autocmd [:VimEnter :WinEnter]
                                  {: group
