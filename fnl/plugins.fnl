@@ -70,6 +70,7 @@
      :ggandor/leap.nvim {:mod :tools.leap}
      :windwp/nvim-autopairs {}
      ;; theme
+     :rcarriga/nvim-notify {:mod :ui.notify}
      :folke/zen-mode.nvim {:mod :ui.zenmode}
      :nvim-lualine/lualine.nvim {:mod :ui.lualine}
      :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
