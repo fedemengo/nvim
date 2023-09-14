@@ -233,6 +233,7 @@
                                 :attach_mappings (fn [_ map]
                                                    (map [:n] :S
                                                         (fn []
+                                                          ;; decrease search depth
                                                           (when (> (. opts
                                                                       :fcmd_depth)
                                                                    1)
@@ -251,6 +252,7 @@
                                                                      {:reset_prompt false}))))
                                                    (map [:n] :D
                                                         (fn []
+                                                          ;; increase search depth
                                                           (tset opts
                                                                 :fcmd_depth
                                                                 (+ (. opts

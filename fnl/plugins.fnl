@@ -55,6 +55,7 @@
      :stevearc/profile.nvim {:mod :dev.profile}
      :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
      ;; utils
+     ;:nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
      :folke/which-key.nvim {:mod :tools.which-key}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
      :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :tools.telescope}
@@ -63,7 +64,6 @@
      :norcalli/nvim-colorizer.lua {:mod :ui.colorizer}
      :numToStr/FTerm.nvim {:mod :tools.fterm}
      :SmiteshP/nvim-navic {}
-     :nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
      :jdhao/better-escape.vim {:mod :tools.better-escape}
      :mhinz/vim-startify {:mod :ui.startify}
      :karb94/neoscroll.nvim {:mod :ui.neoscroll}
