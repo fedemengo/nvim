@@ -58,6 +58,12 @@
           (vim.api.nvim_buf_set_text 0 (-- sr) 0 (-- er) (length line)
                                      [newline])))))
 
+(fn toggle-wrap []
+  (let [has-wrap (. vim.wo :wrap)]
+    (if has-wrap
+      (vim.cmd "windo set nowrap")
+      (vim.cmd "windo set wrap"))))
+
 (map [:v] :<leader><space> eval-expression {:desc "Evaluate expression"})
 
 ;; search with s instead of f
@@ -127,8 +133,13 @@
 
 (map [:n] :<leader>h (bindcmd "tabmove -1") {:desc "Move tab to the left"})
 (map [:n] :<leader>l (bindcmd "tabmove +1") {:desc "Move tab to the right"})
+
 (map [:n] :<leader>s (bindcmd :split) {:desc "Split window horizontally"})
 (map [:n] :<leader>v (bindcmd :vsplit) {:desc "Split window vertically"})
+(map [:n] :sd        (bindcmd "vertical resize -15") {:desc "Decrease split width"})
+(map [:n] :si        (bindcmd "vertical resize +15") {:desc "Increase split width"})
+(map [:n] :<leader>w toggle-wrap {:desc "Toggle wrap"})
+
 (map [:n] :<leader>q (bindcmd :qa) {:desc "Quit all"})
 (map [:n] :<leader>Q (bindcmd :qa!) {:desc "Force quit all"})
 (map [:n :v] :<leader>d64 "c<C-r>=system('base64 --decode', @\")<cr><Esc>"
