@@ -134,9 +134,7 @@
 (set vim.o.updatetime interval)
 
 (set vim.o.list true)
-(set vim.opt.listchars {:tab "▸ " :eol "↵"})
-
-; :space "⋅"})
+(set vim.opt.listchars {:tab "▸ " :eol "↵"}) ; :space "⋅"})
 
 ; open all folds by default
 
@@ -150,9 +148,9 @@
 
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
-;;(vim.cmd "colorscheme github_dimmed")
 
-(vim.cmd "colorscheme PaperColor")
+;;(vim.cmd "colorscheme github_light")
+(vim.cmd "colorscheme monokai-pro")
 (set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")

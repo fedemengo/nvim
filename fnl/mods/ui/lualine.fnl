@@ -1,4 +1,5 @@
-(module mods.ui.lualine {autoload {lualine :lualine navic :nvim-navic}})
+(module mods.ui.lualine {autoload {lualine :lualine
+                                   navic :nvim-navic}})
 
 (navic.setup {:depth_limit 5})
 
@@ -24,5 +25,5 @@
                                         :always_visible true}]
                            :lualine_c [location {:cond navic.is_available}]
                            :lualine_x [:branch]
-                           :lualine_y [:filetype session]
+                           :lualine_y [:filetype session :lsp_progress]
                            :lualine_z [:progress :location]}})

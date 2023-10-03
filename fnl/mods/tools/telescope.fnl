@@ -76,25 +76,16 @@
                           :search ""
                           :prompt_title "Fuzzy grep"})
 
-(local ivy_config (themes.get_ivy {:borderchars {:prompt ["─"
-                                                          ""
-                                                          ""
-                                                          ""
-                                                          "─"
-                                                          "─"
-                                                          ""
-                                                          ""]
+(fn gen_ivy_config [height]
+  (themes.get_ivy {:borderchars {:prompt ["─" "" "" "" "─" "─" "" ""]
                                                  :results [""]
-                                                 :preview [""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""]}
+                                                 :preview ["" "" "" "" "" "" "" ""]}
                                    :preview_width 0.7
+                                   :layout_config {:height height}
                                    :preview_title ""}))
+
+(local ivy_config (gen_ivy_config 0.7))
+(local small_ivy_config (gen_ivy_config 0.3))
 
 (local fzf_opts_theme (merge-table ivy_config fuzzy_search_opts))
 
@@ -147,7 +138,6 @@
 
 (map [:n] :<C-h> (bindf themed_count_find_files {:hidden true})
      {:desc "Find all files [hidden]"})
-(map [:n] :<C-f> themed_count_find_files {:desc "Find files"})
 
 (map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)
      {:desc "Find symbols [LSP]"})
@@ -165,7 +155,7 @@
 (map [:n] :gr themed_bufnr_lsp_refs {:desc "References [LSP]"})
 (map [:n] :gd themed_bufnr_lsp_defs {:desc "Definitions [LSP]"})
 (map [:n] :fd (bindf builtin.diagnostics ivy_config) {:desc :Diagnostics})
-(map [:n] :fe (bindf builtin.diagnostics diag_err_theme)
+(map [:n] :fe (bindf (bindf builtin.diagnostics {:severity_bound :ERROR :prompt_title "Workspace Errors"}) ivy_config)
      {:desc "Diagnostics [ERR]"})
 
 (var pickers (require :telescope.pickers))
@@ -340,7 +330,7 @@
              (p.find p)))
 
 (local themed_magic (bindf magic ivy_config))
+(local small_themed_magic (bindf magic small_ivy_config))
 
 (map [:n] :F themed_magic {:desc "Find and move around"})
-(map [:n] :fj themed_magic {:desc "Find and move around"})
-(map [:n] :<C-space> themed_magic {:desc "Find and move around"})
+(map [:n] :<C-f> small_themed_magic {:desc "Find and move around"})

@@ -95,7 +95,7 @@
                         :flags {:allow_incremental_sync true
                                 :debounce_text_changes 1000}
                         :settings {:gopls {:completeUnimported true
-                                           :buildFlags [:-tags=integration]
+                                           :buildFlags ["-tags=integration,opensearch"]
                                            :gofumpt true
                                            :experimentalPostfixCompletions true
                                            :analyses {:nilness true
