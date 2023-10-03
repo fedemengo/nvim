@@ -155,8 +155,7 @@
 (map [:n] :gr themed_bufnr_lsp_refs {:desc "References [LSP]"})
 (map [:n] :gd themed_bufnr_lsp_defs {:desc "Definitions [LSP]"})
 (map [:n] :fd (bindf builtin.diagnostics ivy_config) {:desc :Diagnostics})
-(map [:n] :fe (bindf (bindf builtin.diagnostics {:severity_bound :ERROR :prompt_title "Workspace Errors"}) ivy_config)
-     {:desc "Diagnostics [ERR]"})
+(map [:n] :fe (bindf builtin.diagnostics (merge-table {:severity_bound :ERROR :prompt_title "Workspace Errors"} (deep-copy ivy_config))) {:desc "Diagnostics [ERR]"})
 
 (var pickers (require :telescope.pickers))
 (var finders (require :telescope.finders))

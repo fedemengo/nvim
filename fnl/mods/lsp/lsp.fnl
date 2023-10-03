@@ -46,7 +46,7 @@
 
 (mason.setup)
 (masonlsp.setup {:ensure_installed [:gopls
-                                    :fennel_language_server
+                                    ;:fennel_language_server
                                     :clangd
                                     :bashls
                                     :dockerls
@@ -111,14 +111,14 @@
                                            :staticcheck true
                                            :usePlaceholders true}}}
                 :lua_ls {:settings {:Lua {:diagnostics {:globals [:vim]}}}}
-                :fennel_language_server {:default_config {:cmd [:$HOME/.local/bin/fennel-language-server]
-                                                          :filetypes [:fennel]
-                                                          :single_file_support true
-                                                          :root_dir (lsputil.root_pattern :fnl)
-                                                          :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
-                                                                              :diagnostics {:globals [:vim
-                                                                                                      :module
-                                                                                                      :autoload]}}}}}
+                ;:fennel_language_server {:default_config {:cmd [:$HOME/.local/bin/fennel-language-server]
+                ;                                          :filetypes [:fennel]
+                ;                                          :single_file_support true
+                ;                                          :root_dir (lsputil.root_pattern :fnl)
+                ;                                          :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
+                ;                                                              :diagnostics {:globals [:vim
+                ;                                                                                      :module
+                ;                                                                                      :autoload]}}}}}
                 :pylsp {:settings {:pylsp {:plugins {:pycodestyle {:enable true
                                                                    :ignore [;; expected 2 blank lines, found 1
                                                                             :E302
