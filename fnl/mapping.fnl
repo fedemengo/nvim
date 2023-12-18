@@ -20,10 +20,18 @@
 
 ;; for themes respecting vim.o.background
 
+(fn light-theme []
+  (vim.cmd "colorscheme github_light")
+  (set vim.o.background :light))
+
+(fn dark-theme []
+  (vim.cmd "colorscheme monokai-pro")
+  (set vim.o.background :dark))
+
 (fn toggle-theme []
   (if (= :dark (. vim.o :background))
-      (set vim.o.background :light)
-      (set vim.o.background :dark)))
+    (light-theme)
+    (dark-theme)))
 
 (fn open-web-commit []
   (let [path (vim.fn.expand "%:p:h")

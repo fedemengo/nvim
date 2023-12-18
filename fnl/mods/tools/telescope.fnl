@@ -59,7 +59,8 @@
                                                     :.local/share/Trash/
                                                     :.local/share/nvim/swap/
                                                     "code%-other/"]}
-                  :pickers {:live_grep {:mappings {:i {:<c-r> actions.to_fuzzy_refine}}}
+                  :pickers {:colorscheme {:enable_preview true }
+                            :live_grep {:mappings {:i {:<c-r> actions.to_fuzzy_refine}}}
                             :find_files {:mappings {:i {:<c-r> (fn [buf]
                                                                  (generate.refine buf
                                                                                   {:prompt_to_prefix true

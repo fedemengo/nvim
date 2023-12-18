@@ -45,7 +45,9 @@
      :lewis6991/impatient.nvim {}
      :NLKNguyen/papercolor-theme {}
      :fedemengo/github-nvim-theme {}
+     :catppuccin/nvim {}
      :loctvl842/monokai-pro.nvim {:mod :ui.monokai}
+     :AlexvZyl/nordic.nvim {}
 
      ;; ln -s ~/.local/share/nvim/site/pack/packer/opt/copilot.lua ~/.local/share/nvim/site/pack/packer/start/copilot.lua
      :zbirenbaum/copilot.lua {:cmd :Copilot
@@ -56,8 +58,10 @@
      :rktjmp/hotpot.nvim {}
      :stevearc/profile.nvim {:mod :dev.profile}
      :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
+     :RRethy/vim-illuminate {}
      ;; utils
      ;:nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
+     :wellle/targets.vim {}
      :folke/which-key.nvim {:mod :tools.which-key}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
      :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :tools.telescope}

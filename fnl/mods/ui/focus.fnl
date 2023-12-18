@@ -1,3 +1,3 @@
 (module mods.ui.focus {autoload {focus :focus }})
 
-(focus.setup)
+(focus.setup {:enable false})
