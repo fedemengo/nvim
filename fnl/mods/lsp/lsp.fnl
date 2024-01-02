@@ -130,7 +130,8 @@
                                                                             :W503]
                                                                    :indentSize 2}
                                                      :pylsp_mypy {:enabled true
-                                                                  :live_mode true}}}}}
+                                                                  :live_mode true}}}}
+                        :plugins {:rope_autoimport {:enabled true}}}
                 :clangd {:autostart true
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})

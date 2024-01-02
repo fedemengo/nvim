@@ -1,12 +1,11 @@
 (module :core)
 
 ;; autocmd
-
 (when (vim.fn.has :autocmd)
-  (let [group (vim.api.nvim_create_augroup :misc {:clear true})]
+  (let [g (vim.api.nvim_create_augroup :misc {:clear true})]
     ;; restore cursor last position in filesilent since for new file would error
     (vim.api.nvim_create_autocmd :BufReadPost
-                                 {: group
+                                 {:group g
                                   :pattern "*"
                                   :callback (fn []
                                               (when (<= (vim.fn.line "'\"")
@@ -14,18 +13,20 @@
                                                 (vim.fn.execute "normal! g`\"")))})
     ;; switch off relative number in insert mode
     (vim.api.nvim_create_autocmd :InsertEnter
-                                 {: group :command "set norelativenumber"})
+                                 {:group g :command "set norelativenumber"})
     (vim.api.nvim_create_autocmd :InsertLeave
-                                 {: group :command "set relativenumber"})
+                                 {:group g :command "set relativenumber"})
     ;; enable number in telescope preview
-    (vim.api.nvim_create_autocmd "User TelescopePreviewerLoaded"
-                                 {: group :command "setlocal number"})
+    (vim.api.nvim_create_autocmd :User
+                                 {:group g
+                                  :pattern :TelescopePreviewerLoaded
+                                  :command "setlocal number"})
     ;; delete empty space from the end of lines on every save
     (vim.api.nvim_create_autocmd :BufWritePre
-                                 {: group :command "%s/\\s\\+$//e"}))
-  (let [group (vim.api.nvim_create_augroup :filetype-mappings {:clear true})]
+                                 {:group g :command "%s/\\s\\+$//e"}))
+  (let [g (vim.api.nvim_create_augroup :filetype-mappings {:clear true})]
     (vim.api.nvim_create_autocmd :FileType
-                                 {: group
+                                 {:group g
                                   :pattern "python,json"
                                   :callback (fn []
                                               (set vim.o.shiftwidth 2)
@@ -33,56 +34,55 @@
                                               (set vim.o.softtabstop 2))})
     ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
     (vim.api.nvim_create_autocmd :FileType
-                                 {: group
+                                 {:group g
                                   :pattern "fennel,lisp"
                                   :command "setlocal lisp iskeyword-=_ iskeyword-=."})
     ;; <cr> enters command mode everywhere except in quickfix
     (vim.api.nvim_create_autocmd :BufEnter
-                                 {: group
+                                 {:group g
                                   :callback (fn []
                                               (if (= :qf vim.bo.filetype)
                                                   (unmap [:n] :<cr>)
                                                   (map [:n] :<cr> ":")))}))
 
-  (let [group (vim.api.nvim_create_augroup :window-switching {:clear true})]
+  (let [g (vim.api.nvim_create_augroup :window-switching {:clear true})]
     (vim.api.nvim_create_autocmd [:VimEnter :WinEnter]
-                                 {: group
+                                 {:group g
                                   :callback (fn []
                                               (set vim.o.cursorline true)
                                               (set vim.o.cursorcolumn true))})
     (vim.api.nvim_create_autocmd :WinLeave
-                                 {: group
+                                 {:group g
                                   :callback (fn []
                                               (set vim.o.cursorline true)
                                               (set vim.o.cursorcolumn false))}))
-  (let [group (vim.api.nvim_create_augroup :go-format {:clear true})]
+  (let [g (vim.api.nvim_create_augroup :go-format {:clear true})]
     (vim.api.nvim_create_autocmd :BufWritePre
-                                 {: group
+                                 {:group g
                                   :pattern :*.go
                                   :callback (fn []
                                               (set gof (require :go.format))
                                               (gof.goimport))}))
-  (let [group (vim.api.nvim_create_augroup :large-files {:clear true})]
+  (let [g (vim.api.nvim_create_augroup :large-files {:clear true})]
     (vim.api.nvim_create_autocmd :BufReadPre
-                                 {: group
+                                 {:group g
                                   :callback (fn [ev]
                                               ;; cannot get number of lines if buffer is not fully read
                                               ;;(when (or (> (vim.api.nvim_buf_line_count bufnr) 5_000))
                                               ;;          (> (vim.fn.getfsize (vim.fn.bufname bufnr)) (* 1024 1024))
-                                              (if (<= (vim.fn.getfsize (vim.fn.bufname (. ev
-                                                                                          :buf)))
+                                              (if (<= (vim.fn.getfsize (vim.fn.bufname (. ev :buf)))
                                                       (* 1024 1024))
                                                   (set vim.o.foldmethod :expr)
                                                   (set vim.o.foldmethod :indent)))}))
-  ;;(let [group (vim.api.nvim_create_augroup "diagnotics" {:clear true})]
+  ;;(let [g (vim.api.nvim_create_augroup "diagnotics" {:clear true})]
   ;;  (vim.api.nvim_create_autocmd
   ;;    "DiagnosticChanged"
-  ;;    {:group group
+  ;;    {:group g
   ;;     :callback (fn [ev]
   ;;                 (log.debug ev))})))
-  (let [group (vim.api.nvim_create_augroup :autosave {:clear true})]
+  (let [g (vim.api.nvim_create_augroup :autosave {:clear true})]
     (vim.api.nvim_create_autocmd :InsertLeave
-                                 {: group
+                                 {:group g
                                   :callback (fn []
                                               (when (and (not vim.bo.readonly)
                                                          (vim.fn.filereadable (vim.fn.expand "%")))
@@ -137,12 +137,11 @@
 (set vim.o.list true)
 (set vim.opt.listchars {:tab "▸ " :eol "↵"}) ; :space "⋅"})
 
-; open all folds by default
-
+;; open all folds by default
 (set vim.o.foldenable false)
 (set vim.o.foldexpr "nvim_treesitter#foldexpr()")
-;; undo dir
 
+;; undo dir
 (local undodir_path (.. (os.getenv :HOME) :/.nvim/undo-dir/))
 (when (= 0 (vim.fn.isdirectory undodir_path))
   (vim.fn.mkdir undodir_path :p))

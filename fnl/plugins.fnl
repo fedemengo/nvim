@@ -66,7 +66,7 @@
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
      :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :tools.telescope}
      :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
-     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank}
+     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank :main :ibl}
      :norcalli/nvim-colorizer.lua {:mod :ui.colorizer}
      :numToStr/FTerm.nvim {:mod :tools.fterm}
      :SmiteshP/nvim-navic {}
