@@ -81,7 +81,7 @@
   (themes.get_ivy {:borderchars {:prompt ["─" "" "" "" "─" "─" "" ""]
                                                  :results [""]
                                                  :preview ["" "" "" "" "" "" "" ""]}
-                                   :preview_width 0.7
+                                   :preview_width 0.65
                                    :layout_config {:height height}
                                    :preview_title ""}))
 
@@ -155,8 +155,13 @@
 (map [:n] :gi themed_bufnr_lsp_impl {:desc "Implementations [LSP]"})
 (map [:n] :gr themed_bufnr_lsp_refs {:desc "References [LSP]"})
 (map [:n] :gd themed_bufnr_lsp_defs {:desc "Definitions [LSP]"})
-(map [:n] :fd (bindf builtin.diagnostics ivy_config) {:desc :Diagnostics})
-(map [:n] :fe (bindf builtin.diagnostics (merge-table {:severity_bound :ERROR :prompt_title "Workspace Errors"} (deep-copy ivy_config))) {:desc "Diagnostics [ERR]"})
+(map [:n] :fd (bindf builtin.diagnostics (merge-table {:sort_by :severity :line_width 10}
+                                                      (deep-copy ivy_config))) {:desc :Diagnostics})
+(map [:n] :fe (bindf builtin.diagnostics (merge-table {:sort_by :severity
+                                                       :severity :error
+                                                       :line_width 10
+                                                       :prompt_title "Workspace Errors"}
+                                                      (deep-copy ivy_config))) {:desc "Diagnostics [ERR]"})
 
 (var pickers (require :telescope.pickers))
 (var finders (require :telescope.finders))
