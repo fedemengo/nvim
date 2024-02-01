@@ -59,10 +59,12 @@
      :stevearc/profile.nvim {:mod :dev.profile}
      :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
      :RRethy/vim-illuminate {}
+     :sopa0/telescope-makefile {:requires [[:akinsho/toggleterm.nvim]]}
      ;; utils
      ;:nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
      :wellle/targets.vim {}
      :folke/which-key.nvim {:mod :tools.which-key}
+    :folke/trouble.nvim {:mod :tools.trouble}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
      :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :tools.telescope}
      :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}

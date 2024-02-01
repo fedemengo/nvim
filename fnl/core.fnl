@@ -37,6 +37,11 @@
                                  {:group g
                                   :pattern "fennel,lisp"
                                   :command "setlocal lisp iskeyword-=_ iskeyword-=."})
+    (vim.api.nvim_create_autocmd :FileType
+                                 {:group g
+                                  :pattern "make"
+                                  :command "setlocal iskeyword+=-"})
+
     ;; <cr> enters command mode everywhere except in quickfix
     (vim.api.nvim_create_autocmd :BufEnter
                                  {:group g
@@ -105,7 +110,7 @@
 (set vim.o.incsearch true)
 (set vim.o.ignorecase true)
 (set vim.o.smartcase true)
-(set vim.o.cmdheight 0)
+;(set vim.o.cmdheight 0)
 
 (let [indent 4]
   (set vim.o.shiftwidth indent)
