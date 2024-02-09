@@ -80,9 +80,11 @@
      ;; theme
      :rcarriga/nvim-notify {:mod :ui.notify}
      :folke/zen-mode.nvim {:mod :ui.zenmode}
+     :nvim-lualine/lualine.nvim {}
      :arkav/lualine-lsp-progress {:mod :ui.lualine}
      :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
      :nvim-focus/focus.nvim {:mod :ui.focus}
+     :petertriho/nvim-scrollbar {:mod :ui.scrollbar}
      ;; programming
      :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter}
      :ray-x/go.nvim {:mod :dev.go_nvim}
