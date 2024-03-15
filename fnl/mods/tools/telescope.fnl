@@ -28,8 +28,6 @@
                              :file_ignore_patterns [:.git/
                                                     :node_modules/
                                                     :.npm/
-                                                    "*[Cc]ache/"
-                                                    :*-cache*
                                                     :*.tags*
                                                     :*.gemtags*
                                                     :*.csv
