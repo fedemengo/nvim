@@ -20,6 +20,7 @@
                                 :python
                                 :lua
                                 :vim
+                                :vimdoc
                                 :bash
                                 :gitcommit
                                 :gitignore

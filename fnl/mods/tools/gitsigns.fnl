@@ -27,7 +27,7 @@
                                            :delay 100
                                            :ignore_whitespace false}})
 
-(map [:n] :<leader>b gitsigns.toggle_current_line_blame
+(map [:n] :<leader>gb gitsigns.toggle_current_line_blame
      {:desc "Toggle git blame line"})
-(map [:n] :<space>b gitsigns.toggle_current_line_blame
+(map [:n] :<space>gb gitsigns.toggle_current_line_blame
      {:desc "Toggle git blame line"})
