@@ -44,7 +44,7 @@
                    {:mapping (cmp.mapping.preset.cmdline)
                     :sources [{:name :path} {:name :cmdline}]})
 
-(mason.setup)
+(mason.setup {:PATH :append})
 (masonlsp.setup {:ensure_installed [:gopls
                                     ;:fennel_language_server
                                     :clangd
@@ -90,8 +90,8 @@
 
 (local lsp_opt {:gopls {:autostart true
                         :cmd [:gopls :serve]
-                        :filetypes [:go :gomod]
-                        :root_dir (lsputil.root_pattern :go.work :go.mod :.git)
+                        :filetypes [:go :mod]
+                        :root_dir (lsputil.root_pattern :go.mod :.git)
                         :flags {:allow_incremental_sync true
                                 :debounce_text_changes 1000}
                         :settings {:gopls {:completeUnimported true
@@ -104,6 +104,18 @@
                                                       :unusedvariable true
                                                       :shadow true
                                                       :useany true
+                                                      :assign true
+                                                      :bools true
+                                                      :defers true
+                                                      :deprecated true
+                                                      :errorsas true
+                                                      :httpresponse true
+                                                      :ifaceassert true
+                                                      :loopclosure true
+                                                      :lostcancel true
+                                                      :simplifyrange true
+                                                      :simplifyslice true
+                                                      :structtag true
                                                       :fieldalignment false}
                                            :codelenses {:gc_details true
                                                         :generate true
