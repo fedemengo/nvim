@@ -1,6 +1,5 @@
 (module :mods.lsp.lsp
-        {autoload {log :mods/dev/log
-                   navic nvim-navic
+        {autoload {navic nvim-navic
                    cmp cmp
                    cmp_nvim_lsp cmp_nvim_lsp
                    lspkind lspkind
@@ -13,8 +12,6 @@
                    masonnullls mason-null-ls
                    themes telescope.themes
                    tbuiltin telescope.builtin}})
-
-(log.setup {:outfile :/tmp/nvim.lsp.log :color true :level trace})
 
 (cmp.setup {:window {:completion (cmp.config.window.bordered)
                      :documentation (cmp.config.window.bordered)}
@@ -152,7 +149,6 @@
   (each [_ server (ipairs (get_servers))]
     (let [server_config (. lspconfig server)
           opts (or (. lsp_opt server) {})]
-      (log.trace "Setting up LSP for" server opts)
       (tset opts :on_attach on_attach)
       (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
       (server_config.setup opts))))

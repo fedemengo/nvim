@@ -55,14 +55,11 @@
      ;                        :mod :dev.copilot}
      ;:zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
      ;; dev
-     :rktjmp/hotpot.nvim {}
      :stevearc/profile.nvim {:mod :dev.profile}
      :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
      :RRethy/vim-illuminate {}
      :sopa0/telescope-makefile {:requires [[:akinsho/toggleterm.nvim]]}
-     :leoluz/nvim-dap-go {:requires [[:mfussenegger/nvim-dap]] :mod :dev.debug}
      ;; utils
-     ;:nvim-tree/nvim-tree.lua {:mod :tools.nvim-tree}
      :wellle/targets.vim {}
      :folke/which-key.nvim {:mod :tools.which-key}
      :folke/trouble.nvim {:mod :tools.trouble}

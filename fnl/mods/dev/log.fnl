@@ -1,3 +1,5 @@
+(module :mods.dev.log)
+
 (var log {:version :0.1.0
           :caller true
           :usecolor true
