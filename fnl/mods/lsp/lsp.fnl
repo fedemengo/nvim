@@ -129,12 +129,14 @@
                 ;                                                                                      :module
                 ;                                                                                      :autoload]}}}}}
                 :pylsp {:settings {:pylsp {:plugins {:pycodestyle {:enable true
-                                                                   :ignore [;; expected 2 blank lines, found 1
+                                                                   :ignore [;; continuation line indentation is not a multiple of four
+                                                                            :E121
+                                                                            ;; expected 2 blank lines, found 1
                                                                             :E302
                                                                             ;; line too long
                                                                             :E501
-                                                                            ;; continuation line indentation is not a multiple of four
-                                                                            :E121
+                                                                            ;; allow multiple stms in the same line
+                                                                            :E701
                                                                             ;; line break before binary operator
                                                                             :W503]
                                                                    :indentSize 2}
@@ -156,7 +158,7 @@
 ;; https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#configuration
 
 (let [autopep8 (nullls.builtins.formatting.autopep8.with {:extra_args [:--indent-size=2
-                                                                       "--ignore=E302,E121"
+                                                                       "--ignore=E302,E121,E701"
                                                                        :--max-line-length=120]})]
   (nullls.setup {:sources [autopep8
                            nullls.builtins.formatting.stylua

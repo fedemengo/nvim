@@ -110,7 +110,7 @@
 (set vim.o.incsearch true)
 (set vim.o.ignorecase true)
 (set vim.o.smartcase true)
-;(set vim.o.cmdheight 0)
+(set vim.o.cmdheight 0)
 
 (let [indent 4]
   (set vim.o.shiftwidth indent)
@@ -154,8 +154,8 @@
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
 
-;;(vim.cmd "colorscheme catppuccin-latte")
-(vim.cmd "colorscheme monokai-pro-spectrum")
-(set vim.o.background :light)
+;(vim.cmd "colorscheme monokai-pro-spectrum")
+(vim.cmd "colorscheme papercolor")
+(set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")
