@@ -54,6 +54,15 @@
      ;                        :event :InsertEnter
      ;                        :mod :dev.copilot}
      ;:zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
+     :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
+     :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
+                               [:stevearc/dressing.nvim]
+                               [:nvim-lua/plenary.nvim]
+                               [:MunifTanjim/nui.nvim]
+                               [:nvim-tree/nvim-web-devicons]]
+                     :run :make
+                     :mod :dev.avante}
+
      ;; dev
      :stevearc/profile.nvim {:mod :dev.profile}
      :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
