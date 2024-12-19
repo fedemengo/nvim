@@ -50,10 +50,10 @@
      :AlexvZyl/nordic.nvim {}
 
      ;; ln -s ~/.local/share/nvim/site/pack/packer/opt/copilot.lua ~/.local/share/nvim/site/pack/packer/start/copilot.lua
-     ;:zbirenbaum/copilot.lua {:cmd :Copilot
-     ;                        :event :InsertEnter
-     ;                        :mod :dev.copilot}
-     ;:zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
+     :zbirenbaum/copilot.lua {:cmd :Copilot
+                             :event :InsertEnter
+                             :mod :dev.copilot}
+     :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
      :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
      :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
                                [:stevearc/dressing.nvim]
