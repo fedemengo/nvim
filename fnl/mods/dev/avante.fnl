@@ -8,7 +8,7 @@
                :vendors {:ollama {:__inherited_from "openai"
                                 :api_key_name ""
                                 :endpoint "http://harlie:11434/v1"
-                                :model "codellama:13b"}}})
+                                :model "marco-o1:7b-fp16"}}})
 (avante.setup config)
 
 (map [:n :v] :<C-a>a (bindf api.ask) {:desc "Open avante sidebar"})
