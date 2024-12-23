@@ -110,7 +110,7 @@
 (set vim.o.incsearch true)
 (set vim.o.ignorecase true)
 (set vim.o.smartcase true)
-(set vim.o.cmdheight 0)
+(set vim.o.cmdheight 1)
 
 (let [indent 4]
   (set vim.o.shiftwidth indent)
@@ -155,7 +155,9 @@
 (set vim.o.undofile true)
 
 ;(vim.cmd "colorscheme monokai-pro-spectrum")
-(vim.cmd "colorscheme papercolor")
+(match (pcall #(vim.cmd "colorscheme PaperColor"))
+  (true _) (vim.notify "Successfully set colorscheme to PaperColor" vim.log.levels.INFO)
+  (false err) (vim.notify (.. "Failed to set papercolor theme: " err) vim.log.levels.WARN))
 (set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")
