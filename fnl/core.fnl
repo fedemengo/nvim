@@ -156,7 +156,7 @@
 
 ;(vim.cmd "colorscheme monokai-pro-spectrum")
 (match (pcall #(vim.cmd "colorscheme PaperColor"))
-  (true _) (vim.notify "Successfully set colorscheme to PaperColor" vim.log.levels.INFO)
+  (true _) _
   (false err) (vim.notify (.. "Failed to set papercolor theme: " err) vim.log.levels.WARN))
 (set vim.o.background :dark)
 
