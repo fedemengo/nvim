@@ -56,6 +56,7 @@
      :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
      :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
      :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
+                               [:HakonHarnes/img-clip.nvim]
                                [:stevearc/dressing.nvim]
                                [:nvim-lua/plenary.nvim]
                                [:MunifTanjim/nui.nvim]
