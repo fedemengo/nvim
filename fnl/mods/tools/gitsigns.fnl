@@ -12,6 +12,7 @@
                          :delete        {:text "-"}
                          :topdelete     {:text "-"}}
                  :current_line_blame_formatter "\t\t<author> | <author_time:%a %d/%m/%y %X> | <summary> "
+                 :current_line_blame_opts {:delay 500}
                  :current_line_blame false})
 
 (map [:n] :<leader>gb gitsigns.toggle_current_line_blame  {:desc "Toggle git blame line"})
