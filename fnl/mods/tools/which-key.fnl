@@ -1,3 +1,7 @@
-(module mods.tools.which-key {autoload {which-key :which-key}})
+(module mods.tools.which-key {autoload {wk :which-key}})
 
-(which-key.setup)
+(wk.setup
+  {:triggers
+    [ {:mode ["n"] 1 "f"}
+      {:mode ["n"] 1 "t"} ]})
+

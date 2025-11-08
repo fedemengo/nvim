@@ -4,8 +4,7 @@
 
 (avante_lib.load)
 
-(local config {:provider "ollama"
-               :vendors {:ollama {:__inherited_from "openai"
+(local config {:providers {:ollama {:__inherited_from "openai"
                                 :api_key_name ""
                                 :endpoint "http://harlie:11434/v1"
                                 :model "marco-o1:7b-fp16"}}})

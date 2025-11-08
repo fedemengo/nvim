@@ -98,7 +98,7 @@
      :ray-x/go.nvim {:mod :dev.go_nvim}
      :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
      :ray-x/lsp_signature.nvim {}
-     :simrat39/symbols-outline.nvim {:mod :lsp.symbols}
+     :hedyhli/outline.nvim {:mod :lsp.symbols}
      :wakatime/vim-wakatime {}
      :Vonr/align.nvim {:mod :tools.align}
      :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
@@ -112,8 +112,12 @@
                                            [:hrsh7th/cmp-nvim-lsp]
                                            [:hrsh7th/cmp-nvim-lua]
                                            [:onsails/lspkind.nvim]
-                                           [:jose-elias-alvarez/null-ls.nvim]]
-                                :mod :lsp.lsp})
+                                           [:nvimtools/none-ls.nvim]]
+                                :mod :lsp.lsp}
+
+     ;; misc
+     :gruvw/strudel.nvim {:run "npm install" :mod :misc.strudel})
+
 
 (map [:n] :<space>pi packer.install {:desc "Install plugins"})
 (map [:n] :<space>pu packer.update {:desc "Update plugins"})

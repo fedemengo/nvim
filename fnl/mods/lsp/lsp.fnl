@@ -55,7 +55,16 @@
                                     :rust_analyzer]
                  :automatic_installation true})
 
-(masonnullls.setup {:automatic_setup true})
+(let [fmt nullls.builtins.formatting]
+  (nullls.setup {:sources [fmt.black
+                           fmt.stylua
+                           fmt.fnlfmt
+                           fmt.shfmt
+                           fmt.goimports
+                           fmt.gofumpt
+                           fmt.prettier]}))
+
+(masonnullls.setup {:handlers {}})
 
 (local on_attach
        (fn [client buf]
@@ -152,21 +161,8 @@
 
 (let [get_servers (. masonlsp :get_installed_servers)]
   (each [_ server (ipairs (get_servers))]
-    (let [server_config (. lspconfig server)
-          opts (or (. lsp_opt server) {})]
+    (let [opts (or (. lsp_opt server) {})]
       (tset opts :on_attach on_attach)
       (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
-      (server_config.setup opts))))
+      (vim.lsp.config server opts))))
 
-;; https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#configuration
-
-(nullls.setup {:sources [;(nullls.builtins.formatting.autopep8.with {:extra_args ["--indent-size=4"
-                         ;                                                        "--ignore=E302,E121,E701"
-                         ;                                                        "--max-line-length=150"]})
-                         nullls.builtins.formatting.black
-                         nullls.builtins.formatting.stylua
-                         nullls.builtins.formatting.fnlfmt
-                         nullls.builtins.formatting.shfmt
-                         nullls.builtins.formatting.goimports
-                         nullls.builtins.formatting.gofumpt
-                         nullls.builtins.formatting.prettier]})

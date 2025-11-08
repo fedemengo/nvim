@@ -164,8 +164,3 @@
 
 (map [:n] :<S-Tab> :za {:desc "Toggle fold under cursor"})
 
-;; https://github.com/folke/which-key.nvim#%EF%B8%8F-configuration
-;; this is discouraged, but hey https://xkcd.com/1172
-
-(map [:n] :f (bindcmd "WhichKey f"))
-(map [:n] :t (bindcmd "WhichKey t"))
