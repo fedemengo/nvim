@@ -24,7 +24,7 @@
                                                  :--only-matching]
                              :layout_strategy :bottom_pane
                              :layout_config {:scroll_speed 8
-                                             :preview_width 0.7}
+                                             :bottom_pane {:preview_width 0.7}}
                              :file_ignore_patterns [:.git/
                                                     :node_modules/
                                                     :.npm/
@@ -81,8 +81,9 @@
                                                  :results [""]
                                                  :preview ["" "" "" "" "" "" "" ""]}
                    :shorten_path true
-                   :preview_width 0.65
-                   :layout_config {:height height}}))
+                   :layout_config {:height height
+                                   :preview_width 0.65
+                                   }}))
                    ;:preview_title ""}))
 
 (local ivy_config (gen_ivy_config 0.7))
