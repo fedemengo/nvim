@@ -95,6 +95,9 @@
      ;; programming
      :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter}
      :ray-x/go.nvim {:mod :dev.go_nvim}
+     :Julian/lean.nvim {;:ft [:lean]
+                        :requires [[:neovim/nvim-lspconfig]]
+                        :mod :dev.lean}
      :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
      :ray-x/lsp_signature.nvim {}
      :hedyhli/outline.nvim {:mod :lsp.symbols}
