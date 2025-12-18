@@ -88,7 +88,6 @@
 
 ;; jk is the new esc
 
-(map [:i :t :v :x :c] :jk :<Esc>)
 (map [:i :t :v :x :c] :jk "<C-\\><C-n>")
 
 ;; move in cmd mode
@@ -163,4 +162,3 @@
 (map [:x] :<leader>p "\"_dP")
 
 (map [:n] :<S-Tab> :za {:desc "Toggle fold under cursor"})
-

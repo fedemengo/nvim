@@ -14,8 +14,8 @@
 (conf.setup {:ensure_installed [:commonlisp
                                 :fennel
                                 :go
-                                :gosum
                                 :gomod
+                                :gowork
                                 :cpp
                                 :python
                                 :lua

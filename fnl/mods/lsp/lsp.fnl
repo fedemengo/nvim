@@ -4,7 +4,6 @@
                    cmp_nvim_lsp cmp_nvim_lsp
                    lspkind lspkind
                    lspsignature lsp_signature
-                   lspconfig lspconfig
                    lsputil lspconfig/util
                    nullls null-ls
                    mason mason
@@ -12,6 +11,9 @@
                    masonnullls mason-null-ls
                    themes telescope.themes
                    tbuiltin telescope.builtin}})
+
+;; selection behavior for cmp mappings
+(local cmp_select {:behavior cmp.SelectBehavior.Select})
 
 (cmp.setup {:window {:completion (cmp.config.window.bordered)
                      :documentation (cmp.config.window.bordered)}
@@ -96,7 +98,7 @@
 
 (local lsp_opt {:gopls {:autostart true
                         :cmd [:gopls :serve]
-                        :filetypes [:go :mod]
+                        :filetypes [:go :gomod :gowork]
                         :root_dir (lsputil.root_pattern :go.mod :.git)
                         :flags {:allow_incremental_sync true
                                 :debounce_text_changes 1000}
@@ -159,10 +161,22 @@
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
 
-(let [get_servers (. masonlsp :get_installed_servers)]
-  (each [_ server (ipairs (get_servers))]
-    (let [opts (or (. lsp_opt server) {})]
-      (tset opts :on_attach on_attach)
-      (tset opts :capabilites (cmp_nvim_lsp.default_capabilities))
-      (vim.lsp.config server opts))))
+;; Ensure server configuration modules are available to vim.lsp.config
+(fn ensure_server_config [name]
+  (pcall require (.. :lspconfig.server_configurations. name)))
 
+(let [mkcfg vim.lsp.config
+      installed (. masonlsp :get_installed_servers)]
+  (each [_ server (ipairs (installed))]
+    (let [base (or (. lsp_opt server) {})]
+      (tset base :on_attach on_attach)
+      (tset base :capabilities (cmp_nvim_lsp.default_capabilities))
+      (ensure_server_config server)
+      (let [cfg (mkcfg server base)]
+        (if cfg
+            (let [fts (or (. cfg :filetypes) [])]
+              (vim.api.nvim_create_autocmd :FileType
+                {:pattern fts
+                 :callback (fn [ev]
+                             (vim.lsp.start (vim.tbl_extend :keep cfg {:bufnr (. ev :buf)})))}))
+            )))) )

@@ -1,4 +1,4 @@
-(module mods.util.indentblanck {autoload {indentblanckline ibl}})
+(module mods.ui.indentblank {autoload {ibl ibl}})
 
-(indentblanckline.setup {:exclude {:filetypes [:startify :TelescopePrompt]
-                                    :buftypes [:terminal :nofile]}})
+(ibl.setup {:exclude {:filetypes [:startify :TelescopePrompt]
+                      :buftypes [:terminal :nofile]}})

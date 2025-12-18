@@ -1,13 +1,14 @@
-(module mods.ui.zenmode {autoload {cmd indent_blankline.commands
-                                   zenmode zen-mode}})
+(module mods.ui.zenmode {autoload {zenmode zen-mode}})
 
 (fn onopen []
-  (cmd.disable))
+  (vim.cmd "IBLDisable"))
 
 (fn onclose []
-  (cmd.enable))
+  (vim.cmd "IBLEnable"))
 
 (zenmode.setup {:window {:backdrop 1
+                         :width 0.75
+                         :height 0.95
                          :options {:signcolumn :no
                                    :cursorline false
                                    :cursorcolumn false

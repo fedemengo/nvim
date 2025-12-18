@@ -1,7 +1,8 @@
 (module mods.tools.which-key {autoload {wk :which-key}})
 
+;; Show which-key for <leader>, and keep custom prefixes for 'f' and 't'
 (wk.setup
   {:triggers
-    [ {:mode ["n"] 1 "f"}
-      {:mode ["n"] 1 "t"} ]})
-
+    [ {:mode ["n" "v"] :prefix "<leader>"}
+      {:mode ["n"] :prefix "f"}
+      {:mode ["n"] :prefix "t"} ]})
