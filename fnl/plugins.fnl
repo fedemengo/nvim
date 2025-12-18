@@ -49,9 +49,8 @@
      :loctvl842/monokai-pro.nvim {:mod :ui.monokai}
      :AlexvZyl/nordic.nvim {}
 
-     ;; ln -s ~/.local/share/nvim/site/pack/packer/opt/copilot.lua ~/.local/share/nvim/site/pack/packer/start/copilot.lua
-     :zbirenbaum/copilot.lua {:cmd :Copilot
-                             :event :InsertEnter
+     :zbirenbaum/copilot.lua {;:cmd :Copilot
+                             ;:event :InsertEnter
                              :mod :dev.copilot}
      :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
      :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
