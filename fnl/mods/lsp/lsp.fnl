@@ -4,6 +4,7 @@
                    cmp_nvim_lsp cmp_nvim_lsp
                    lspkind lspkind
                    lspsignature lsp_signature
+                   lspconfig lspconfig
                    lsputil lspconfig/util
                    nullls null-ls
                    mason mason
@@ -71,7 +72,9 @@
 (local on_attach
        (fn [client buf]
          (vim.api.nvim_buf_set_option buf :omnifunc "v:lua.vim.lsp.omnifunc")
-         (navic.attach client buf)
+         (when client.server_capabilities.documentSymbolProvider
+           (navic.attach client buf))
+
          (lspsignature.on_attach {:bind true
                                   :handler_opts {:border :rounded}
                                   :hint_enable false}
@@ -161,22 +164,12 @@
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
 
-;; Ensure server configuration modules are available to vim.lsp.config
-(fn ensure_server_config [name]
-  (pcall require (.. :lspconfig.server_configurations. name)))
 
-(let [mkcfg vim.lsp.config
-      installed (. masonlsp :get_installed_servers)]
-  (each [_ server (ipairs (installed))]
-    (let [base (or (. lsp_opt server) {})]
-      (tset base :on_attach on_attach)
-      (tset base :capabilities (cmp_nvim_lsp.default_capabilities))
-      (ensure_server_config server)
-      (let [cfg (mkcfg server base)]
-        (if cfg
-            (let [fts (or (. cfg :filetypes) [])]
-              (vim.api.nvim_create_autocmd :FileType
-                {:pattern fts
-                 :callback (fn [ev]
-                             (vim.lsp.start (vim.tbl_extend :keep cfg {:bufnr (. ev :buf)})))}))
-            )))) )
+(let [installed ((. masonlsp :get_installed_servers))]
+  (each [_ server (ipairs installed)]
+    (let [opts (or (. lsp_opt server) {})]
+      (tset opts :on_attach on_attach)
+      (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
+
+      ;; start via lspconfig (no vim.lsp.config, no manual autocmd)
+      ((. lspconfig server :setup) opts))))
