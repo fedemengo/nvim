@@ -93,7 +93,7 @@
                                                          (vim.fn.filereadable (vim.fn.expand "%")))
                                                 (vim.cmd "silent! update")))})))
 
-(set vim.g.editorconfig false)
+(set vim.g.editorconfig true)
 
 (set vim.g.mapleader ";")
 
