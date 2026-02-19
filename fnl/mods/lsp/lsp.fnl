@@ -14,6 +14,7 @@
                    tbuiltin telescope.builtin}})
 
 ;; selection behavior for cmp mappings
+
 (local cmp_select {:behavior cmp.SelectBehavior.Select})
 
 (cmp.setup {:window {:completion (cmp.config.window.bordered)
@@ -69,12 +70,14 @@
 
 (masonnullls.setup {:handlers {}})
 
+(map [:n] :fk (bindf vim.lsp.buf.format {:async false})
+     {:desc "Format code [LSP]"})
+
 (local on_attach
        (fn [client buf]
          (vim.api.nvim_buf_set_option buf :omnifunc "v:lua.vim.lsp.omnifunc")
          (when client.server_capabilities.documentSymbolProvider
            (navic.attach client buf))
-
          (lspsignature.on_attach {:bind true
                                   :handler_opts {:border :rounded}
                                   :hint_enable false}
@@ -88,8 +91,6 @@
          (map [:n] :gD vim.lsp.buf.declaration
               {:desc "Go to declaration [LSP]" :buffer buf})
          (map [:n] :K vim.lsp.buf.hover {:desc "Hover [LSP]" :buffer buf})
-         (map [:n] :fk (bindf vim.lsp.buf.format {:async true})
-              {:desc "Format code [LSP]" :buffer buf})
          (map [:n] "]d" vim.diagnostic.goto_prev
               {:desc "Next diagnostic" :buffer buf})
          (map [:n] "[s" vim.diagnostic.show
@@ -164,12 +165,10 @@
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
 
-
 (let [installed ((. masonlsp :get_installed_servers))]
   (each [_ server (ipairs installed)]
     (let [opts (or (. lsp_opt server) {})]
       (tset opts :on_attach on_attach)
       (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
-
       ;; start via lspconfig (no vim.lsp.config, no manual autocmd)
       ((. lspconfig server :setup) opts))))

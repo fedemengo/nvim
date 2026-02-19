@@ -1,6 +1,6 @@
 (module :core)
-
 ;; autocmd
+
 (when (vim.fn.has :autocmd)
   (let [g (vim.api.nvim_create_augroup :misc {:clear true})]
     ;; restore cursor last position in filesilent since for new file would error
@@ -39,9 +39,8 @@
                                   :command "setlocal lisp iskeyword-=_ iskeyword-=."})
     (vim.api.nvim_create_autocmd :FileType
                                  {:group g
-                                  :pattern "make"
+                                  :pattern :make
                                   :command "setlocal iskeyword+=-"})
-
     ;; <cr> enters command mode everywhere except in quickfix
     (vim.api.nvim_create_autocmd :BufEnter
                                  {:group g
@@ -49,7 +48,6 @@
                                               (if (= :qf vim.bo.filetype)
                                                   (unmap [:n] :<cr>)
                                                   (map [:n] :<cr> ":")))}))
-
   (let [g (vim.api.nvim_create_augroup :window-switching {:clear true})]
     (vim.api.nvim_create_autocmd [:VimEnter :WinEnter]
                                  {:group g
@@ -75,7 +73,8 @@
                                               ;; cannot get number of lines if buffer is not fully read
                                               ;;(when (or (> (vim.api.nvim_buf_line_count bufnr) 5_000))
                                               ;;          (> (vim.fn.getfsize (vim.fn.bufname bufnr)) (* 1024 1024))
-                                              (if (<= (vim.fn.getfsize (vim.fn.bufname (. ev :buf)))
+                                              (if (<= (vim.fn.getfsize (vim.fn.bufname (. ev
+                                                                                          :buf)))
                                                       (* 1024 1024))
                                                   (set vim.o.foldmethod :expr)
                                                   (set vim.o.foldmethod :indent)))}))
@@ -140,24 +139,29 @@
 (set vim.o.updatetime interval)
 
 (set vim.o.list true)
-(set vim.opt.listchars {:tab "▸ " :eol "↵"}) ; :space "⋅"})
+(set vim.opt.listchars {:tab "▸ " :eol "↵"})
+
+; :space "⋅"})
 
 ;; open all folds by default
+
 (set vim.o.foldenable false)
 (set vim.o.foldexpr "nvim_treesitter#foldexpr()")
-
 ;; undo dir
+
 (local undodir_path (.. (os.getenv :HOME) :/.nvim/undo-dir/))
 (when (= 0 (vim.fn.isdirectory undodir_path))
   (vim.fn.mkdir undodir_path :p))
 
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
-
 ;(vim.cmd "colorscheme monokai-pro-spectrum")
+
 (match (pcall #(vim.cmd "colorscheme PaperColor"))
   (true _) _
-  (false err) (vim.notify (.. "Failed to set papercolor theme: " err) vim.log.levels.WARN))
+  (false err)
+  (vim.notify (.. "Failed to set papercolor theme: " err) vim.log.levels.WARN))
+
 (set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")
