@@ -4,7 +4,6 @@
                    cmp_nvim_lsp cmp_nvim_lsp
                    lspkind lspkind
                    lspsignature lsp_signature
-                   lspconfig lspconfig
                    lsputil lspconfig/util
                    nullls null-ls
                    mason mason
@@ -170,5 +169,5 @@
     (let [opts (or (. lsp_opt server) {})]
       (tset opts :on_attach on_attach)
       (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
-      ;; start via lspconfig (no vim.lsp.config, no manual autocmd)
-      ((. lspconfig server :setup) opts))))
+      (vim.lsp.config server opts)
+      (vim.lsp.enable server))))
