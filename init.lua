@@ -16,4 +16,3 @@ require("impatient").enable_profile()
 --require("mods/dev/profile")
 
 vim.g["aniseed#env"] = { module = "init", compile = true }
-
