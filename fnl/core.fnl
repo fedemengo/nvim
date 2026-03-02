@@ -94,8 +94,6 @@
 
 (set vim.g.editorconfig true)
 
-(set vim.g.mapleader ";")
-
 (set vim.o.number true)
 (set vim.o.relativenumber true)
 (set vim.o.ruler true)
