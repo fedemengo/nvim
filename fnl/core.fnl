@@ -1,4 +1,5 @@
 (module :core)
+
 ;; autocmd
 
 (when (vim.fn.has :autocmd)
@@ -138,13 +139,13 @@
 
 (set vim.o.list true)
 (set vim.opt.listchars {:tab "▸ " :eol "↵"})
-
 ; :space "⋅"})
 
 ;; open all folds by default
 
 (set vim.o.foldenable false)
 (set vim.o.foldexpr "nvim_treesitter#foldexpr()")
+
 ;; undo dir
 
 (local undodir_path (.. (os.getenv :HOME) :/.nvim/undo-dir/))
@@ -153,6 +154,7 @@
 
 (set vim.o.undodir undodir_path)
 (set vim.o.undofile true)
+
 ;(vim.cmd "colorscheme monokai-pro-spectrum")
 
 (match (pcall #(vim.cmd "colorscheme PaperColor"))

@@ -11,29 +11,32 @@
 (defn safe-mod-require [mod]
   (safe-require (.. :mods "." mod)))
 
-(defn bootstrap-lazy []
+(defn bootstrap-lazy
+  []
   (let [lazypath (.. (vim.fn.stdpath :data) :/lazy/lazy.nvim)
         uv (or vim.uv vim.loop)]
     (when (not (uv.fs_stat lazypath))
       (vim.fn.system [:git
                       :clone
-                      :--filter=blob:none
-                      :https://github.com/folke/lazy.nvim.git
+                      "--filter=blob:none"
+                      "https://github.com/folke/lazy.nvim.git"
                       :--branch=stable
                       lazypath])
       (when (not (= 0 vim.v.shell_error))
         (error "failed to bootstrap lazy.nvim")))
     (vim.opt.rtp:prepend lazypath)))
 
-(defn to-lazy-spec [name opts]
+(defn to-lazy-spec
+  [name opts]
   (let [spec [name]
         opts (or opts {})]
     (each [k v (pairs opts)]
       (match k
         :requires (tset spec :dependencies v)
         :run (tset spec :build v)
-        :mod (tset spec :config (fn [_plugin _opts]
-                                  (safe-mod-require v)))
+        :mod (tset spec :config
+                   (fn [_plugin _opts]
+                     (safe-mod-require v)))
         _ (tset spec k v)))
     spec))
 
@@ -48,8 +51,7 @@
     (bootstrap-lazy)
     (let [lazy (safe-require :lazy)]
       (when lazy
-        (lazy.setup specs
-                    {:ui {:border :rounded}})))))
+        (lazy.setup specs {:ui {:border :rounded}})))))
 
 ;; setup is used for inline setup for modules that require no or {} arg
 
@@ -63,71 +65,53 @@
               (plugin.setup arg))
             (plugin.setup))))))
 
-(use
-     ;; ensured
-     :Olical/aniseed {}
-     :lewis6991/impatient.nvim {}
-     :NLKNguyen/papercolor-theme {}
-     :fedemengo/github-nvim-theme {}
-     :catppuccin/nvim {}
-     :loctvl842/monokai-pro.nvim {:mod :ui.monokai}
-     :AlexvZyl/nordic.nvim {}
-
+(use ;; ensured
+     :Olical/aniseed {} :lewis6991/impatient.nvim {} :NLKNguyen/papercolor-theme
+     {} :fedemengo/github-nvim-theme {} :catppuccin/nvim {}
+     :loctvl842/monokai-pro.nvim {:mod :ui.monokai} :AlexvZyl/nordic.nvim {}
      :zbirenbaum/copilot.lua {;:cmd :Copilot
                              ;:event :InsertEnter
                              :mod :dev.copilot}
      :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
      :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
      :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
-                                     [:HakonHarnes/img-clip.nvim]
-                                     [:stevearc/dressing.nvim]
-                                     [:nvim-lua/plenary.nvim]
-                                     [:MunifTanjim/nui.nvim]
-                                     [:nvim-tree/nvim-web-devicons]]
-                           :run :make
-                           :mod :dev.avante}
-
-     ;; dev
-     :stevearc/profile.nvim {:mod :dev.profile}
-     :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
-     :RRethy/vim-illuminate {:mod :tools.illuminate}
-     :sopa0/telescope-makefile {:requires [[:akinsho/toggleterm.nvim]]}
-     ;; utils
-     :wellle/targets.vim {}
-     :folke/which-key.nvim {:mod :tools.which-key}
+                                    [:HakonHarnes/img-clip.nvim]
+                                    [:stevearc/dressing.nvim]
+                                    [:nvim-lua/plenary.nvim]
+                                    [:MunifTanjim/nui.nvim]
+                                    [:nvim-tree/nvim-web-devicons]]
+                         :run :make
+                         :mod :dev.avante} ;; dev
+     :stevearc/profile.nvim {:mod :dev.profile} :ruifm/gitlinker.nvim
+     {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
+     :RRethy/vim-illuminate {:mod :tools.illuminate} :sopa0/telescope-makefile
+     {:requires [[:akinsho/toggleterm.nvim]]} ;; utils
+     :wellle/targets.vim {} :folke/which-key.nvim {:mod :tools.which-key}
      :folke/trouble.nvim {:mod :tools.trouble}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
-     :nvim-telescope/telescope.nvim {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]] :mod :tools.telescope}
-     :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
+     :nvim-telescope/telescope.nvim
+     {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
+      :mod :tools.telescope} :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
      :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank :main :ibl}
-     :norcalli/nvim-colorizer.lua {:mod :ui.colorizer}
-     :numToStr/FTerm.nvim {:mod :tools.fterm}
-     :SmiteshP/nvim-navic {}
-     :jdhao/better-escape.vim {:mod :tools.better-escape}
-     :mhinz/vim-startify {:mod :ui.startify}
-     :karb94/neoscroll.nvim {:mod :ui.neoscroll}
-     :ggandor/leap.nvim {:url "https://codeberg.org/andyg/leap.nvim"
-                         :mod :tools.leap}
-     :windwp/nvim-autopairs {}
-     ;; theme
-     :rcarriga/nvim-notify {:mod :ui.notify}
-     :folke/zen-mode.nvim {:mod :ui.zenmode}
-     :nvim-lualine/lualine.nvim {}
-     :arkav/lualine-lsp-progress {:mod :ui.lualine}
-     :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
-     :nvim-focus/focus.nvim {:mod :ui.focus}
-     :petertriho/nvim-scrollbar {:mod :ui.scrollbar}
-     ;; programming
+     :norcalli/nvim-colorizer.lua {:mod :ui.colorizer} :numToStr/FTerm.nvim
+     {:mod :tools.fterm} :SmiteshP/nvim-navic {} :jdhao/better-escape.vim
+     {:mod :tools.better-escape} :mhinz/vim-startify {:mod :ui.startify}
+     :karb94/neoscroll.nvim {:mod :ui.neoscroll} :ggandor/leap.nvim
+     {:url "https://codeberg.org/andyg/leap.nvim" :mod :tools.leap}
+     :windwp/nvim-autopairs {} ;; theme
+     :rcarriga/nvim-notify {:mod :ui.notify} :folke/zen-mode.nvim
+     {:mod :ui.zenmode} :nvim-lualine/lualine.nvim {}
+     :arkav/lualine-lsp-progress {:mod :ui.lualine} :akinsho/bufferline.nvim
+     {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
+     :nvim-focus/focus.nvim {:mod :ui.focus} :petertriho/nvim-scrollbar
+     {:mod :ui.scrollbar} ;; programming
      :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter}
-     :ray-x/go.nvim {:mod :dev.go_nvim}
-     :Julian/lean.nvim {;:ft [:lean]
-                        :requires [[:neovim/nvim-lspconfig]]
-                        :mod :dev.lean}
-     :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
-     :ray-x/lsp_signature.nvim {}
-     :hedyhli/outline.nvim {:mod :lsp.symbols}
-     :wakatime/vim-wakatime {}
-     :Vonr/align.nvim {:mod :tools.align}
+     :ray-x/go.nvim {:mod :dev.go_nvim} :Julian/lean.nvim
+     {;:ft [:lean]
+      :requires [[:neovim/nvim-lspconfig]]
+      :mod :dev.lean} :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
+     :ray-x/lsp_signature.nvim {} :hedyhli/outline.nvim {:mod :lsp.symbols}
+     :wakatime/vim-wakatime {} :Vonr/align.nvim {:mod :tools.align}
      :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
                                            [:williamboman/mason.nvim]
                                            [:williamboman/mason-lspconfig.nvim]
@@ -141,10 +125,8 @@
                                            [:onsails/lspkind.nvim]
                                            [:nvimtools/none-ls.nvim]]
                                 :mod :lsp.lsp}
-
      ;; misc
      :gruvw/strudel.nvim {:run "npm install" :mod :misc.strudel})
-
 
 (map [:n] :<space>pi ":Lazy install<cr>" {:desc "Install plugins"})
 (map [:n] :<space>pu ":Lazy update<cr>" {:desc "Update plugins"})

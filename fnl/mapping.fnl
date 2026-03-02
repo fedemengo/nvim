@@ -1,5 +1,4 @@
 (module :mapping)
-
 ;; open new file at current line in new tab
 
 (fn opentab-at-location []
@@ -30,8 +29,8 @@
 
 (fn toggle-theme []
   (if (= :dark (. vim.o :background))
-    (light-theme)
-    (dark-theme)))
+      (light-theme)
+      (dark-theme)))
 
 (fn open-web-commit []
   (let [path (vim.fn.expand "%:p:h")
@@ -69,32 +68,27 @@
 (fn toggle-wrap []
   (let [has-wrap (. vim.wo :wrap)]
     (if has-wrap
-      (vim.cmd "windo set nowrap")
-      (vim.cmd "windo set wrap"))))
+        (vim.cmd "windo set nowrap")
+        (vim.cmd "windo set wrap"))))
 
 (map [:v] :<leader><space> eval-expression {:desc "Evaluate expression"})
-
 ;; search with s instead of f
 
 (map [:n] :s :f)
 (map [:n] :S :F)
-
 ;; disable arrows
 
 (map [:n :i :v :x :c] :<up> :<nop>)
 (map [:n :i :v :x :c] :<down> :<nop>)
 (map [:n :i :v :x :c] :<left> :<nop>)
 (map [:n :i :v :x :c] :<right> :<nop>)
-
 ;; jk is the new esc
 
 (map [:i :t :v :x :c] :jk "<C-\\><C-n>")
-
 ;; move in cmd mode
 
 (map [:c] :<C-b> :<S-Left>)
 (map [:c] :<C-f> :<S-Right>)
-
 ;; quick movement between splits
 
 (each [_ k (pairs [:h :j :k :l])]
@@ -108,13 +102,11 @@
 (map [:n] :tv (bindcmd [:vsplit :term]) {:desc "Open term in vertical split"})
 (map [:n] :ts (bindcmd [:split :term]) {:desc "Open term in horizontal split"})
 (map [:n :t] :<leader>ex (bindcmd :exit) {:desc "Close current buffer"})
-
 ;; keep visual mode while indenting left/right
 
 (map [:v :s] "<" :<gv)
 (map [:v :s] ">" :>gv)
 (map [:n] :gf (bindcmd "edit <cfile>") {:desc "Edit file under cursor"})
-
 ;; hide search highlight
 
 (map [:n] :<Esc> (bindcmd "silent! nohls") {:desc "Clear search highlight"})
@@ -143,8 +135,8 @@
 
 (map [:n] :<leader>s (bindcmd :split) {:desc "Split window horizontally"})
 (map [:n] :<leader>v (bindcmd :vsplit) {:desc "Split window vertically"})
-(map [:n] :sd        (bindcmd "vertical resize -15") {:desc "Decrease split width"})
-(map [:n] :si        (bindcmd "vertical resize +15") {:desc "Increase split width"})
+(map [:n] :sd (bindcmd "vertical resize -15") {:desc "Decrease split width"})
+(map [:n] :si (bindcmd "vertical resize +15") {:desc "Increase split width"})
 (map [:n] :<leader>w toggle-wrap {:desc "Toggle wrap"})
 
 (map [:n] :<leader>q (bindcmd :qa) {:desc "Quit all"})
