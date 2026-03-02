@@ -189,7 +189,7 @@
   (vim.fn.fnamemodify path ":h"))
 
 (fn extract_first_dir [path]
-  (set clean (path:gsub "%./" ""))
+  (var clean (path:gsub "%./" ""))
   ;; http://www.lua.org/pil/20.2.html#:~:text=character%20%60%25%C2%B4%20works%20as%20an%20escape
   (car (vim.split clean "/")))
 
@@ -221,13 +221,16 @@
   (picker.refresh_previewer picker)
   (picker.refresh picker (new_magic_finder_job opts) popts))
 
+(fn update_magic_prompt_title [opts]
+  (tset opts :prompt_title (.. "Magic in " (. opts :cwd))))
+
 (var magic (fn [_opts]
              (var opts (deep-copy (or _opts {})))
              (var cwd (utils.buffer_dir))
              (tset opts :fcmd_depth 4)
              (tset opts :cwd cwd)
              (tset opts :entry_maker (make_entry.gen_from_file opts))
-             (tset opts :prompt_title (.. "Magic in " (. opts :cwd)))
+             (update_magic_prompt_title opts)
              (var p
                   (pickers.new opts
                                {:finder (new_magic_finder_job opts)
@@ -289,6 +292,7 @@
                                                                            nwd)
                                                             (set cwd nwd)
                                                             (tset opts :cwd cwd)
+                                                            (update_magic_prompt_title opts)
                                                             (tset opts
                                                                   :entry_maker
                                                                   (make_entry.gen_from_file opts))
@@ -308,6 +312,7 @@
                                                                            nwd)
                                                             (set cwd nwd)
                                                             (tset opts :cwd cwd)
+                                                            (update_magic_prompt_title opts)
                                                             (tset opts
                                                                   :entry_maker
                                                                   (make_entry.gen_from_file opts))
@@ -329,6 +334,7 @@
                                                                  (vim.fn.resolve (.. cwd
                                                                                      "/..")))
                                                             (tset opts :cwd cwd)
+                                                            (update_magic_prompt_title opts)
                                                             (tset opts
                                                                   :entry_maker
                                                                   (make_entry.gen_from_file opts))

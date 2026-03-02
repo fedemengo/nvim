@@ -42,7 +42,8 @@
 
 (cmp.setup.cmdline [":"]
                    {:mapping (cmp.mapping.preset.cmdline)
-                    :sources [{:name :path} {:name :cmdline}]})
+                    :sources (cmp.config.sources [{:name :path}]
+                                                 [{:name :cmdline}])})
 
 (mason.setup {:PATH :append})
 (masonlsp.setup {:ensure_installed [:gopls
@@ -56,7 +57,7 @@
                                     :pylsp
                                     :jdtls
                                     :rust_analyzer]
-                 :automatic_installation true})
+                 :automatic_enable false})
 
 (let [fmt nullls.builtins.formatting]
   (nullls.setup {:sources [fmt.black
@@ -74,7 +75,6 @@
 
 (local on_attach
        (fn [client buf]
-         (vim.api.nvim_buf_set_option buf :omnifunc "v:lua.vim.lsp.omnifunc")
          (when client.server_capabilities.documentSymbolProvider
            (navic.attach client buf))
          (lspsignature.on_attach {:bind true
@@ -164,10 +164,14 @@
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
 
+(local default_lsp_capabilities (cmp_nvim_lsp.default_capabilities))
+
 (let [installed ((. masonlsp :get_installed_servers))]
   (each [_ server (ipairs installed)]
     (let [opts (or (. lsp_opt server) {})]
       (tset opts :on_attach on_attach)
-      (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
+      (tset opts :capabilities (vim.tbl_deep_extend :force
+                                                    default_lsp_capabilities
+                                                    (or (. opts :capabilities) {})))
       (vim.lsp.config server opts)
       (vim.lsp.enable server))))
