@@ -36,6 +36,10 @@
                                               (set vim.o.shiftwidth 2)
                                               (set vim.o.tabstop 2)
                                               (set vim.o.softtabstop 2))})
+    (vim.api.nvim_create_autocmd :FileType
+                                 {:group g
+                                  :pattern :python
+                                  :command "setlocal colorcolumn=88"})
     ;; https://superuser.com/questions/741422/vim-move-word-skips-dot
     (vim.api.nvim_create_autocmd :FileType
                                  {:group g
