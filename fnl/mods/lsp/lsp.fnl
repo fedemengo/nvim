@@ -133,7 +133,8 @@
                                                         :test true}
                                            :staticcheck true
                                            :usePlaceholders true}}}
-                :lua_ls {:settings {:Lua {:diagnostics {:globals [:vim]}}}}
+                :lua_ls {:filetypes [:lua]
+                         :settings {:Lua {:diagnostics {:globals [:vim]}}}}
                 ;:fennel_language_server {:default_config {:cmd [:$HOME/.local/bin/fennel-language-server]
                 ;                                          :filetypes [:fennel]
                 ;                                          :single_file_support true
@@ -142,7 +143,8 @@
                 ;                                                              :diagnostics {:globals [:vim
                 ;                                                                                      :module
                 ;                                                                                      :autoload]}}}}}
-                :pylsp {:settings {:pylsp {:plugins {:pycodestyle {:enable false
+                :pylsp {:filetypes [:python]
+                        :settings {:pylsp {:plugins {:pycodestyle {:enable false
                                                                    :ignore [;; continuation line indentation is not a multiple of four
                                                                             :E121
                                                                             ;; expected 2 blank lines, found 1
@@ -160,11 +162,20 @@
                                                      :pylsp_mypy {:enabled true
                                                                   :live_mode true}}}}
                         :plugins {:rope_autoimport {:enabled true}}}
+                :bashls {:filetypes [:bash :sh :zsh]}
+                :dockerls {:filetypes [:dockerfile]}
+                :jsonls {:filetypes [:json :jsonc]}
+                :sqlls {:filetypes [:sql]}
+                :jdtls {:filetypes [:java]}
+                :rust_analyzer {:filetypes [:rust]}
                 :clangd {:autostart true
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
 
 (local default_lsp_capabilities (cmp_nvim_lsp.default_capabilities))
+
+(local enabled_servers [])
+(local ft_to_servers {})
 
 (let [installed ((. masonlsp :get_installed_servers))]
   (each [_ server (ipairs installed)]
@@ -174,4 +185,25 @@
                                                     default_lsp_capabilities
                                                     (or (. opts :capabilities) {})))
       (vim.lsp.config server opts)
-      (vim.lsp.enable server))))
+      (let [filetypes (or (. opts :filetypes)
+                          (. (. vim.lsp.config server) :filetypes)
+                          [])]
+        (each [_ ft (ipairs filetypes)]
+          (when (not (. ft_to_servers ft))
+            (tset ft_to_servers ft []))
+          (table.insert (. ft_to_servers ft) server))))))
+
+(vim.api.nvim_create_autocmd :FileType
+                             {:group (vim.api.nvim_create_augroup :lsp-enable
+                                                                  {:clear true})
+                              :callback (fn [ev]
+                                          (let [servers (or (. ft_to_servers
+                                                               (. ev :match))
+                                                            [])]
+                                            (each [_ server (ipairs servers)]
+                                              (when (not (. enabled_servers
+                                                             server))
+                                                (vim.lsp.enable server)
+                                                (tset enabled_servers
+                                                      server
+                                                      true)))))} )
