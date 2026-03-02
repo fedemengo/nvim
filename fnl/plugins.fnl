@@ -1,4 +1,4 @@
-(module plugins {autoload {packer :packer}})
+(module plugins)
 
 (defn safe-require
   [mod]
@@ -11,20 +11,45 @@
 (defn safe-mod-require [mod]
   (safe-require (.. :mods "." mod)))
 
-(defn- use
+(defn bootstrap-lazy []
+  (let [lazypath (.. (vim.fn.stdpath :data) :/lazy/lazy.nvim)
+        uv (or vim.uv vim.loop)]
+    (when (not (uv.fs_stat lazypath))
+      (vim.fn.system [:git
+                      :clone
+                      :--filter=blob:none
+                      :https://github.com/folke/lazy.nvim.git
+                      :--branch=stable
+                      lazypath])
+      (when (not (= 0 vim.v.shell_error))
+        (error "failed to bootstrap lazy.nvim")))
+    (vim.opt.rtp:prepend lazypath)))
+
+(defn to-lazy-spec [name opts]
+  (let [spec [name]
+        opts (or opts {})]
+    (each [k v (pairs opts)]
+      (match k
+        :requires (tset spec :dependencies v)
+        :run (tset spec :build v)
+        :mod (tset spec :config (fn [_plugin _opts]
+                                  (safe-mod-require v)))
+        _ (tset spec k v)))
+    spec))
+
+(defn use
   [...]
-  (let [packs [...]]
-    (packer.startup {1 (fn [use]
-                         (for [i 1 (length packs) 2]
-                           (let [name (. packs i) ;; plugin name
-                                 opts (. packs (+ i 1))]
-                             ;; plugin opts
-                             (-?> (. opts :mod) (safe-mod-require))
-                             ;; optional opts mods
-                             (table.insert opts 1 name)
-                             (use opts))))
-                     :config {:display {:open_fn (. (require :packer.util)
-                                                    :float)}}})))
+  (let [packs [...]
+        specs []]
+    (for [i 1 (length packs) 2]
+      (let [name (. packs i)
+            opts (. packs (+ i 1))]
+        (table.insert specs (to-lazy-spec name opts))))
+    (bootstrap-lazy)
+    (let [lazy (safe-require :lazy)]
+      (when lazy
+        (lazy.setup specs
+                    {:ui {:border :rounded}})))))
 
 ;; setup is used for inline setup for modules that require no or {} arg
 
@@ -40,7 +65,6 @@
 
 (use
      ;; ensured
-     :wbthomason/packer.nvim {}
      :Olical/aniseed {}
      :lewis6991/impatient.nvim {}
      :NLKNguyen/papercolor-theme {}
@@ -55,18 +79,18 @@
      :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
      :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
      :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
-                               [:HakonHarnes/img-clip.nvim]
-                               [:stevearc/dressing.nvim]
-                               [:nvim-lua/plenary.nvim]
-                               [:MunifTanjim/nui.nvim]
-                               [:nvim-tree/nvim-web-devicons]]
-                     :run :make
-                     :mod :dev.avante}
+                                     [:HakonHarnes/img-clip.nvim]
+                                     [:stevearc/dressing.nvim]
+                                     [:nvim-lua/plenary.nvim]
+                                     [:MunifTanjim/nui.nvim]
+                                     [:nvim-tree/nvim-web-devicons]]
+                           :run :make
+                           :mod :dev.avante}
 
      ;; dev
      :stevearc/profile.nvim {:mod :dev.profile}
      :ruifm/gitlinker.nvim {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
-     :RRethy/vim-illuminate {}
+     :RRethy/vim-illuminate {:mod :tools.illuminate}
      :sopa0/telescope-makefile {:requires [[:akinsho/toggleterm.nvim]]}
      ;; utils
      :wellle/targets.vim {}
@@ -82,7 +106,8 @@
      :jdhao/better-escape.vim {:mod :tools.better-escape}
      :mhinz/vim-startify {:mod :ui.startify}
      :karb94/neoscroll.nvim {:mod :ui.neoscroll}
-     :ggandor/leap.nvim {:mod :tools.leap}
+     :ggandor/leap.nvim {:url "https://codeberg.org/andyg/leap.nvim"
+                         :mod :tools.leap}
      :windwp/nvim-autopairs {}
      ;; theme
      :rcarriga/nvim-notify {:mod :ui.notify}
@@ -121,7 +146,7 @@
      :gruvw/strudel.nvim {:run "npm install" :mod :misc.strudel})
 
 
-(map [:n] :<space>pi packer.install {:desc "Install plugins"})
-(map [:n] :<space>pu packer.update {:desc "Update plugins"})
-(map [:n] :<space>pc packer.clean {:desc "Clean plugins"})
-(map [:n] :<space>pC packer.compile {:desc "Compile plugins"})
+(map [:n] :<space>pi ":Lazy install<cr>" {:desc "Install plugins"})
+(map [:n] :<space>pu ":Lazy update<cr>" {:desc "Update plugins"})
+(map [:n] :<space>pc ":Lazy clean<cr>" {:desc "Clean plugins"})
+(map [:n] :<space>pC ":Lazy sync<cr>" {:desc "Sync plugins"})
