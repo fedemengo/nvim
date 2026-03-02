@@ -61,8 +61,7 @@
                  :automatic_enable false})
 
 (let [fmt nullls.builtins.formatting]
-  (nullls.setup {:sources [fmt.black
-                           fmt.stylua
+  (nullls.setup {:sources [fmt.stylua
                            fmt.fnlfmt
                            fmt.shfmt
                            fmt.goimports
@@ -200,7 +199,6 @@
                                                      :jedi_symbols {:enabled true}
                                                      :autopep8 {:enable false}
                                                      :yapf {:enable false}
-                                                     :black {:enabled true}
                                                      :pylsp_mypy {:enabled true
                                                                   :live_mode true}}}}
                         :plugins {:rope_autoimport {:enabled true}}}
@@ -209,6 +207,9 @@
                                                          :extraPaths ["src"]
                                                          :useLibraryCodeForTypes true
                                                          :diagnosticMode :openFilesOnly}}}}
+                :ruff {:init_options {:settings {:configuration "~/.dandelion/ruff.toml"
+                                                 :fixAll true
+                                                 :organizeImports true}}}
                 :bashls {:filetypes [:bash :sh :zsh]}
                 :dockerls {:filetypes [:dockerfile]}
                 :jsonls {:filetypes [:json :jsonc]}
@@ -219,7 +220,6 @@
                          :cmd (clangd_cmd)
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
-
 (local default_lsp_capabilities (cmp_nvim_lsp.default_capabilities))
 
 (local enabled_servers [])
@@ -270,3 +270,11 @@
                                                 (tset enabled_servers
                                                       server
                                                       true)))))} )
+
+
+(when (= 1 (vim.fn.executable :ruff))
+  (let [opts (or (. lsp_opt :ruff) {})]
+    (tset opts :on_attach on_attach)
+    (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
+    (vim.lsp.config :ruff opts)
+    (vim.lsp.enable :ruff)))
