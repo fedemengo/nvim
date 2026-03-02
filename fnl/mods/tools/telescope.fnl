@@ -22,6 +22,8 @@
                                                  :--column
                                                  :--smart-case
                                                  :--only-matching]
+                             :mappings {:i {:<C-n> actions.select_tab}
+                                        :n {:<C-n> actions.select_tab}}
                              :layout_strategy :bottom_pane
                              :layout_config {:scroll_speed 8
                                              :bottom_pane {:preview_width 0.7}}
