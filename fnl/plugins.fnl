@@ -88,6 +88,8 @@
      {:requires [[:akinsho/toggleterm.nvim]]} ;; utils
      :wellle/targets.vim {} :folke/which-key.nvim {:mod :tools.which-key}
      :folke/trouble.nvim {:mod :tools.trouble}
+     :folke/todo-comments.nvim {:requires [[:nvim-lua/plenary.nvim]]
+                                :mod :tools.todo-comments}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
      :nvim-telescope/telescope.nvim
      {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
