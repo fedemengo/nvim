@@ -46,7 +46,7 @@
                                                  [{:name :cmdline}])})
 
 (mason.setup {:PATH :append})
-(masonlsp.setup {:ensure_installed [:gopls
+(masonlsp.setup {:ensure_installed [;:gopls
                                     ;:fennel_language_server
                                     :clangd
                                     :bashls
