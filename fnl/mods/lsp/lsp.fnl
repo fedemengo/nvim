@@ -73,10 +73,34 @@
 (map [:n] :fk (bindf vim.lsp.buf.format {:async false})
      {:desc "Format code [LSP]"})
 
+(var clangd_hints_enabled (or vim.g.clangd_hints_enabled false))
+(set vim.g.clangd_hints_enabled clangd_hints_enabled)
+
+(local clangd_filetypes [:c :cpp :cuda])
+
+(local clangd_cmd
+       (fn []
+         (if clangd_hints_enabled
+             [:clangd "--function-arg-placeholders=true" "--inlay-hints=true"]
+             [:clangd "--function-arg-placeholders=false" "--inlay-hints=false"])))
+
+(local restart_clangd
+       (fn []
+         (each [_ client (ipairs (vim.lsp.get_clients {:name :clangd}))]
+           ;; graceful shutdown avoids non-zero "killed" exit warnings
+           (client.stop false))
+         (when (vim.tbl_contains clangd_filetypes vim.bo.filetype)
+           (vim.defer_fn (fn []
+                           (vim.lsp.enable :clangd))
+                         120))))
+
 (local on_attach
        (fn [client buf]
          (when client.server_capabilities.documentSymbolProvider
            (navic.attach client buf))
+         (when (= client.name :clangd)
+           (when (and vim.lsp.inlay_hint vim.lsp.inlay_hint.enable)
+             (vim.lsp.inlay_hint.enable clangd_hints_enabled {:bufnr buf})))
          (lspsignature.on_attach {:bind true
                                   :handler_opts {:border :rounded}
                                   :hint_enable false}
@@ -169,6 +193,7 @@
                 :jdtls {:filetypes [:java]}
                 :rust_analyzer {:filetypes [:rust]}
                 :clangd {:autostart true
+                         :cmd (clangd_cmd)
                          :capabilities {:offsetEncoding :utf-8}
                          :filetypes [:c :cpp :cuda]}})
 
@@ -185,13 +210,27 @@
                                                     default_lsp_capabilities
                                                     (or (. opts :capabilities) {})))
       (vim.lsp.config server opts)
-      (let [filetypes (or (. opts :filetypes)
+        (let [filetypes (or (. opts :filetypes)
                           (. (. vim.lsp.config server) :filetypes)
                           [])]
         (each [_ ft (ipairs filetypes)]
           (when (not (. ft_to_servers ft))
             (tset ft_to_servers ft []))
           (table.insert (. ft_to_servers ft) server))))))
+
+(vim.api.nvim_create_user_command :ClangdHintsToggle
+                                  (fn []
+                                    (set clangd_hints_enabled
+                                         (not clangd_hints_enabled))
+                                    (set vim.g.clangd_hints_enabled
+                                         clangd_hints_enabled)
+                                    (tset (. lsp_opt :clangd) :cmd
+                                          (clangd_cmd))
+                                    (restart_clangd)
+                                    (vim.notify (if clangd_hints_enabled
+                                                    "clangd hints/placeholders: ON"
+                                                    "clangd hints/placeholders: OFF")))
+                                  {})
 
 (vim.api.nvim_create_autocmd :FileType
                              {:group (vim.api.nvim_create_augroup :lsp-enable
