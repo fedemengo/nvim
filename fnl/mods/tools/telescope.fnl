@@ -14,6 +14,9 @@
 ;;
 ;;(log.trace "Loading telescope")
 
+(local media-filetypes ["png" "webp" "jpg" "jpeg" "gif" "mp4" "webm" "pdf" "epub"])
+(local media-find-cmd :rg)
+
 (telescope.setup {:defaults {:vimgrep_arguments [:rg
                                                  :--color=never
                                                  :--no-heading
@@ -68,10 +71,13 @@
                   :extensions {:fzf {:fuzzy true
                                      :override_generic_sorter true
                                      :override_file_sorter true
-                                     :case_mode :smart_case}}})
+                                     :case_mode :smart_case}
+                               :media_files {:filetypes media-filetypes
+                                             :find_cmd media-find-cmd}}})
 
 (telescope.load_extension :fzf)
 (telescope.load_extension :make)
+(telescope.load_extension :media_files)
 
 (local fuzzy_search_opts {:shorten_path true
                           :only_sort_text true
@@ -133,12 +139,17 @@
 (local themed_bufnr_lsp_defs
        (with-bufnr builtin.lsp_definitions lsp_opts_theme))
 
+(fn media-files []
+  (let [media-ext (. (. telescope :extensions) :media_files)]
+    ((. media-ext :media_files) ivy_config)))
+
 (map [:n] :fr (bindf builtin.resume {:initial_mode :normal})
      {:desc "Resume last search"})
 (map [:n] :ff themed_count_find_files {:desc "Find files"})
 (map [:n] :fa (bindf themed_count_find_files {:hidden true})
      {:desc "Find all files [hidden]"})
 (map [:n] :fg themed_count_live_grep {:desc "Grep string"})
+(map [:n] :fm media-files {:desc "Find media files"})
 
 (map [:n] :<C-h> (bindf themed_count_find_files {:hidden true})
      {:desc "Find all files [hidden]"})
@@ -175,8 +186,11 @@
 (var pickers (require :telescope.pickers))
 (var finders (require :telescope.finders))
 (var make_entry (require :telescope.make_entry))
+(var previewers (require :telescope.previewers))
 (var conf (. (require :telescope.config) :values))
 (var state (require :telescope.actions.state))
+(local media-preview-script
+       (.. (vim.fn.stdpath :data) "/lazy/telescope-media-files.nvim/scripts/vimg"))
 
 (fn should_cd [old new]
   "Check if we should change directory"
@@ -208,6 +222,67 @@
 (fn all_dirs_from_entry [curr_dir]
   (dirs_from_entry curr_dir extract_dirs))
 
+(fn media-file? [entry]
+  (let [path (or (. entry :path) (. entry :filename) (. entry :value) "")
+        ext (string.lower (vim.fn.fnamemodify path ":e"))]
+    (vim.tbl_contains media-filetypes ext)))
+
+(fn media-previewer-command [cwd entry status]
+  (let [path (or (. entry :path) (. entry :filename) (. entry :value))]
+    (when path
+      (let [preview-winid (. (. status.layout :preview) :winid)
+            (row col) (unpack (vim.api.nvim_win_get_position preview-winid))
+            width (vim.api.nvim_win_get_width preview-winid)
+            height (vim.api.nvim_win_get_height preview-winid)
+            full-path (if (= "/" (string.sub path 1 1))
+                          path
+                          (.. cwd "/" path))]
+        [media-preview-script
+         full-path
+         col
+         (+ row 1)
+         width
+         height
+         250]))))
+
+(fn magic-previewer [opts]
+  (let [file-previewer (conf.file_previewer opts)
+        media-previewer (previewers.new_termopen_previewer
+                         {:get_command (fn [entry status]
+                                         (media-previewer-command (. opts :cwd)
+                                                                  entry
+                                                                  status))})]
+    (previewers.new
+     {:setup (fn []
+               {:active :file})
+      :teardown (fn [self]
+                  ((. file-previewer :teardown) file-previewer)
+                  ((. media-previewer :teardown) media-previewer))
+      :send_input (fn [self input]
+                    (if (= :media (. self.state :active))
+                        ((. media-previewer :send_input) media-previewer input)
+                        ((. file-previewer :send_input) file-previewer input)))
+      :scroll_fn (fn [self direction]
+                   (if (= :media (. self.state :active))
+                       ((. media-previewer :scroll_fn) media-previewer direction)
+                       ((. file-previewer :scroll_fn) file-previewer direction)))
+      :scroll_horizontal_fn (fn [self direction]
+                              (if (= :media (. self.state :active))
+                                  ((. media-previewer :scroll_horizontal_fn)
+                                   media-previewer
+                                   direction)
+                                  ((. file-previewer :scroll_horizontal_fn)
+                                   file-previewer
+                                   direction)))
+      :preview_fn (fn [self entry status]
+                    (if (media-file? entry)
+                        (do
+                          (tset self.state :active :media)
+                          ((. media-previewer :preview) media-previewer entry status))
+                        (do
+                          (tset self.state :active :file)
+                          ((. file-previewer :preview) file-previewer entry status))))})))
+
 (fn new_magic_finder_job [opts]
   "Create a new finder job for the magic picker"
   (var fcmd [:fd :--type :f :--color :never :--follow :--max-results :5000])
@@ -234,7 +309,7 @@
              (var p
                   (pickers.new opts
                                {:finder (new_magic_finder_job opts)
-                                :previewer (conf.grep_previewer opts)
+                                :previewer (magic-previewer opts)
                                 :sorter (conf.file_sorter opts)
                                 :cache_picker false
                                 :attach_mappings (fn [_ map]

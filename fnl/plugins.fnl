@@ -91,6 +91,7 @@
      :folke/todo-comments.nvim {:requires [[:nvim-lua/plenary.nvim]]
                                 :mod :tools.todo-comments}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
+     :nvim-telescope/telescope-media-files.nvim {}
      :nvim-telescope/telescope.nvim
      {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
       :mod :tools.telescope} :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
