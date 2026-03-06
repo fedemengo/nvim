@@ -210,8 +210,14 @@
   "Extract the directory from the selected entry in the current picker"
   (var entry (state.get_selected_entry))
   (var new_dir "")
-  (when (?. entry :value)
-    (set new_dir (dir_extractor (. entry :value))))
+  ;; In grep mode entry.value = "file:lnum:col:text"; use entry.filename for the clean path
+  (var path (or (?. entry :filename) (?. entry :value)))
+  (when path
+    ;; Strip curr_dir prefix so extractors work on relative paths
+    (var rel_path (if (vim.startswith path curr_dir)
+                    (string.sub path (+ (length curr_dir) 2))
+                    path))
+    (set new_dir (dir_extractor rel_path)))
   (var full_path (vim.fn.resolve (.. curr_dir "/" new_dir)))
   (full_path:gsub "//" "/"))
 
@@ -313,6 +319,9 @@
 
 (fn refresh [picker opts popts]
   "Refresh the picker with new options"
+  (tset opts :entry_maker (if (= (. opts :mode) :grep)
+                              (make_entry.gen_from_vimgrep opts)
+                              (make_entry.gen_from_file opts)))
   (update_magic_prompt_title opts)
   (when (and picker.prompt_border picker.prompt_border.change_title)
     (picker.prompt_border:change_title (. opts :prompt_title)))
@@ -412,7 +421,7 @@
   (vim.fn.setreg :v [])
   (magic (merge-table ivy_config {:mode :grep :default_text text})))
 
-(map [:n] :F themed_magic {:desc "Find and move around"})
-(map [:n] :<C-f> small_themed_magic {:desc "Find and move around"})
+(map [:n] :F small_themed_magic {:desc "Find and move around"})
+(map [:n] :<C-f> themed_magic {:desc "Find and move around"})
 (map [:n] :fs magic-grep-cword {:desc "Find string [magic grep]"})
 (map [:v] :fs magic-grep-visual {:desc "Find selection [magic grep]"})
