@@ -4,5 +4,7 @@
 
 (map [:n :v :x] :<C-u> (bindf ns.ctrl_u {:move_cursor true :duration 250}))
 (map [:n :v :x] :<C-d> (bindf ns.ctrl_d {:move_cursor true :duration 250}))
-(map [:n :v :x] :<C-y> (bindf ns.scroll (- 0.1) {:move_cursor true :duration 100}))
-(map [:n :v :x] :<C-e> (bindf ns.scroll 0.1 {:move_cursor true :duration 100}))
+(map [:n :v :x] :<C-S-u> (bindf ns.scroll -0.25 {:move_cursor true :duration 150}))
+(map [:n :v :x] :<C-S-d> (bindf ns.scroll 0.25 {:move_cursor true :duration 150}))
+(map [:n :v :x] :<C-y> (bindf ns.scroll (- 0.1) {:move_cursor true :duration 200}))
+(map [:n :v :x] :<C-e> (bindf ns.scroll 0.1 {:move_cursor true :duration 200}))
