@@ -128,6 +128,14 @@
                                            [:onsails/lspkind.nvim]
                                            [:nvimtools/none-ls.nvim]]
                                 :mod :lsp.lsp}
+     ;; dap
+     :mfussenegger/nvim-dap {}
+     :mfussenegger/nvim-dap-python {:requires [[:mfussenegger/nvim-dap]]}
+     :rcarriga/nvim-dap-ui {:requires [[:mfussenegger/nvim-dap]
+                                        [:nvim-neotest/nvim-nio]]}
+     :jay-babu/mason-nvim-dap.nvim {:requires [[:williamboman/mason.nvim]
+                                                [:mfussenegger/nvim-dap]]
+                                     :mod :dev.dap}
      ;; misc
      :gruvw/strudel.nvim {:run "npm install" :mod :misc.strudel})
 
