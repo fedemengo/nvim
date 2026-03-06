@@ -156,7 +156,6 @@
 
 (map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)
      {:desc "Find symbols [LSP]"})
-(map [:n] :fs (bindf builtin.grep_string ivy_config) {:desc "Find string"})
 (map [:n] :fz (bindf builtin.grep_string fzf_opts_theme)
      {:desc "Fuzzy grep string"})
 (map [:n] :fb (bindf builtin.buffers ivy_config) {:desc "Buffer list"})
@@ -283,7 +282,7 @@
                           (tset self.state :active :file)
                           ((. file-previewer :preview) file-previewer entry status))))})))
 
-(fn new_magic_finder_job [opts]
+(fn new_magic_finder [opts]
   "Create a new finder job for the magic picker"
   (var fcmd [:fd :--type :f :--color :never :--follow :--max-results :5000])
   (set fcmd (cons fcmd [:--max-depth (. opts :fcmd_depth)]))
@@ -291,71 +290,75 @@
     (set fcmd (cons fcmd :--hidden)))
   (finders.new_oneshot_job fcmd opts))
 
-(fn refresh [picker opts popts]
-  "Refresh the picker with new options"
-  (picker.refresh_previewer picker)
-  (picker.refresh picker (new_magic_finder_job opts) popts))
+(fn new_magic_grepper [opts]
+  "Create a live grep finder job for the magic picker"
+  (var gcmd [:rg :--color=never :--no-heading :--with-filename
+             :--line-number :--column :--smart-case
+             :--max-depth (. opts :fcmd_depth)])
+  (when (. opts :hidden)
+    (set gcmd (cons gcmd :--hidden)))
+  (finders.new_job
+   (fn [query]
+     (when (and query (not= query ""))
+       (cons gcmd [query :-- (. opts :cwd)])))
+   (make_entry.gen_from_vimgrep opts)
+   nil
+   (. opts :cwd)))
 
 (fn update_magic_prompt_title [opts]
-  (tset opts :prompt_title (.. "Magic in " (. opts :cwd))))
+  (var mode (if (= (. opts :mode) :grep) :grep :find))
+  (var cwd (. opts :cwd))
+  (var relcwd (cwd:gsub (os.getenv :HOME) :$HOME))
+  (tset opts :prompt_title (.. mode " [d:" (. opts :fcmd_depth) "] " relcwd)))
+
+(fn refresh [picker opts popts]
+  "Refresh the picker with new options"
+  (update_magic_prompt_title opts)
+  (when (and picker.prompt_border picker.prompt_border.change_title)
+    (picker.prompt_border:change_title (. opts :prompt_title)))
+  (picker.refresh_previewer picker)
+  (var finder (if (= (. opts :mode) :grep)
+                  (new_magic_grepper opts)
+                  (new_magic_finder opts)))
+  (picker.refresh picker finder popts))
 
 (var magic (fn [_opts]
              (var opts (deep-copy (or _opts {})))
              (var cwd (utils.buffer_dir))
              (tset opts :fcmd_depth 4)
              (tset opts :cwd cwd)
-             (tset opts :entry_maker (make_entry.gen_from_file opts))
+             (tset opts :mode (or (. opts :mode) :files))
+             (tset opts :entry_maker (if (= (. opts :mode) :grep)
+                                        (make_entry.gen_from_vimgrep opts)
+                                        (make_entry.gen_from_file opts)))
              (update_magic_prompt_title opts)
              (var p
                   (pickers.new opts
-                               {:finder (new_magic_finder_job opts)
+                               {:finder (if (= (. opts :mode) :grep)
+                                            (new_magic_grepper opts)
+                                            (new_magic_finder opts))
                                 :previewer (magic-previewer opts)
                                 :sorter (conf.file_sorter opts)
                                 :cache_picker false
-                                :attach_mappings (fn [_ map]
+                                :attach_mappings (fn [buf map]
                                                    (map [:n] :S
                                                         (fn []
                                                           ;; decrease search depth
-                                                          (when (> (. opts
-                                                                      :fcmd_depth)
-                                                                   1)
-                                                            (tset opts
-                                                                  :fcmd_depth
-                                                                  (- (. opts
-                                                                        :fcmd_depth)
-                                                                     1))
-                                                            (print (.. "search in "
-                                                                       (. opts
-                                                                          :cwd)
-                                                                       " @ depth "
-                                                                       (. opts
-                                                                          :fcmd_depth)))
-                                                            (refresh p opts
-                                                                     {:reset_prompt false}))))
+                                                          (when (> (. opts :fcmd_depth) 1)
+                                                            (tset opts :fcmd_depth
+                                                                  (- (. opts :fcmd_depth) 1))
+                                                            (refresh p opts {:reset_prompt false}))))
                                                    (map [:n] :D
                                                         (fn []
                                                           ;; increase search depth
-                                                          (tset opts
-                                                                :fcmd_depth
-                                                                (+ (. opts
-                                                                      :fcmd_depth)
-                                                                   1))
-                                                          (print (.. "search in "
-                                                                     (. opts
-                                                                        :cwd)
-                                                                     " @ depth "
-                                                                     (. opts
-                                                                        :fcmd_depth)))
-                                                          (refresh p opts
-                                                                   {:reset_prompt false})))
+                                                          (tset opts :fcmd_depth
+                                                                (+ (. opts :fcmd_depth) 1))
+                                                          (refresh p opts {:reset_prompt false})))
                                                    (map [:i :n] :<C-h>
                                                         (fn []
                                                           (tset opts :hidden
                                                                 (not (. opts
                                                                         :hidden)))
-                                                          (tset opts
-                                                                :entry_maker
-                                                                (make_entry.gen_from_file opts))
                                                           (refresh p opts
                                                                    {:reset_prompt false})))
                                                    (map [:i :n] :<C-e>
@@ -367,65 +370,49 @@
                                                                            nwd)
                                                             (set cwd nwd)
                                                             (tset opts :cwd cwd)
-                                                            (update_magic_prompt_title opts)
-                                                            (tset opts
-                                                                  :entry_maker
-                                                                  (make_entry.gen_from_file opts))
-                                                            (print (.. "search in "
-                                                                       (. opts
-                                                                          :cwd)
-                                                                       " @ depth "
-                                                                       (. opts
-                                                                          :fcmd_depth)))
-                                                            (refresh p opts
-                                                                     {:reset_prompt false}))))
+                                                            (refresh p opts {:reset_prompt false}))))
                                                    (map [:i :n] :<tab>
                                                         (fn []
-                                                          (var nwd
-                                                               (all_dirs_from_entry cwd))
-                                                          (when (should_cd cwd
-                                                                           nwd)
+                                                          (var nwd (all_dirs_from_entry cwd))
+                                                          (when (should_cd cwd nwd)
                                                             (set cwd nwd)
                                                             (tset opts :cwd cwd)
-                                                            (update_magic_prompt_title opts)
-                                                            (tset opts
-                                                                  :entry_maker
-                                                                  (make_entry.gen_from_file opts))
-                                                            (print (.. "search in "
-                                                                       (. opts
-                                                                          :cwd)
-                                                                       " @ depth "
-                                                                       (. opts
-                                                                          :fcmd_depth)))
-                                                            (refresh p opts
-                                                                     {:reset_prompt true
-                                                                      :prompt_title (.. "Magic in "
-                                                                                        (. opts
-                                                                                           :cwd))}))))
+                                                            (refresh p opts {:reset_prompt true}))))
                                                    (map [:i :n] :<S-tab>
                                                         (fn []
                                                           (when (not (= cwd "/"))
-                                                            (set cwd
-                                                                 (vim.fn.resolve (.. cwd
-                                                                                     "/..")))
+                                                            (set cwd (vim.fn.resolve (.. cwd "/..")))
                                                             (tset opts :cwd cwd)
-                                                            (update_magic_prompt_title opts)
-                                                            (tset opts
-                                                                  :entry_maker
-                                                                  (make_entry.gen_from_file opts))
-                                                            (print (.. "search in "
-                                                                       (. opts
-                                                                          :cwd)
-                                                                       " @ depth "
-                                                                       (. opts
-                                                                          :fcmd_depth)))
-                                                            (refresh p opts
-                                                                     {:reset_prompt false}))))
+                                                            (refresh p opts {:reset_prompt false}))))
+                                                   (map [:i :n] :<C-g>
+                                                        (fn []
+                                                          (tset opts :mode
+                                                                (if (= (. opts :mode) :grep)
+                                                                    :files
+                                                                    :grep))
+                                                          (if (= (. opts :mode) :grep)
+                                                              (tset opts :entry_maker
+                                                                    (make_entry.gen_from_vimgrep opts))
+                                                              (tset opts :entry_maker
+                                                                    (make_entry.gen_from_file opts)))
+                                                          (refresh p opts {:reset_prompt false})))
                                                    true)}))
              (p.find p)))
 
 (local themed_magic (bindf magic ivy_config))
 (local small_themed_magic (bindf magic small_ivy_config))
 
+(fn magic-grep-cword []
+  (magic (merge-table ivy_config {:mode :grep
+                                   :default_text (vim.fn.expand "<cword>")})))
+
+(fn magic-grep-visual []
+  (vim.cmd "noau normal! \"vy")
+  (var text (vim.fn.getreg :v))
+  (vim.fn.setreg :v [])
+  (magic (merge-table ivy_config {:mode :grep :default_text text})))
+
 (map [:n] :F themed_magic {:desc "Find and move around"})
 (map [:n] :<C-f> small_themed_magic {:desc "Find and move around"})
+(map [:n] :fs magic-grep-cword {:desc "Find string [magic grep]"})
+(map [:v] :fs magic-grep-visual {:desc "Find selection [magic grep]"})
