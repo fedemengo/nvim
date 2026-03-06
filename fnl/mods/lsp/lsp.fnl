@@ -55,6 +55,7 @@
                                     :jsonls
                                     :sqlls
                                     :pylsp
+                                    :pyright
                                     :jdtls
                                     :rust_analyzer]
                  :automatic_enable false})
@@ -96,6 +97,16 @@
 
 (local on_attach
        (fn [client buf]
+         (when (= client.name :pylsp)
+           (tset client.server_capabilities :documentFormattingProvider false)
+           (tset client.server_capabilities :documentRangeFormattingProvider false))
+         ;; ruff can attach to Python buffers but doesn't provide rich symbol hover docs.
+         ;; keep hover owned by pylsp so `K` shows Python docstrings on usages/calls.
+         (when (= client.name :ruff)
+           (tset client.server_capabilities :hoverProvider false)
+           (tset client.server_capabilities :definitionProvider false)
+           (tset client.server_capabilities :referencesProvider false))
+         (vim.api.nvim_buf_set_option buf :omnifunc "v:lua.vim.lsp.omnifunc")
          (when client.server_capabilities.documentSymbolProvider
            (navic.attach client buf))
          (when (= client.name :clangd)
@@ -111,6 +122,8 @@
               {:desc "Code actions [LSP]" :buffer buf})
          (map [:n] :gt vim.lsp.buf.type_definition
               {:desc "Type definition [LSP]" :buffer buf})
+         (map [:n] :gd vim.lsp.buf.definition
+              {:desc "Go to definition [LSP]" :buffer buf})
          (map [:n] :gD vim.lsp.buf.declaration
               {:desc "Go to declaration [LSP]" :buffer buf})
          (map [:n] :K vim.lsp.buf.hover {:desc "Hover [LSP]" :buffer buf})
@@ -180,12 +193,22 @@
                                                                             ;; line break before binary operator
                                                                             :W503]
                                                                    :indentSize 4}
+                                                     ;; Force-enable Jedi language features for hover/definitions/references.
+                                                     :jedi_hover {:enabled true}
+                                                     :jedi_definition {:enabled true}
+                                                     :jedi_references {:enabled true}
+                                                     :jedi_symbols {:enabled true}
                                                      :autopep8 {:enable false}
                                                      :yapf {:enable false}
                                                      :black {:enabled true}
                                                      :pylsp_mypy {:enabled true
                                                                   :live_mode true}}}}
                         :plugins {:rope_autoimport {:enabled true}}}
+                :pyright {:filetypes [:python]
+                          :settings {:python {:analysis {:autoSearchPaths true
+                                                         :extraPaths ["src"]
+                                                         :useLibraryCodeForTypes true
+                                                         :diagnosticMode :openFilesOnly}}}}
                 :bashls {:filetypes [:bash :sh :zsh]}
                 :dockerls {:filetypes [:dockerfile]}
                 :jsonls {:filetypes [:json :jsonc]}
@@ -201,16 +224,17 @@
 
 (local enabled_servers [])
 (local ft_to_servers {})
+(local prefer_pyright (= 1 (vim.fn.executable :pyright-langserver)))
 
-(let [installed ((. masonlsp :get_installed_servers))]
-  (each [_ server (ipairs installed)]
-    (let [opts (or (. lsp_opt server) {})]
-      (tset opts :on_attach on_attach)
-      (tset opts :capabilities (vim.tbl_deep_extend :force
-                                                    default_lsp_capabilities
-                                                    (or (. opts :capabilities) {})))
-      (vim.lsp.config server opts)
-        (let [filetypes (or (. opts :filetypes)
+(each [server opts (pairs lsp_opt)]
+  (when (not (and prefer_pyright (= server :pylsp)))
+    (let [server_opts (vim.deepcopy opts)]
+      (tset server_opts :on_attach on_attach)
+      (tset server_opts :capabilities (vim.tbl_deep_extend :force
+                                                            default_lsp_capabilities
+                                                            (or (. server_opts :capabilities) {})))
+      (vim.lsp.config server server_opts)
+      (let [filetypes (or (. server_opts :filetypes)
                           (. (. vim.lsp.config server) :filetypes)
                           [])]
         (each [_ ft (ipairs filetypes)]
