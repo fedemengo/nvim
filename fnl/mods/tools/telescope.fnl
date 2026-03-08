@@ -89,13 +89,11 @@
                                  :results [""]
                                  :preview ["" "" "" "" "" "" "" ""]}
                    :shorten_path true
-                   :layout_config {:height height
-                                   :preview_width 0.65
-                                   }}))
-                   ;:preview_title ""}))
+                   :layout_config {: height :preview_width 0.7}}))
+
+;:preview_title ""}))
 
 (local ivy_config (gen_ivy_config 0.7))
-(local small_ivy_config (gen_ivy_config 0.4))
 
 (local fzf_opts_theme (merge-table ivy_config fuzzy_search_opts))
 
@@ -145,7 +143,6 @@
 (map [:n] :fr (bindf builtin.resume {:initial_mode :normal})
      {:desc "Resume last search"})
 
-(map [:n] :ff themed_count_find_files {:desc "Find files"})
 (map [:n] :fa (bindf themed_count_find_files {:hidden true})
      {:desc "Find all files [hidden]"})
 
@@ -328,7 +325,15 @@
   (var mode (if (= (. opts :mode) :grep) :grep :find))
   (var cwd (. opts :cwd))
   (var relcwd (cwd:gsub (os.getenv :HOME) :$HOME))
-  (tset opts :prompt_title (.. mode " [d:" (. opts :fcmd_depth) "] " relcwd)))
+  (var hidden? (if (. opts :hidden) :on :off))
+  (tset opts :prompt_title
+        (.. mode
+            " [d:"
+            (. opts :fcmd_depth)
+            "] [h:"
+            hidden?
+            "] "
+            relcwd)))
 
 (fn refresh [picker opts popts]
   "Refresh the picker with new options"
@@ -446,8 +451,16 @@
                                                    true)}))
              (p.find p)))
 
+(fn themed_magic_height [height]
+  (bindf magic (gen_ivy_config height)))
 (local themed_magic (bindf magic ivy_config))
-(local small_themed_magic (bindf magic small_ivy_config))
+
+(fn count_themed_magic []
+  (let [n (. vim.v :count)
+        n (if (> n 0) n 4)
+        n (math.max 1 (math.min n 9))
+        height (/ n 10)]
+    ((themed_magic_height height))))
 
 (fn magic-grep-cword []
   (magic (merge-table ivy_config
@@ -459,7 +472,7 @@
   (vim.fn.setreg :v [])
   (magic (merge-table ivy_config {:mode :grep :default_text text})))
 
-(map [:n] :F small_themed_magic {:desc "Find and move around"})
+(map [:n] :F count_themed_magic {:desc "Find and move around [count height]"})
 (map [:n] :<C-f> themed_magic {:desc "Find and move around"})
 (map [:n] :fs magic-grep-cword {:desc "Find string [magic grep]"})
 (map [:v] :fs magic-grep-visual {:desc "Find selection [magic grep]"})
