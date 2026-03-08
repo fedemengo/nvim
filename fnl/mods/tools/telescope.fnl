@@ -14,7 +14,7 @@
 ;;
 ;;(log.trace "Loading telescope")
 
-(local media-filetypes ["png" "webp" "jpg" "jpeg" "gif" "mp4" "webm" "pdf" "epub"])
+(local media-filetypes [:png :webp :jpg :jpeg :gif :mp4 :webm :pdf :epub])
 (local media-find-cmd :rg)
 
 (telescope.setup {:defaults {:vimgrep_arguments [:rg
@@ -62,7 +62,7 @@
                                                     :.local/share/Trash/
                                                     :.local/share/nvim/swap/
                                                     "code%-other/"]}
-                  :pickers {:colorscheme {:enable_preview true }
+                  :pickers {:colorscheme {:enable_preview true}
                             :live_grep {:mappings {:i {:<c-r> actions.to_fuzzy_refine}}}
                             :find_files {:mappings {:i {:<c-r> (fn [buf]
                                                                  (generate.refine buf
@@ -86,8 +86,8 @@
 
 (fn gen_ivy_config [height]
   (themes.get_ivy {:borderchars {:prompt ["─" "" "" "" "─" "─" "" ""]
-                                                 :results [""]
-                                                 :preview ["" "" "" "" "" "" "" ""]}
+                                 :results [""]
+                                 :preview ["" "" "" "" "" "" "" ""]}
                    :shorten_path true
                    :layout_config {:height height
                                    :preview_width 0.65
@@ -95,7 +95,7 @@
                    ;:preview_title ""}))
 
 (local ivy_config (gen_ivy_config 0.7))
-(local small_ivy_config (gen_ivy_config 0.3))
+(local small_ivy_config (gen_ivy_config 0.4))
 
 (local fzf_opts_theme (merge-table ivy_config fuzzy_search_opts))
 
@@ -110,8 +110,7 @@
   (fn [args]
     (var opts (or opts? {}))
     (var back "")
-    (for [i 1 vim.v.count]
-      ;; h v:count
+    (for [i 1 vim.v.count] ;; h v:count
       (set back (.. back "/..")))
     (var cwd (vim.fn.resolve (.. (utils.buffer_dir) back)))
     (var relwd (cwd:gsub (os.getenv :HOME) :$HOME))
@@ -145,9 +144,11 @@
 
 (map [:n] :fr (bindf builtin.resume {:initial_mode :normal})
      {:desc "Resume last search"})
+
 (map [:n] :ff themed_count_find_files {:desc "Find files"})
 (map [:n] :fa (bindf themed_count_find_files {:hidden true})
      {:desc "Find all files [hidden]"})
+
 (map [:n] :fg themed_count_live_grep {:desc "Grep string"})
 (map [:n] :fm media-files {:desc "Find media files"})
 
@@ -156,11 +157,14 @@
 
 (map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)
      {:desc "Find symbols [LSP]"})
+
 (map [:n] :fz (bindf builtin.grep_string fzf_opts_theme)
      {:desc "Fuzzy grep string"})
+
 (map [:n] :fb (bindf builtin.buffers ivy_config) {:desc "Buffer list"})
 (map [:n] :fc (bindf builtin.command_history ivy_config)
      {:desc "Commands history"})
+
 (map [:n] :gc (bindf builtin.git_commits ivy_config) {:desc "Commit history"})
 (map [:n] :gs (bindf builtin.git_status ivy_config) {:desc "Git status"})
 (map [:n] :gS (bindf builtin.git_stash ivy_config) {:desc "Git stashes"})
@@ -168,19 +172,22 @@
 (map [:n] :gi themed_bufnr_lsp_impl {:desc "Implementations [LSP]"})
 (map [:n] :gr themed_bufnr_lsp_refs {:desc "References [LSP]"})
 (map [:n] :gd themed_bufnr_lsp_defs {:desc "Definitions [LSP]"})
-(map [:n] :fd (bindf builtin.diagnostics (merge-table {:sort_by :severity :line_width 10}
-                                                      (deep-copy ivy_config))) {:desc :Diagnostics})
+(map [:n] :fd (bindf builtin.diagnostics
+                     (merge-table {:sort_by :severity :line_width 10}
+                                  (deep-copy ivy_config)))
+     {:desc :Diagnostics})
 
 (fn diagnostics-opts []
   {:sort_by :severity
-    :severity :error
-    :line_width 10
-    :path_display {:shorten 3}
-    :dynamic_preview_title true
-    :prompt_title "Workspace Errors"})
+   :severity :error
+   :line_width 10
+   :path_display {:shorten 3}
+   :dynamic_preview_title true
+   :prompt_title "Workspace Errors"})
 
-(map [:n] :fe (bindf builtin.diagnostics (merge-table (diagnostics-opts)
-                                                      ivy_config)) {:desc "Diagnostics [ERR]"})
+(map [:n] :fe (bindf builtin.diagnostics
+                     (merge-table (diagnostics-opts) ivy_config))
+     {:desc "Diagnostics [ERR]"})
 
 (var pickers (require :telescope.pickers))
 (var finders (require :telescope.finders))
@@ -189,14 +196,14 @@
 (var conf (. (require :telescope.config) :values))
 (var state (require :telescope.actions.state))
 (local media-preview-script
-       (.. (vim.fn.stdpath :data) "/lazy/telescope-media-files.nvim/scripts/vimg"))
+       (.. (vim.fn.stdpath :data)
+           :/lazy/telescope-media-files.nvim/scripts/vimg))
 
 (fn should_cd [old new]
   "Check if we should change directory"
   (and (= 1 (vim.fn.isdirectory new)) ;; new is an existing directory
+       ;; old and new are not the same
        (not (= old new))))
-
-;; old and new are not the same
 
 (fn extract_dirs [path]
   (vim.fn.fnamemodify path ":h"))
@@ -215,8 +222,8 @@
   (when path
     ;; Strip curr_dir prefix so extractors work on relative paths
     (var rel_path (if (vim.startswith path curr_dir)
-                    (string.sub path (+ (length curr_dir) 2))
-                    path))
+                      (string.sub path (+ (length curr_dir) 2))
+                      path))
     (set new_dir (dir_extractor rel_path)))
   (var full_path (vim.fn.resolve (.. curr_dir "/" new_dir)))
   (full_path:gsub "//" "/"))
@@ -242,51 +249,54 @@
             full-path (if (= "/" (string.sub path 1 1))
                           path
                           (.. cwd "/" path))]
-        [media-preview-script
-         full-path
-         col
-         (+ row 1)
-         width
-         height
-         250]))))
+        [media-preview-script full-path col (+ row 1) width height 250]))))
 
 (fn magic-previewer [opts]
   (let [file-previewer (conf.file_previewer opts)
-        media-previewer (previewers.new_termopen_previewer
-                         {:get_command (fn [entry status]
-                                         (media-previewer-command (. opts :cwd)
-                                                                  entry
-                                                                  status))})]
-    (previewers.new
-     {:setup (fn []
-               {:active :file})
-      :teardown (fn [self]
-                  ((. file-previewer :teardown) file-previewer)
-                  ((. media-previewer :teardown) media-previewer))
-      :send_input (fn [self input]
-                    (if (= :media (. self.state :active))
-                        ((. media-previewer :send_input) media-previewer input)
-                        ((. file-previewer :send_input) file-previewer input)))
-      :scroll_fn (fn [self direction]
-                   (if (= :media (. self.state :active))
-                       ((. media-previewer :scroll_fn) media-previewer direction)
-                       ((. file-previewer :scroll_fn) file-previewer direction)))
-      :scroll_horizontal_fn (fn [self direction]
-                              (if (= :media (. self.state :active))
-                                  ((. media-previewer :scroll_horizontal_fn)
-                                   media-previewer
-                                   direction)
-                                  ((. file-previewer :scroll_horizontal_fn)
-                                   file-previewer
-                                   direction)))
-      :preview_fn (fn [self entry status]
-                    (if (media-file? entry)
-                        (do
-                          (tset self.state :active :media)
-                          ((. media-previewer :preview) media-previewer entry status))
-                        (do
-                          (tset self.state :active :file)
-                          ((. file-previewer :preview) file-previewer entry status))))})))
+        media-previewer (previewers.new_termopen_previewer {:get_command (fn [entry
+                                                                              status]
+                                                                           (media-previewer-command (. opts
+                                                                                                       :cwd)
+                                                                                                    entry
+                                                                                                    status))})]
+    (previewers.new {:setup (fn []
+                              {:active :file})
+                     :teardown (fn [self]
+                                 ((. file-previewer :teardown) file-previewer)
+                                 ((. media-previewer :teardown) media-previewer))
+                     :send_input (fn [self input]
+                                   (if (= :media (. self.state :active))
+                                       ((. media-previewer :send_input) media-previewer
+                                                                        input)
+                                       ((. file-previewer :send_input) file-previewer
+                                                                       input)))
+                     :scroll_fn (fn [self direction]
+                                  (if (= :media (. self.state :active))
+                                      ((. media-previewer :scroll_fn) media-previewer
+                                                                      direction)
+                                      ((. file-previewer :scroll_fn) file-previewer
+                                                                     direction)))
+                     :scroll_horizontal_fn (fn [self direction]
+                                             (if (= :media
+                                                    (. self.state :active))
+                                                 ((. media-previewer
+                                                     :scroll_horizontal_fn) media-previewer
+                                                                                                                                                 direction)
+                                                 ((. file-previewer
+                                                     :scroll_horizontal_fn) file-previewer
+                                                                                                                                                direction)))
+                     :preview_fn (fn [self entry status]
+                                   (if (media-file? entry)
+                                       (do
+                                         (tset self.state :active :media)
+                                         ((. media-previewer :preview) media-previewer
+                                                                       entry
+                                                                       status))
+                                       (do
+                                         (tset self.state :active :file)
+                                         ((. file-previewer :preview) file-previewer
+                                                                      entry
+                                                                      status))))})))
 
 (fn new_magic_finder [opts]
   "Create a new finder job for the magic picker"
@@ -298,18 +308,21 @@
 
 (fn new_magic_grepper [opts]
   "Create a live grep finder job for the magic picker"
-  (var gcmd [:rg :--color=never :--no-heading :--with-filename
-             :--line-number :--column :--smart-case
-             :--max-depth (. opts :fcmd_depth)])
+  (var gcmd [:rg
+             :--color=never
+             :--no-heading
+             :--with-filename
+             :--line-number
+             :--column
+             :--smart-case
+             :--max-depth
+             (. opts :fcmd_depth)])
   (when (. opts :hidden)
     (set gcmd (cons gcmd :--hidden)))
-  (finders.new_job
-   (fn [query]
-     (when (and query (not= query ""))
-       (cons gcmd [query :-- (. opts :cwd)])))
-   (make_entry.gen_from_vimgrep opts)
-   nil
-   (. opts :cwd)))
+  (finders.new_job (fn [query]
+                     (when (and query (not= query ""))
+                       (cons gcmd [query "--" (. opts :cwd)])))
+                   (make_entry.gen_from_vimgrep opts) nil (. opts :cwd)))
 
 (fn update_magic_prompt_title [opts]
   (var mode (if (= (. opts :mode) :grep) :grep :find))
@@ -319,9 +332,10 @@
 
 (fn refresh [picker opts popts]
   "Refresh the picker with new options"
-  (tset opts :entry_maker (if (= (. opts :mode) :grep)
-                              (make_entry.gen_from_vimgrep opts)
-                              (make_entry.gen_from_file opts)))
+  (tset opts :entry_maker
+        (if (= (. opts :mode) :grep)
+            (make_entry.gen_from_vimgrep opts)
+            (make_entry.gen_from_file opts)))
   (update_magic_prompt_title opts)
   (when (and picker.prompt_border picker.prompt_border.change_title)
     (picker.prompt_border:change_title (. opts :prompt_title)))
@@ -337,9 +351,10 @@
              (tset opts :fcmd_depth 4)
              (tset opts :cwd cwd)
              (tset opts :mode (or (. opts :mode) :files))
-             (tset opts :entry_maker (if (= (. opts :mode) :grep)
-                                        (make_entry.gen_from_vimgrep opts)
-                                        (make_entry.gen_from_file opts)))
+             (tset opts :entry_maker
+                   (if (= (. opts :mode) :grep)
+                       (make_entry.gen_from_vimgrep opts)
+                       (make_entry.gen_from_file opts)))
              (update_magic_prompt_title opts)
              (var p
                   (pickers.new opts
@@ -353,16 +368,26 @@
                                                    (map [:n] :S
                                                         (fn []
                                                           ;; decrease search depth
-                                                          (when (> (. opts :fcmd_depth) 1)
-                                                            (tset opts :fcmd_depth
-                                                                  (- (. opts :fcmd_depth) 1))
-                                                            (refresh p opts {:reset_prompt false}))))
+                                                          (when (> (. opts
+                                                                      :fcmd_depth)
+                                                                   1)
+                                                            (tset opts
+                                                                  :fcmd_depth
+                                                                  (- (. opts
+                                                                        :fcmd_depth)
+                                                                     1))
+                                                            (refresh p opts
+                                                                     {:reset_prompt false}))))
                                                    (map [:n] :D
                                                         (fn []
                                                           ;; increase search depth
-                                                          (tset opts :fcmd_depth
-                                                                (+ (. opts :fcmd_depth) 1))
-                                                          (refresh p opts {:reset_prompt false})))
+                                                          (tset opts
+                                                                :fcmd_depth
+                                                                (+ (. opts
+                                                                      :fcmd_depth)
+                                                                   1))
+                                                          (refresh p opts
+                                                                   {:reset_prompt false})))
                                                    (map [:i :n] :<C-h>
                                                         (fn []
                                                           (tset opts :hidden
@@ -379,32 +404,45 @@
                                                                            nwd)
                                                             (set cwd nwd)
                                                             (tset opts :cwd cwd)
-                                                            (refresh p opts {:reset_prompt false}))))
+                                                            (refresh p opts
+                                                                     {:reset_prompt false}))))
                                                    (map [:i :n] :<tab>
                                                         (fn []
-                                                          (var nwd (all_dirs_from_entry cwd))
-                                                          (when (should_cd cwd nwd)
+                                                          (var nwd
+                                                               (all_dirs_from_entry cwd))
+                                                          (when (should_cd cwd
+                                                                           nwd)
                                                             (set cwd nwd)
                                                             (tset opts :cwd cwd)
-                                                            (refresh p opts {:reset_prompt true}))))
+                                                            (refresh p opts
+                                                                     {:reset_prompt true}))))
                                                    (map [:i :n] :<S-tab>
                                                         (fn []
                                                           (when (not (= cwd "/"))
-                                                            (set cwd (vim.fn.resolve (.. cwd "/..")))
+                                                            (set cwd
+                                                                 (vim.fn.resolve (.. cwd
+                                                                                     "/..")))
                                                             (tset opts :cwd cwd)
-                                                            (refresh p opts {:reset_prompt false}))))
+                                                            (refresh p opts
+                                                                     {:reset_prompt false}))))
                                                    (map [:i :n] :<C-g>
                                                         (fn []
                                                           (tset opts :mode
-                                                                (if (= (. opts :mode) :grep)
+                                                                (if (= (. opts
+                                                                          :mode)
+                                                                       :grep)
                                                                     :files
                                                                     :grep))
-                                                          (if (= (. opts :mode) :grep)
-                                                              (tset opts :entry_maker
+                                                          (if (= (. opts :mode)
+                                                                 :grep)
+                                                              (tset opts
+                                                                    :entry_maker
                                                                     (make_entry.gen_from_vimgrep opts))
-                                                              (tset opts :entry_maker
+                                                              (tset opts
+                                                                    :entry_maker
                                                                     (make_entry.gen_from_file opts)))
-                                                          (refresh p opts {:reset_prompt false})))
+                                                          (refresh p opts
+                                                                   {:reset_prompt false})))
                                                    true)}))
              (p.find p)))
 
@@ -412,8 +450,8 @@
 (local small_themed_magic (bindf magic small_ivy_config))
 
 (fn magic-grep-cword []
-  (magic (merge-table ivy_config {:mode :grep
-                                   :default_text (vim.fn.expand "<cword>")})))
+  (magic (merge-table ivy_config
+                      {:mode :grep :default_text (vim.fn.expand :<cword>)})))
 
 (fn magic-grep-visual []
   (vim.cmd "noau normal! \"vy")

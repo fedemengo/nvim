@@ -37,7 +37,7 @@
     (vim.api.nvim_create_autocmd :FileType
                                  {:group g
                                   :pattern "fennel,lisp"
-                                  :command "setlocal lisp iskeyword-=_ iskeyword-=."})
+                                  :command "setlocal lisp iskeyword-=."})
     (vim.api.nvim_create_autocmd :FileType
                                  {:group g
                                   :pattern :make
