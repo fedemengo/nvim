@@ -101,6 +101,7 @@
 
 (map [:n] :tv (bindcmd [:vsplit :term]) {:desc "Open term in vertical split"})
 (map [:n] :ts (bindcmd [:split :term]) {:desc "Open term in horizontal split"})
+(map [:n] :tt (bindcmd [:tabnew :term]) {:desc "Open term in new tab"})
 (map [:n :t] :<leader>ex (bindcmd :exit) {:desc "Close current buffer"})
 ;; keep visual mode while indenting left/right
 

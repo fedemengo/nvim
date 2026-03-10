@@ -162,6 +162,10 @@
   (false err)
   (vim.notify (.. "Failed to set papercolor theme: " err) vim.log.levels.WARN))
 
+;; unset colorscheme terminal color overrides so :term inherits from the terminal emulator
+(for [i 0 15]
+  (vim.api.nvim_set_var (.. "terminal_color_" i) nil))
+
 (set vim.o.background :dark)
 
 (vim.cmd "hi VertSplit ctermbg=NONE guibg=NONE guifg=NONE")
