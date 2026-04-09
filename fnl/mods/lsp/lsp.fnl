@@ -57,7 +57,8 @@
                                     :pylsp
                                     :pyright
                                     :jdtls
-                                    :rust_analyzer]
+                                    :rust_analyzer
+                                    :ts_ls]
                  :automatic_enable false})
 
 (let [fmt nullls.builtins.formatting]
@@ -220,6 +221,10 @@
                 :sqlls {:filetypes [:sql]}
                 :jdtls {:filetypes [:java]}
                 :rust_analyzer {:filetypes [:rust]}
+                :ts_ls {:filetypes [:typescript
+                                    :javascript
+                                    :typescriptreact
+                                    :javascriptreact]}
                 :clangd {:autostart true
                          :cmd (clangd_cmd)
                          :capabilities {:offsetEncoding :utf-8}
