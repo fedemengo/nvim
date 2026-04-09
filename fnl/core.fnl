@@ -31,7 +31,7 @@
   (let [g (vim.api.nvim_create_augroup :filetype-mappings {:clear true})]
     (vim.api.nvim_create_autocmd :FileType
                                  {:group g
-                                  :pattern "python,json"
+                                  :pattern "python,json,typescript,javascript,typescriptreact,javascriptreact"
                                   :callback (fn []
                                               (set vim.o.shiftwidth 2)
                                               (set vim.o.tabstop 2)
