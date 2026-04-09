@@ -222,8 +222,6 @@
 
 (local default_lsp_capabilities (cmp_nvim_lsp.default_capabilities))
 
-(local enabled_servers [])
-(local ft_to_servers {})
 (local prefer_pyright (= 1 (vim.fn.executable :pyright-langserver)))
 
 (each [server opts (pairs lsp_opt)]
@@ -234,13 +232,7 @@
                                                             default_lsp_capabilities
                                                             (or (. server_opts :capabilities) {})))
       (vim.lsp.config server server_opts)
-      (let [filetypes (or (. server_opts :filetypes)
-                          (. (. vim.lsp.config server) :filetypes)
-                          [])]
-        (each [_ ft (ipairs filetypes)]
-          (when (not (. ft_to_servers ft))
-            (tset ft_to_servers ft []))
-          (table.insert (. ft_to_servers ft) server))))))
+      (vim.lsp.enable server))))
 
 (vim.api.nvim_create_user_command :ClangdHintsToggle
                                   (fn []
@@ -256,17 +248,4 @@
                                                     "clangd hints/placeholders: OFF")))
                                   {})
 
-(vim.api.nvim_create_autocmd :FileType
-                             {:group (vim.api.nvim_create_augroup :lsp-enable
-                                                                  {:clear true})
-                              :callback (fn [ev]
-                                          (let [servers (or (. ft_to_servers
-                                                               (. ev :match))
-                                                            [])]
-                                            (each [_ server (ipairs servers)]
-                                              (when (not (. enabled_servers
-                                                             server))
-                                                (vim.lsp.enable server)
-                                                (tset enabled_servers
-                                                      server
-                                                      true)))))} )
+
