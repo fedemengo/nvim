@@ -257,3 +257,10 @@
                                                     "clangd hints/placeholders: OFF")))
                                   {})
 
+
+(when (= 1 (vim.fn.executable :ruff))
+  (let [opts (or (. lsp_opt :ruff) {})]
+    (tset opts :on_attach on_attach)
+    (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
+    (vim.lsp.config :ruff opts)
+    (vim.lsp.enable :ruff)))
