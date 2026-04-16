@@ -250,6 +250,7 @@
 
 (fn magic-previewer [opts]
   (let [file-previewer (conf.file_previewer opts)
+        grep-previewer (conf.grep_previewer opts)
         media-previewer (previewers.new_termopen_previewer {:get_command (fn [entry
                                                                               status]
                                                                            (media-previewer-command (. opts
@@ -260,28 +261,40 @@
                               {:active :file})
                      :teardown (fn [self]
                                  ((. file-previewer :teardown) file-previewer)
+                                 ((. grep-previewer :teardown) grep-previewer)
                                  ((. media-previewer :teardown) media-previewer))
                      :send_input (fn [self input]
                                    (if (= :media (. self.state :active))
                                        ((. media-previewer :send_input) media-previewer
                                                                         input)
-                                       ((. file-previewer :send_input) file-previewer
-                                                                       input)))
+                                       (if (= :grep (. self.state :active))
+                                           ((. grep-previewer :send_input) grep-previewer
+                                                                    input)
+                                           ((. file-previewer :send_input) file-previewer
+                                                                           input))))
                      :scroll_fn (fn [self direction]
                                   (if (= :media (. self.state :active))
                                       ((. media-previewer :scroll_fn) media-previewer
                                                                       direction)
-                                      ((. file-previewer :scroll_fn) file-previewer
-                                                                     direction)))
+                                      (if (= :grep (. self.state :active))
+                                          ((. grep-previewer :scroll_fn) grep-previewer
+                                                                   direction)
+                                          ((. file-previewer :scroll_fn) file-previewer
+                                                                         direction))))
                      :scroll_horizontal_fn (fn [self direction]
                                              (if (= :media
                                                     (. self.state :active))
                                                  ((. media-previewer
                                                      :scroll_horizontal_fn) media-previewer
                                                                                                                                                  direction)
-                                                 ((. file-previewer
-                                                     :scroll_horizontal_fn) file-previewer
-                                                                                                                                                direction)))
+                                                 (if (= :grep
+                                                        (. self.state :active))
+                                                     ((. grep-previewer
+                                                         :scroll_horizontal_fn) grep-previewer
+                                                                                                                                                    direction)
+                                                     ((. file-previewer
+                                                         :scroll_horizontal_fn) file-previewer
+                                                                                                                                                   direction))))
                      :preview_fn (fn [self entry status]
                                    (if (media-file? entry)
                                        (do
@@ -289,11 +302,17 @@
                                          ((. media-previewer :preview) media-previewer
                                                                        entry
                                                                        status))
-                                       (do
-                                         (tset self.state :active :file)
-                                         ((. file-previewer :preview) file-previewer
+                                       (if (. entry :lnum)
+                                           (do
+                                             (tset self.state :active :grep)
+                                             ((. grep-previewer :preview) grep-previewer
                                                                       entry
-                                                                      status))))})))
+                                                                      status))
+                                           (do
+                                             (tset self.state :active :file)
+                                             ((. file-previewer :preview) file-previewer
+                                                                          entry
+                                                                          status)))))})))
 
 (fn new_magic_finder [opts]
   "Create a new finder job for the magic picker"
