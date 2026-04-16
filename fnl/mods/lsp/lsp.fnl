@@ -212,9 +212,6 @@
                                                          :extraPaths ["src"]
                                                          :useLibraryCodeForTypes true
                                                          :diagnosticMode :openFilesOnly}}}}
-                :ruff {:init_options {:settings {:configuration "~/.dandelion/ruff.toml"
-                                                 :fixAll true
-                                                 :organizeImports true}}}
                 :bashls {:filetypes [:bash :sh :zsh]}
                 :dockerls {:filetypes [:dockerfile]}
                 :jsonls {:filetypes [:json :jsonc]}
@@ -259,7 +256,9 @@
 
 
 (when (= 1 (vim.fn.executable :ruff))
-  (let [opts (or (. lsp_opt :ruff) {})]
+  (let [opts {:init_options {:settings {:configuration "~/.dandelion/ruff.toml"
+                                        :fixAll true
+                                        :organizeImports true}}}]
     (tset opts :on_attach on_attach)
     (tset opts :capabilities (cmp_nvim_lsp.default_capabilities))
     (vim.lsp.config :ruff opts)
