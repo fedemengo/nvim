@@ -38,7 +38,7 @@
         line (vim.fn.line ".")
         safe_path (vim.fn.shellescape path)
         safe_file (vim.fn.shellescape file)]
-    (vim.fn.execute (.. "!open-web-commit " safe_path " " safe_file " " line))
+    (vim.fn.execute (.. "! ~/.dotfiles/bin/utils/open-web-commit " safe_path " " safe_file " " line))
     (match vim.v.shell_error
       1 (print (.. path " is not a git repository"))
       2 (print (.. path "/" file ":" line " was never committed")))))
