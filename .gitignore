@@ -1,5 +1,6 @@
 lua/
 autoload/
 plugin/
+after/
 
 .DS_Store

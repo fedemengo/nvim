@@ -9,27 +9,7 @@ Nvim config in fennel (lisp)
 ## Requirements
 
 - [fennel](https://fennel-lang.org)
-- npm - for some language server
-- node16 - for copilot
-- python3.10-venv
-- fd/fd-find
-- rg
-
-other stuff for LSPs
-
-- pylsp-mypy
-- pep8
-
-### Plugins
-
-Different plugins will require different binaries, here some
-
-- fd
-- rg
-- gopls
-- prettier
-
-## Bootstrap
-
-Install required plugins with `:PackerInstall`, that's it
+- `nvm`, `node`, `npm`
+- `ripgrep`, `fd-find`
+- `python-language-server`, `black`, `ruff`
 
