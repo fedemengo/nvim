@@ -5,4 +5,5 @@
   {:triggers
     [ {:mode ["n" "v"] :prefix "<leader>"}
       {:mode ["n"] :prefix "f"}
-      {:mode ["n"] :prefix "t"} ]})
+      {:mode ["n"] :prefix "t"}
+      {:mode ["n"] :prefix "<space>"} ]})

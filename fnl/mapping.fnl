@@ -155,3 +155,7 @@
 (map [:x] :<leader>p "\"_dP")
 
 (map [:n] :<S-Tab> :za {:desc "Toggle fold under cursor"})
+
+(map [:n] :<space>cd ":CodeDiff<cr>"            {:desc "Git diff explorer"})
+(map [:n] :<space>ch ":CodeDiff history<cr>"  {:desc "Git history"})
+(map [:n] :<space>cp ":CodeDiff main...<cr>"  {:desc "PR diff (vs main)"})

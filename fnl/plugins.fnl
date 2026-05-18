@@ -113,6 +113,7 @@
      {;:ft [:lean]
       :requires [[:neovim/nvim-lspconfig]]
       :mod :dev.lean} :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
+     :esmuellert/codediff.nvim {:cmd :CodeDiff :mod :tools.codediff}
      :ray-x/lsp_signature.nvim {} :hedyhli/outline.nvim {:mod :lsp.symbols}
      :wakatime/vim-wakatime {} :Vonr/align.nvim {:mod :tools.align}
      :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
