@@ -24,7 +24,14 @@
                                   :command "setlocal number"})
     ;; delete empty space from the end of lines on every save
     (vim.api.nvim_create_autocmd :BufWritePre
-                                 {:group g :command "%s/\\s\\+$//e"})
+                                 {:group g
+                                  :callback (fn [ev]
+                                              (let [bufnr (. ev :buf)]
+                                                (when (and (vim.api.nvim_get_option_value :modifiable
+                                                                                          {:buf bufnr})
+                                                           (= "" (vim.api.nvim_get_option_value :buftype
+                                                                                                 {:buf bufnr})))
+                                                  (vim.cmd "keeppatterns %s/\\s\\+$//e"))))})
     ;; equalize windows on terminal resize
     (vim.api.nvim_create_autocmd :VimResized
                                  {:group g :command "wincmd ="}))
