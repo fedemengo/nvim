@@ -96,7 +96,7 @@
      {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
       :mod :tools.telescope} :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
      :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank :main :ibl}
-     :norcalli/nvim-colorizer.lua {:mod :ui.colorizer} :numToStr/FTerm.nvim
+     :catgoose/nvim-colorizer.lua {:mod :ui.colorizer} :numToStr/FTerm.nvim
      {:mod :tools.fterm} :SmiteshP/nvim-navic {} :jdhao/better-escape.vim
      {:mod :tools.better-escape} :mhinz/vim-startify {:mod :ui.startify}
      :karb94/neoscroll.nvim {:mod :ui.neoscroll} :ggandor/leap.nvim

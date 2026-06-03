@@ -222,6 +222,7 @@
                 :clangd {:autostart true
                          :cmd (clangd_cmd)
                          :capabilities {:offsetEncoding :utf-8}
+                         :indentation {:enable false}
                          :filetypes [:c :cpp :cuda]}})
 
 (local default_lsp_capabilities (cmp_nvim_lsp.default_capabilities))
