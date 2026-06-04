@@ -27,4 +27,4 @@
                               (= t ":")
                               [:cmdline :path]
                               [])))
-             :completion {:menu {:auto_show true}}}}))
+             :completion {:menu {:auto_show true}}}})
