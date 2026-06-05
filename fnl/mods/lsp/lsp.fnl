@@ -1,8 +1,5 @@
 (module :mods.lsp.lsp
         {autoload {navic nvim-navic
-                   cmp cmp
-                   cmp_nvim_lsp cmp_nvim_lsp
-                   lspkind lspkind
                    lspsignature lsp_signature
                    lsputil lspconfig/util
                    nullls null-ls
@@ -12,38 +9,6 @@
                    themes telescope.themes
                    tbuiltin telescope.builtin}})
 
-;; selection behavior for cmp mappings
-
-(local cmp_select {:behavior cmp.SelectBehavior.Select})
-
-(cmp.setup {:window {:completion (cmp.config.window.bordered)
-                     :documentation (cmp.config.window.bordered)}
-            :mapping (cmp.mapping.preset.insert {:<C-q> (cmp.mapping.scroll_docs -4)
-                                                 :<C-w> (cmp.mapping.scroll_docs 4)
-                                                 :<C-p> (cmp.mapping.select_prev_item cmp_select)
-                                                 :<C-n> (cmp.mapping.select_next_item cmp_select)
-                                                 :<C-e> (cmp.mapping.abort)
-                                                 :<C-y> (cmp.mapping.confirm {:select true
-                                                                              :behavior cmp.ConfirmBehavior.Replace})
-                                                 :<S-Tab> (cmp.mapping.complete)})
-            :experimental {:native_menu false :ghost_text true}
-            :sources (cmp.config.sources [{:name :copilot}
-                                          {:name :nvim_lsp}
-                                          {:name :nvim_lua}
-                                          {:name :conjure}
-                                          {:name :path}
-                                          {:name :buffer :keyword_length 5}])
-            :formatting {:format (lspkind.cmp_format {:mode :symbol_text
-                                                      :maxwidth 50})}})
-
-(cmp.setup.cmdline ["/" "?"]
-                   {:mapping (cmp.mapping.preset.cmdline)
-                    :sources [{:name :buffer}]})
-
-(cmp.setup.cmdline [":"]
-                   {:mapping (cmp.mapping.preset.cmdline)
-                    :sources (cmp.config.sources [{:name :path}]
-                                                 [{:name :cmdline}])})
 
 (mason.setup {:PATH :append})
 (masonlsp.setup {:ensure_installed [;:gopls
@@ -225,7 +190,7 @@
                          :indentation {:enable false}
                          :filetypes [:c :cpp :cuda]}})
 
-(local default_lsp_capabilities (cmp_nvim_lsp.default_capabilities))
+(local default_lsp_capabilities ((. (require :blink.cmp) :get_lsp_capabilities)))
 
 (local prefer_pyright (= 1 (vim.fn.executable :pyright-langserver)))
 

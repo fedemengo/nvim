@@ -72,7 +72,9 @@
      :zbirenbaum/copilot.lua {;:cmd :Copilot
                              ;:event :InsertEnter
                              :mod :dev.copilot}
-     :zbirenbaum/copilot-cmp {:mod :dev.copilot_cmp}
+     :saghen/blink.cmp {:run "cargo build --release"
+                        :requires [[:giuxtaposition/blink-cmp-copilot]]
+                        :mod :lsp.blink}
      :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
      :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
                                     [:HakonHarnes/img-clip.nvim]
@@ -120,13 +122,6 @@
                                            [:williamboman/mason.nvim]
                                            [:williamboman/mason-lspconfig.nvim]
                                            [:jay-babu/mason-null-ls.nvim]
-                                           [:hrsh7th/nvim-cmp]
-                                           [:hrsh7th/cmp-buffer]
-                                           [:hrsh7th/cmp-path]
-                                           [:hrsh7th/cmp-cmdline]
-                                           [:hrsh7th/cmp-nvim-lsp]
-                                           [:hrsh7th/cmp-nvim-lua]
-                                           [:onsails/lspkind.nvim]
                                            [:nvimtools/none-ls.nvim]]
                                 :mod :lsp.lsp}
      ;; dap
