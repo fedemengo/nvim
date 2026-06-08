@@ -48,6 +48,7 @@
       (let [name (. packs i)
             opts (. packs (+ i 1))]
         (table.insert specs (to-lazy-spec name opts))))
+
     (bootstrap-lazy)
     (let [lazy (safe-require :lazy)]
       (when lazy
@@ -65,72 +66,93 @@
               (plugin.setup arg))
             (plugin.setup))))))
 
-(use ;; ensured
-     :Olical/aniseed {} :lewis6991/impatient.nvim {} :NLKNguyen/papercolor-theme
-     {} :fedemengo/github-nvim-theme {} :catppuccin/nvim {}
-     :loctvl842/monokai-pro.nvim {:mod :ui.monokai} :AlexvZyl/nordic.nvim {}
-     :zbirenbaum/copilot.lua {;:cmd :Copilot
-                             ;:event :InsertEnter
-                             :mod :dev.copilot}
+(use ;; bootstrap — must be eager
+     :Olical/aniseed {} :lewis6991/impatient.nvim {}
+     ;; colorschemes — eager so the theme is applied at startup
+     :NLKNguyen/papercolor-theme {} :fedemengo/github-nvim-theme {}
+     :catppuccin/nvim {} :AlexvZyl/nordic.nvim {}
+     :loctvl842/monokai-pro.nvim {:mod :ui.monokai}
+     ;; ui chrome — eager (statusline/tabline/navic must be ready before first render)
+     :nvim-lualine/lualine.nvim {}
+     :arkav/lualine-lsp-progress {:mod :ui.lualine}
+     :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
+     :SmiteshP/nvim-navic {}
+     :nvim-focus/focus.nvim {:mod :ui.focus}
+     :mhinz/vim-startify {:mod :ui.startify}
+     :rcarriga/nvim-notify {:mod :ui.notify}
+     ;; motion / text-objects — eager so they work from keystroke 1
+     :ggandor/leap.nvim {:url "https://codeberg.org/andyg/leap.nvim" :mod :tools.leap}
+     :wellle/targets.vim {}
+     ;; which-key — eager so every keymap registers its description
+     :folke/which-key.nvim {:mod :tools.which-key}
+     ;; lsp + completion — eager (attach on BufRead handled internally)
+     :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
+                                            [:williamboman/mason.nvim]
+                                            [:williamboman/mason-lspconfig.nvim]
+                                            [:jay-babu/mason-null-ls.nvim]
+                                            [:nvimtools/none-ls.nvim]]
+                                 :mod :lsp.lsp}
      :saghen/blink.cmp {:run "cargo build --release"
                         :requires [[:giuxtaposition/blink-cmp-copilot]]
                         :mod :lsp.blink}
-     :MeanderingProgrammer/render-markdown.nvim {:mod :ui.render-markdown}
-     :yetone/avante.nvim {:requires [[:nvim-treesitter/nvim-treesitter]
-                                    [:HakonHarnes/img-clip.nvim]
-                                    [:stevearc/dressing.nvim]
-                                    [:nvim-lua/plenary.nvim]
-                                    [:MunifTanjim/nui.nvim]
-                                    [:nvim-tree/nvim-web-devicons]]
-                         :run :make
-                         :mod :dev.avante} ;; dev
-     :stevearc/profile.nvim {:mod :dev.profile} :ruifm/gitlinker.nvim
-     {:requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
-     :RRethy/vim-illuminate {:mod :tools.illuminate} :sopa0/telescope-makefile
-     {:requires [[:akinsho/toggleterm.nvim]]} ;; utils
-     :wellle/targets.vim {} :folke/which-key.nvim {:mod :tools.which-key}
-     :folke/trouble.nvim {:mod :tools.trouble}
-     :folke/todo-comments.nvim {:requires [[:nvim-lua/plenary.nvim]]
+     :ray-x/lsp_signature.nvim {}
+     :wakatime/vim-wakatime {}
+     ;; treesitter — eager (syntax highlight needed immediately)
+     :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter}
+     ;; copilot — defer until insert mode
+     :zbirenbaum/copilot.lua {:event :InsertEnter :mod :dev.copilot}
+     ;; insert-mode only
+     :windwp/nvim-autopairs {:event :InsertEnter}
+     :jdhao/better-escape.vim {:event :InsertEnter :mod :tools.better-escape}
+     ;; buffer decorations — load once a file is open
+     :lewis6991/gitsigns.nvim {:event [:BufRead :BufNewFile] :mod :tools.gitsigns}
+     :RRethy/vim-illuminate {:event :LspAttach :mod :tools.illuminate}
+     :kevinhwang91/nvim-hlslens {:event [:BufRead :BufNewFile] :mod :ui.hlslens}
+     :lukas-reineke/indent-blankline.nvim {:event [:BufRead :BufNewFile] :mod :ui.indentblank :main :ibl}
+     :catgoose/nvim-colorizer.lua {:event [:BufRead :BufNewFile] :mod :ui.colorizer}
+     :karb94/neoscroll.nvim {:event [:BufRead :BufNewFile] :mod :ui.neoscroll}
+     :petertriho/nvim-scrollbar {:event [:BufRead :BufNewFile] :mod :ui.scrollbar}
+     :folke/todo-comments.nvim {:event [:BufRead :BufNewFile]
+                                :requires [[:nvim-lua/plenary.nvim]]
                                 :mod :tools.todo-comments}
+     :MeanderingProgrammer/render-markdown.nvim {:ft [:markdown :Avante] :mod :ui.render-markdown}
+     ;; filetype-specific
+     :ray-x/go.nvim {:ft [:go :gomod :gowork] :mod :dev.go_nvim}
+     :Julian/lean.nvim {:ft [:lean]
+                        :requires [[:neovim/nvim-lspconfig]]
+                        :mod :dev.lean}
+     ;; commands
+     :folke/trouble.nvim {:cmd [:Trouble :TroubleToggle] :mod :tools.trouble}
+     :folke/zen-mode.nvim {:cmd :ZenMode :mod :ui.zenmode}
+     :hedyhli/outline.nvim {:cmd :Outline :mod :lsp.symbols}
+     :esmuellert/codediff.nvim {:cmd :CodeDiff :mod :tools.codediff}
+     :numToStr/FTerm.nvim {:cmd :FTerm :mod :tools.fterm}
+     ;; deferred — load after startup, before first user input
+     :nvim-telescope/telescope.nvim {:event :VeryLazy
+                                     :requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
+                                     :mod :tools.telescope}
      :nvim-telescope/telescope-fzf-native.nvim {:run :make}
      :nvim-telescope/telescope-media-files.nvim {}
-     :nvim-telescope/telescope.nvim
-     {:requires [[:nvim-lua/popup.nvim] [:nvim-lua/plenary.nvim]]
-      :mod :tools.telescope} :kevinhwang91/nvim-hlslens {:mod :ui.hlslens}
-     :lukas-reineke/indent-blankline.nvim {:mod :ui.indentblank :main :ibl}
-     :catgoose/nvim-colorizer.lua {:mod :ui.colorizer} :numToStr/FTerm.nvim
-     {:mod :tools.fterm} :SmiteshP/nvim-navic {} :jdhao/better-escape.vim
-     {:mod :tools.better-escape} :mhinz/vim-startify {:mod :ui.startify}
-     :karb94/neoscroll.nvim {:mod :ui.neoscroll} :ggandor/leap.nvim
-     {:url "https://codeberg.org/andyg/leap.nvim" :mod :tools.leap}
-     :windwp/nvim-autopairs {} ;; theme
-     :rcarriga/nvim-notify {:mod :ui.notify} :folke/zen-mode.nvim
-     {:mod :ui.zenmode} :nvim-lualine/lualine.nvim {}
-     :arkav/lualine-lsp-progress {:mod :ui.lualine} :akinsho/bufferline.nvim
-     {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
-     :nvim-focus/focus.nvim {:mod :ui.focus} :petertriho/nvim-scrollbar
-     {:mod :ui.scrollbar} ;; programming
-     :nvim-treesitter/nvim-treesitter {:run ":TSUpdate" :mod :tools.treesitter}
-     :ray-x/go.nvim {:mod :dev.go_nvim} :Julian/lean.nvim
-     {;:ft [:lean]
-      :requires [[:neovim/nvim-lspconfig]]
-      :mod :dev.lean} :lewis6991/gitsigns.nvim {:mod :tools.gitsigns}
-     :esmuellert/codediff.nvim {:cmd :CodeDiff :mod :tools.codediff}
-     :ray-x/lsp_signature.nvim {} :hedyhli/outline.nvim {:mod :lsp.symbols}
-     :wakatime/vim-wakatime {} :Vonr/align.nvim {:mod :tools.align}
-     :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
-                                           [:williamboman/mason.nvim]
-                                           [:williamboman/mason-lspconfig.nvim]
-                                           [:jay-babu/mason-null-ls.nvim]
-                                           [:nvimtools/none-ls.nvim]]
-                                :mod :lsp.lsp}
-     ;; dap
-     :mfussenegger/nvim-dap {}
-     :mfussenegger/nvim-dap-python {:requires [[:mfussenegger/nvim-dap]]}
-     :rcarriga/nvim-dap-ui {:requires [[:mfussenegger/nvim-dap]
-                                        [:nvim-neotest/nvim-nio]]}
-     :jay-babu/mason-nvim-dap.nvim {:requires [[:williamboman/mason.nvim]
-                                                [:mfussenegger/nvim-dap]]
+     :sopa0/telescope-makefile {:requires [[:akinsho/toggleterm.nvim]]}
+     :ruifm/gitlinker.nvim {:event :VeryLazy :requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
+     :Vonr/align.nvim {:event :VeryLazy :mod :tools.align}
+     :stevearc/profile.nvim {:event :VeryLazy :mod :dev.profile}
+     :yetone/avante.nvim {:event :VeryLazy
+                          :requires [[:nvim-treesitter/nvim-treesitter]
+                                     [:HakonHarnes/img-clip.nvim]
+                                     [:stevearc/dressing.nvim]
+                                     [:nvim-lua/plenary.nvim]
+                                     [:MunifTanjim/nui.nvim]
+                                     [:nvim-tree/nvim-web-devicons]]
+                          :run :make
+                          :mod :dev.avante}
+     ;; dap — load on debug commands
+     :mfussenegger/nvim-dap {:cmd [:DapContinue :DapToggleBreakpoint :DapNew :DapStepOver :DapStepInto]}
+     :mfussenegger/nvim-dap-python {:ft :python :requires [[:mfussenegger/nvim-dap]]}
+     :rcarriga/nvim-dap-ui {:cmd [:DapContinue :DapToggleBreakpoint]
+                             :requires [[:mfussenegger/nvim-dap] [:nvim-neotest/nvim-nio]]}
+     :jay-babu/mason-nvim-dap.nvim {:cmd [:DapContinue :DapToggleBreakpoint]
+                                     :requires [[:williamboman/mason.nvim] [:mfussenegger/nvim-dap]]
                                      :mod :dev.dap}
      ;; misc
      :gruvw/strudel.nvim {:run "npm install" :mod :misc.strudel})
