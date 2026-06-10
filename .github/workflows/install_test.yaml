@@ -17,7 +17,8 @@ jobs:
       contains(github.event.pull_request.title, '[install]')
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |

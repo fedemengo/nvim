@@ -1,5 +1,5 @@
 
-name: Tests macros
+name: Test Macros
 
 on:
   push:
@@ -11,8 +11,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-slim
+  run-tests:
+    runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'skip GA')"
 
     steps:

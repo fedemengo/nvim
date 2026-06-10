@@ -19,12 +19,12 @@ test-install:
 	XDG_DATA_HOME=$(NVIM_TEST_DIR)/data \
 	XDG_CACHE_HOME=$(NVIM_TEST_DIR)/cache \
 	XDG_STATE_HOME=$(NVIM_TEST_DIR)/state \
-	$(NVIM) --headless -c "autocmd User LazyDone ++once qall" -c "Lazy! sync"
+	$(NVIM) --headless "+Lazy! sync" +qa
 	XDG_CONFIG_HOME=$(NVIM_TEST_DIR)/config \
 	XDG_DATA_HOME=$(NVIM_TEST_DIR)/data \
 	XDG_CACHE_HOME=$(NVIM_TEST_DIR)/cache \
 	XDG_STATE_HOME=$(NVIM_TEST_DIR)/state \
-	$(NVIM) --headless -c 'qall'
+	$(NVIM) --headless +qa
 
 clean-install-test:
 	rm -rf $(NVIM_TEST_DIR)
