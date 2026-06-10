@@ -4,3 +4,4 @@ plugin/
 after/
 
 .DS_Store
+fnl/local.fnl

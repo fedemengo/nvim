@@ -8,3 +8,4 @@
 (require :plugins)
 (require :core)
 (require :mapping)
+(pcall require :local)

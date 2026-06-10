@@ -22,12 +22,12 @@
                                     :pylsp
                                     :pyright
                                     :jdtls
-                                    :rust_analyzer]
+                                    :rust_analyzer
+                                    :ts_ls]
                  :automatic_enable false})
 
 (let [fmt nullls.builtins.formatting]
-  (nullls.setup {:sources [fmt.black
-                           fmt.stylua
+  (nullls.setup {:sources [fmt.stylua
                            fmt.fnlfmt
                            fmt.shfmt
                            fmt.goimports
@@ -165,7 +165,6 @@
                                                      :jedi_symbols {:enabled true}
                                                      :autopep8 {:enable false}
                                                      :yapf {:enable false}
-                                                     :black {:enabled true}
                                                      :pylsp_mypy {:enabled true
                                                                   :live_mode true}}}}
                         :plugins {:rope_autoimport {:enabled true}}}
@@ -185,6 +184,10 @@
                 :sqlls {:filetypes [:sql]}
                 :jdtls {:filetypes [:java]}
                 :rust_analyzer {:filetypes [:rust]}
+                :ts_ls {:filetypes [:typescript
+                                    :javascript
+                                    :typescriptreact
+                                    :javascriptreact]}
                 :clangd {:autostart true
                          :cmd (clangd_cmd)
                          :capabilities {:offsetEncoding :utf-8}
