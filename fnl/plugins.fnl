@@ -78,7 +78,7 @@
      :akinsho/bufferline.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :ui.tab}
      :SmiteshP/nvim-navic {}
      :nvim-focus/focus.nvim {:mod :ui.focus}
-     :mhinz/vim-startify {:mod :ui.startify}
+     :goolord/alpha-nvim {:mod :ui.alpha}
      :rcarriga/nvim-notify {:mod :ui.notify}
      ;; motion / text-objects — eager so they work from keystroke 1
      :ggandor/leap.nvim {:url "https://codeberg.org/andyg/leap.nvim" :mod :tools.leap}
@@ -136,6 +136,7 @@
      :sopa0/telescope-makefile {:requires [[:akinsho/toggleterm.nvim]]}
      :ruifm/gitlinker.nvim {:event :VeryLazy :requires [[:nvim-lua/plenary.nvim]] :mod :dev.gitlinker}
      :Vonr/align.nvim {:event :VeryLazy :mod :tools.align}
+     :folke/persistence.nvim {:event :VeryLazy :mod :tools.persistence}
      :stevearc/profile.nvim {:event :VeryLazy :mod :dev.profile}
      :yetone/avante.nvim {:event :VeryLazy
                           :requires [[:nvim-treesitter/nvim-treesitter]
