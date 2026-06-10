@@ -2,6 +2,7 @@ local aniseed_path = vim.fn.stdpath("data") .. "/lazy/aniseed"
 local uv = vim.uv or vim.loop
 
 if not uv.fs_stat(aniseed_path) then
+  vim.fn.mkdir(vim.fn.fnamemodify(aniseed_path, ":h"), "p")
   vim.fn.system({
     "git",
     "clone",

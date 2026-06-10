@@ -92,8 +92,9 @@
                                             [:jay-babu/mason-null-ls.nvim]
                                             [:nvimtools/none-ls.nvim]]
                                  :mod :lsp.lsp}
-     :saghen/blink.cmp {:run "cargo build --release"
-                        :requires [[:giuxtaposition/blink-cmp-copilot]]
+     :saghen/blink.lib {:run "cargo build --release"}
+     :saghen/blink.cmp {:requires [[:giuxtaposition/blink-cmp-copilot]
+                                   [:saghen/blink.lib]]
                         :mod :lsp.blink}
      :ray-x/lsp_signature.nvim {}
      :wakatime/vim-wakatime {}
