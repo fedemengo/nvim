@@ -67,7 +67,7 @@
             (plugin.setup))))))
 
 (use ;; bootstrap — must be eager
-     :Olical/aniseed {} :lewis6991/impatient.nvim {}
+     :Olical/aniseed {}
      ;; colorschemes — eager so the theme is applied at startup
      :NLKNguyen/papercolor-theme {} :fedemengo/github-nvim-theme {}
      :catppuccin/nvim {} :AlexvZyl/nordic.nvim {}
