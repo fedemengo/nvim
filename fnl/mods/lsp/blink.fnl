@@ -63,15 +63,7 @@
                                    :module :blink-cmp-copilot
                                    :score_offset 100
                                    :async true}}}
-   :cmdline {:keymap {:preset :cmdline}
-             :sources (fn []
-                        (let [t (vim.fn.getcmdtype)]
-                          (if (or (= t "/") (= t "?"))
-                              [:buffer]
-                              (= t ":")
-                              [:cmdline :path]
-                              [])))
-             :completion {:menu {:auto_show true}}}})
+   :cmdline {:keymap {:preset :cmdline}}})
 
 (vim.schedule set-kind-hl)
 (vim.api.nvim_create_autocmd :ColorScheme {:callback #(vim.schedule set-kind-hl)})
