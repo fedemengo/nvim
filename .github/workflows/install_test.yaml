@@ -28,7 +28,7 @@ jobs:
       - name: Install Neovim
         run: |
           curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
-          tar -xzf nvim-linux-x86_64.tar.gz -C /usr/local --strip-components=1
+          sudo tar -xzf nvim-linux-x86_64.tar.gz -C /usr/local --strip-components=1
           rm nvim-linux-x86_64.tar.gz
 
       - name: Install test

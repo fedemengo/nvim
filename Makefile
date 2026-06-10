@@ -13,7 +13,7 @@ test-headless:
 	XDG_STATE_HOME=/tmp/nvim-state XDG_CACHE_HOME=/tmp/nvim-cache $(NVIM) --headless '+qa'
 
 test-install:
-	mkdir -p $(NVIM_TEST_DIR)/{data,cache,state,config}
+	mkdir -p $(NVIM_TEST_DIR)/data $(NVIM_TEST_DIR)/cache $(NVIM_TEST_DIR)/state $(NVIM_TEST_DIR)/config
 	ln -sf $(CURDIR) $(NVIM_TEST_DIR)/config/nvim
 	XDG_CONFIG_HOME=$(NVIM_TEST_DIR)/config \
 	XDG_DATA_HOME=$(NVIM_TEST_DIR)/data \

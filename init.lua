@@ -1,7 +1,10 @@
-local aniseed_path = vim.fn.stdpath("data") .. "/lazy/aniseed"
-local uv = vim.uv or vim.loop
+if vim.fn.has("nvim-0.12") == 0 then
+  error("neovim 0.12+ required")
+end
 
-if not uv.fs_stat(aniseed_path) then
+local aniseed_path = vim.fn.stdpath("data") .. "/lazy/aniseed"
+
+if not vim.uv.fs_stat(aniseed_path) then
   vim.fn.mkdir(vim.fn.fnamemodify(aniseed_path, ":h"), "p")
   vim.fn.system({
     "git",
