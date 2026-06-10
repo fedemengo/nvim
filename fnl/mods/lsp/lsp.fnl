@@ -171,9 +171,10 @@
                         :plugins {:rope_autoimport {:enabled true}}}
                 :pyright {:filetypes [:python]
                           :before_init (fn [_ config]
-                                         (let [python (.. config.root_dir "/.venv/bin/python")]
-                                           (when (= 1 (vim.fn.executable python))
-                                             (tset config.settings.python :pythonPath python))))
+                                         (when config.root_dir
+                                           (let [python (.. config.root_dir "/.venv/bin/python")]
+                                             (when (= 1 (vim.fn.executable python))
+                                               (tset config.settings.python :pythonPath python)))))
                           :settings {:python {:analysis {:autoSearchPaths true
                                                          :extraPaths ["src"]
                                                          :useLibraryCodeForTypes true
