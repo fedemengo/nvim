@@ -104,13 +104,19 @@
        (merge-table ivy_config
                     {:severity :error :prompt_title "Workspace Errors"}))
 
+(fn buffer-dir []
+  "utils.buffer_dir, but oil:// buffers resolve to the directory they show"
+  (let [(ok oil) (pcall require :oil)
+        dir (and ok (oil.get_current_dir))]
+    (if dir (vim.fs.normalize dir) (utils.buffer_dir))))
+
 (fn with-count [f opts?]
   (fn [args]
     (var opts (or opts? {}))
     (var back "")
     (for [i 1 vim.v.count] ;; h v:count
       (set back (.. back "/..")))
-    (var cwd (vim.fn.resolve (.. (utils.buffer_dir) back)))
+    (var cwd (vim.fn.resolve (.. (buffer-dir) back)))
     (var relwd (cwd:gsub (os.getenv :HOME) :$HOME))
     (f (merge-table (merge-table ivy_config
                                  {: cwd
@@ -371,7 +377,7 @@
 
 (var magic (fn [_opts]
              (var opts (deep-copy (or _opts {})))
-             (var cwd (utils.buffer_dir))
+             (var cwd (buffer-dir))
              (tset opts :fcmd_depth 4)
              (tset opts :cwd cwd)
              (tset opts :mode (or (. opts :mode) :files))
