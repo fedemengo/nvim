@@ -19,6 +19,13 @@
 
 ;; for themes respecting vim.o.background
 
+(fn apply-cursor-blend [blend]
+  (when (vim.startswith (. vim.g :colors_name) :github_)
+    (let [cc-hl (vim.api.nvim_get_hl 0 {:name :CursorColumn :link false})
+          nr-hl (vim.api.nvim_get_hl 0 {:name :CursorLineNr :link false})]
+      (vim.api.nvim_set_hl 0 :CursorLine {:underline true :sp (. nr-hl :fg)})
+      (vim.api.nvim_set_hl 0 :CursorColumn (vim.tbl_extend :force cc-hl {:blend blend})))))
+
 (fn light-theme []
   (vim.cmd "colorscheme github_light")
   (set vim.o.background :light))
