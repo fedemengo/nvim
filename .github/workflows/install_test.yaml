@@ -20,16 +20,21 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+
       - name: Install dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y git curl nodejs npm ripgrep fd-find
-
-      - name: Install Neovim
-        run: |
-          curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
-          sudo tar -xzf nvim-linux-x86_64.tar.gz -C /usr/local --strip-components=1
-          rm nvim-linux-x86_64.tar.gz
+          sudo apt-get install -y git nodejs npm ripgrep
+          sudo apt-get install -y fd-find
+          sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
 
       - name: Install test
         run: make test-install NVIM_TEST_DIR=/tmp/nvim-test
+
+      - name: Functional test
+        run: make test-functional NVIM_TEST_DIR=/tmp/nvim-test

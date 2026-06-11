@@ -1,4 +1,4 @@
-.PHONY: clean test-headless test-install clean-install-test
+.PHONY: clean test-headless test-install test-functional clean-install-test
 
 NVIM ?= nvim
 NVIM_DATA ?= $(HOME)/.local/share/nvim
@@ -25,6 +25,13 @@ test-install:
 	XDG_CACHE_HOME=$(NVIM_TEST_DIR)/cache \
 	XDG_STATE_HOME=$(NVIM_TEST_DIR)/state \
 	$(NVIM) --headless +qa
+
+test-functional:
+	XDG_CONFIG_HOME=$(NVIM_TEST_DIR)/config \
+	XDG_DATA_HOME=$(NVIM_TEST_DIR)/data \
+	XDG_CACHE_HOME=$(NVIM_TEST_DIR)/cache \
+	XDG_STATE_HOME=$(NVIM_TEST_DIR)/state \
+	$(NVIM) --headless "+lua require('aniseed.fennel').impl().dofile('tests/headless.fnl')" "+cquit! 1"
 
 clean-install-test:
 	rm -rf $(NVIM_TEST_DIR)
