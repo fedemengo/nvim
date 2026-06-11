@@ -33,3 +33,6 @@ jobs:
 
       - name: Install test
         run: make test-install NVIM_TEST_DIR=/tmp/nvim-test
+
+      - name: Functional test
+        run: make test-functional NVIM_TEST_DIR=/tmp/nvim-test

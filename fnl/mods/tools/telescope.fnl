@@ -104,7 +104,7 @@
        (merge-table ivy_config
                     {:severity :error :prompt_title "Workspace Errors"}))
 
-(fn buffer-dir []
+(defn buffer-dir []
   "utils.buffer_dir, but oil:// buffers resolve to the directory they show"
   (let [(ok oil) (pcall require :oil)
         dir (and ok (oil.get_current_dir))]
