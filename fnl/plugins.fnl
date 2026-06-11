@@ -85,6 +85,8 @@
      :wellle/targets.vim {}
      ;; which-key — eager so every keymap registers its description
      :folke/which-key.nvim {:mod :tools.which-key}
+     ;; file explorer — eager so oil takes over directory buffers (netrw)
+     :stevearc/oil.nvim {:requires [[:nvim-tree/nvim-web-devicons]] :mod :tools.oil}
      ;; lsp + completion — eager (attach on BufRead handled internally)
      :VonHeikemen/lsp-zero.nvim {:requires [[:neovim/nvim-lspconfig]
                                             [:williamboman/mason.nvim]
