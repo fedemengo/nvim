@@ -31,7 +31,7 @@ test-functional:
 	XDG_DATA_HOME=$(NVIM_TEST_DIR)/data \
 	XDG_CACHE_HOME=$(NVIM_TEST_DIR)/cache \
 	XDG_STATE_HOME=$(NVIM_TEST_DIR)/state \
-	$(NVIM) --headless "+luafile tests/headless.lua"
+	$(NVIM) --headless "+lua require('aniseed.fennel').impl().dofile('tests/headless.fnl')" "+cquit! 1"
 
 clean-install-test:
 	rm -rf $(NVIM_TEST_DIR)
