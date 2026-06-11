@@ -2,6 +2,9 @@
 
 (local blink (require :blink.cmp))
 
+(when (not (blink.library_available))
+  (: (blink.build) :pwait))
+
 (fn set-kind-hl []
   (each [_ [kind target]
          (ipairs [[:Text :String]
