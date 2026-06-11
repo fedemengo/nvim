@@ -155,7 +155,7 @@
 (map [:n] :fg themed_count_live_grep {:desc "Grep string"})
 (map [:n] :fm media-files {:desc "Find media files"})
 
-(map [:n] :<C-h> (bindf themed_count_find_files {:hidden true})
+(map [:n] :fH (bindf themed_count_find_files {:hidden true})
      {:desc "Find all files [hidden]"})
 
 (map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)

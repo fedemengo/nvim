@@ -71,7 +71,7 @@
 (use ;; bootstrap — must be eager
      :Olical/aniseed {}
      ;; colorschemes — eager so the theme is applied at startup
-     :NLKNguyen/papercolor-theme {} :fedemengo/github-nvim-theme {}
+     :NLKNguyen/papercolor-theme {} :projekt0n/github-nvim-theme {}
      :catppuccin/nvim {} :AlexvZyl/nordic.nvim {} :loctvl842/monokai-pro.nvim
      {:mod :ui.monokai}
      ;; ui chrome — eager (statusline/tabline/navic must be ready before first render)
