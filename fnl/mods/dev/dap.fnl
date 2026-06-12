@@ -48,16 +48,3 @@
         :pathMappings [{:localRoot (vim.fn.getcwd)
                         :remoteRoot (vim.fn.getcwd)}]}])
 
-(map [:n] :<leader>db dap.toggle_breakpoint {:desc "Toggle breakpoint [DAP]"})
-(map [:n] :<leader>dB
-     (fn [] (dap.set_breakpoint (vim.fn.input "Breakpoint condition: ")))
-     {:desc "Conditional breakpoint [DAP]"})
-(map [:n] :<leader>dc dap.continue     {:desc "Continue [DAP]"})
-(map [:n] :<leader>dn dap.step_over    {:desc "Step over [DAP]"})
-(map [:n] :<leader>di dap.step_into    {:desc "Step into [DAP]"})
-(map [:n] :<leader>do dap.step_out     {:desc "Step out [DAP]"})
-(map [:n] :<leader>dr (fn [] (dapui.open)) {:desc "Open DAP UI [DAP]"})
-(map [:n] :<leader>dq dap.terminate    {:desc "Terminate session [DAP]"})
-(map [:n] :<leader>dR dap.repl.open   {:desc "Open REPL [DAP]"})
-(map [:n] :<leader>dt dappy.test_method {:desc "Debug test method [DAP]"})
-(map [:n] :<leader>dT dappy.test_class  {:desc "Debug test class [DAP]"})

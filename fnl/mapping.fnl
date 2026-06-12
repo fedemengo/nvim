@@ -163,6 +163,24 @@
 
 (map [:n] :<S-Tab> :za {:desc "Toggle fold under cursor"})
 
-(map [:n] :<space>cd ":CodeDiff<cr>"            {:desc "Git diff explorer"})
-(map [:n] :<space>ch ":CodeDiff history<cr>"  {:desc "Git history"})
-(map [:n] :<space>cp ":CodeDiff main...<cr>"  {:desc "PR diff (vs main)"})
+(map [:n] :<space>cd ":CodeDiff<cr>"           {:desc "Git diff explorer"})
+(map [:n] :<space>ch ":CodeDiff history<cr>" {:desc "Git history"})
+(map [:n] :<space>cp ":CodeDiff main...<cr>" {:desc "PR diff (vs main)"})
+
+(map [:n] :<leader>xx #((. (require :trouble) :toggle))          {:desc "Toggle Trouble"})
+(map [:n] :<leader>Z  #((. (require :zen-mode) :toggle))         {:desc "Toggle zen mode"})
+(map [:n] :<leader>t  #((. (require :FTerm) :toggle))            {:desc "Toggle FTerm"})
+(map [:n] :<space>s   #((. (require :outline) :toggle_outline))  {:desc "Toggle symbols outline"})
+
+(map [:n] :<leader>db #((. (require :dap) :toggle_breakpoint))   {:desc "Toggle breakpoint [DAP]"})
+(map [:n] :<leader>dB (fn [] ((. (require :dap) :set_breakpoint) (vim.fn.input "Breakpoint condition: ")))
+     {:desc "Conditional breakpoint [DAP]"})
+(map [:n] :<leader>dc #((. (require :dap) :continue))            {:desc "Continue [DAP]"})
+(map [:n] :<leader>dn #((. (require :dap) :step_over))           {:desc "Step over [DAP]"})
+(map [:n] :<leader>di #((. (require :dap) :step_into))           {:desc "Step into [DAP]"})
+(map [:n] :<leader>do #((. (require :dap) :step_out))            {:desc "Step out [DAP]"})
+(map [:n] :<leader>dr #((. (require :dapui) :open))              {:desc "Open DAP UI [DAP]"})
+(map [:n] :<leader>dq #((. (require :dap) :terminate))           {:desc "Terminate session [DAP]"})
+(map [:n] :<leader>dR (fn [] (let [d (require :dap)] (d.repl.open))) {:desc "Open REPL [DAP]"})
+(map [:n] :<leader>dt #((. (require :dap-python) :test_method))  {:desc "Debug test method [DAP]"})
+(map [:n] :<leader>dT #((. (require :dap-python) :test_class))   {:desc "Debug test class [DAP]"})
