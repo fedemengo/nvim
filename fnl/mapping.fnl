@@ -78,6 +78,13 @@
         (vim.cmd "windo set nowrap")
         (vim.cmd "windo set wrap"))))
 
+(fn move-tab [direction]
+  (let [current (vim.fn.tabpagenr)
+        total (vim.fn.tabpagenr "$")]
+    (when (or (and (= direction :left) (> current 1))
+              (and (= direction :right) (< current total)))
+      (vim.cmd (if (= direction :left) "tabmove -1" "tabmove +1")))))
+
 (map [:v] :<leader><space> eval-expression {:desc "Evaluate expression"})
 ;; search with s instead of f
 
@@ -138,8 +145,8 @@
 
 (map [:n] :<leader>fp copy-file-path {:desc "Copy file path"})
 
-(map [:n] :<leader>h (bindcmd "tabmove -1") {:desc "Move tab to the left"})
-(map [:n] :<leader>l (bindcmd "tabmove +1") {:desc "Move tab to the right"})
+(map [:n] :<leader>h #(move-tab :left) {:desc "Move tab to the left"})
+(map [:n] :<leader>l #(move-tab :right) {:desc "Move tab to the right"})
 
 (map [:n] :<leader>s (bindcmd :split) {:desc "Split window horizontally"})
 (map [:n] :<leader>v (bindcmd :vsplit) {:desc "Split window vertically"})
