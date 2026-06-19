@@ -85,6 +85,11 @@
               (and (= direction :right) (< current total)))
       (vim.cmd (if (= direction :left) "tabmove -1" "tabmove +1")))))
 
+(fn resize-width [delta]
+  (let [amount (* vim.v.count1 delta)
+        prefix (if (> amount 0) "+" "")]
+    (vim.cmd (.. "vertical resize " prefix amount))))
+
 (map [:v] :<leader><space> eval-expression {:desc "Evaluate expression"})
 ;; search with s instead of f
 
@@ -150,8 +155,8 @@
 
 (map [:n] :<leader>s (bindcmd :split) {:desc "Split window horizontally"})
 (map [:n] :<leader>v (bindcmd :vsplit) {:desc "Split window vertically"})
-(map [:n] :sd (bindcmd "vertical resize -15") {:desc "Decrease split width"})
-(map [:n] :si (bindcmd "vertical resize +15") {:desc "Increase split width"})
+(map [:n] :sd #(resize-width -15) {:desc "Decrease split width" :noremap true :silent true})
+(map [:n] :si #(resize-width 15) {:desc "Increase split width" :noremap true :silent true})
 (map [:n] :<leader>w toggle-wrap {:desc "Toggle wrap"})
 
 (map [:n] :<leader>q (bindcmd :qa) {:desc "Quit all"})
