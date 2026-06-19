@@ -119,6 +119,7 @@
      :catgoose/nvim-colorizer.lua
      {:event [:BufRead :BufNewFile] :mod :ui.colorizer} :karb94/neoscroll.nvim
      {:event [:BufRead :BufNewFile] :mod :ui.neoscroll}
+     :sphamba/smear-cursor.nvim {:event :VeryLazy :mod :ui.smear-cursor}
      :petertriho/nvim-scrollbar
      {:event [:BufRead :BufNewFile] :mod :ui.scrollbar}
      :folke/todo-comments.nvim
