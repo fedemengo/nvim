@@ -50,17 +50,41 @@
              (set t.opts.hl :StartifySection))
            result))))
 
-;; header: fortune | owlsay, centered as a block (all lines padded equally)
+;; header: fortune | cowsay/owlsay, centered as a block (all lines padded equally)
 (local has-fortune (= 1 (vim.fn.executable :fortune)))
 (local has-owlsay  (= 1 (vim.fn.executable :owlsay)))
 (local has-cowsay  (= 1 (vim.fn.executable :cowsay)))
+
+(local is-darwin (= (. (vim.uv.os_uname) :sysname) "Darwin"))
+
+;; OS-specific fortune databases
+(local fortune-os-dbs
+  (if is-darwin
+      "linuxcookie ascii-art"
+      "linux knghtbrd"))
+
+;; always include the custom fortune file when its strfile index is present
+(local custom-fortune-file (vim.fn.expand "~/.dotfiles/data/fortune.txt"))
+(local custom-fortune-db
+  (if (= 1 (vim.fn.filereadable (.. custom-fortune-file ".dat")))
+      (.. " " custom-fortune-file)
+      ""))
+
+(local fortune-dbs (.. "computers science " fortune-os-dbs custom-fortune-db))
+
+;; pick a random cowsay figure for variety
+(local cowsay-figures [:default :tux :dragon :elephant :stegosaurus :sheep])
+(math.randomseed (% (vim.uv.hrtime) 2147483647))
+(local cowsay-figure (. cowsay-figures (math.random (length cowsay-figures))))
 
 ;; capture fortune once at startup; crop + center at render time when
 ;; window height is actually known
 (local raw-header
   (when has-fortune
-    (let [pipe (if has-owlsay "| owlsay" (if has-cowsay "| cowsay" ""))
-          cmd  (.. "fortune -s computers linux kernelnewbies knghtbrd science " pipe)
+    (let [pipe (if has-owlsay "| owlsay"
+                   has-cowsay (.. "| cowsay -f " cowsay-figure)
+                   "")
+          cmd  (.. "fortune -s " fortune-dbs " " pipe)
           out (vim.fn.systemlist cmd)]
       (when (> (length out) 0) out))))
 
