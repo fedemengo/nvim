@@ -155,8 +155,12 @@
 (map [:n] :fg themed_count_live_grep {:desc "Grep string"})
 (map [:n] :fm media-files {:desc "Find media files"})
 
-(map [:n] :fH (bindf themed_count_find_files {:hidden true})
-     {:desc "Find all files [hidden]"})
+(map [:n] :fH (bindf themed_count_find_files {:hidden true :no_ignore true})
+     {:desc "Find all files [hidden, no-ignore]"})
+
+(map [:n] :fG (bindf themed_count_live_grep
+                     {:hidden true :additional_args [:--no-ignore]})
+     {:desc "Grep string [hidden, no-ignore]"})
 
 (map [:n] :fl (bindf builtin.lsp_document_symbols ivy_config)
      {:desc "Find symbols [LSP]"})
@@ -326,6 +330,8 @@
   (set fcmd (cons fcmd [:--max-depth (. opts :fcmd_depth)]))
   (when (. opts :hidden)
     (set fcmd (cons fcmd :--hidden)))
+  (when (. opts :no_ignore)
+    (set fcmd (cons fcmd :--no-ignore)))
   (finders.new_oneshot_job fcmd opts))
 
 (fn new_magic_grepper [opts]
@@ -341,6 +347,8 @@
              (. opts :fcmd_depth)])
   (when (. opts :hidden)
     (set gcmd (cons gcmd :--hidden)))
+  (when (. opts :no_ignore)
+    (set gcmd (cons gcmd :--no-ignore)))
   (finders.new_job (fn [query]
                      (when (and query (not= query ""))
                        (cons gcmd [query "--" (. opts :cwd)])))
@@ -351,12 +359,15 @@
   (var cwd (. opts :cwd))
   (var relcwd (cwd:gsub (os.getenv :HOME) :$HOME))
   (var hidden? (if (. opts :hidden) :on :off))
+  (var no-ignore? (if (. opts :no_ignore) :on :off))
   (tset opts :prompt_title
         (.. mode
             " [d:"
             (. opts :fcmd_depth)
             "] [h:"
             hidden?
+            "] [i:"
+            no-ignore?
             "] "
             relcwd)))
 
@@ -423,6 +434,13 @@
                                                           (tset opts :hidden
                                                                 (not (. opts
                                                                         :hidden)))
+                                                          (refresh p opts
+                                                                   {:reset_prompt false})))
+                                                   (map [:i :n] :<C-u>
+                                                        (fn []
+                                                          (tset opts :no_ignore
+                                                                (not (. opts
+                                                                        :no_ignore)))
                                                           (refresh p opts
                                                                    {:reset_prompt false})))
                                                    (map [:i :n] :<C-e>
