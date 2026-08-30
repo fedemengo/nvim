@@ -52,6 +52,11 @@
                                  {:group g
                                   :pattern :make
                                   :command "setlocal iskeyword+=-"})
+    ;; wrap at word boundaries so text doesn't touch the window edge
+    (vim.api.nvim_create_autocmd :FileType
+                                 {:group g
+                                  :pattern :markdown
+                                  :command "setlocal linebreak breakindent"})
     ;; <cr> enters command mode everywhere except in quickfix
     (vim.api.nvim_create_autocmd :BufEnter
                                  {:group g
